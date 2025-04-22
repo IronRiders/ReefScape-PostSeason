@@ -65,7 +65,6 @@ public class RobotCommands {
 	public Command startup() {
 		coralIntakeCommands.setOnSuccess(() -> rumble());
 		return coralWristCommands.home()
-				.andThen(climbCommands.rezero())
 				.andThen(elevatorCommands.home());
 	}
 

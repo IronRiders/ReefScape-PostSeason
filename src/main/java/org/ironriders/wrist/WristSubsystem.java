@@ -1,7 +1,11 @@
 package org.ironriders.wrist;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.ironriders.lib.IronSubsystem;
 import org.ironriders.lib.data.PID;
+import org.ironriders.lib.data.MotorSetup;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -15,6 +19,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -29,14 +34,17 @@ public abstract class WristSubsystem extends IronSubsystem {
     private final double PERIOD = .02;
 
     protected final SparkMax motor;
+    protected List<SparkMax>additionalMotors = new ArrayList<>();
     protected final PIDController pid;
     protected final double gearRatio;
 
     protected final SparkMaxConfig motorConfig = new SparkMaxConfig();
+    protected List<SparkMaxConfig> additionalMotorConfigs = new ArrayList<>();
 
-    protected TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State();
-    private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State();
+    protected TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State(); //Acts as a final setpoint
+    private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State(); //Acts as a temporary setpoint for calculating the next speed value
     private final TrapezoidProfile movementProfile;
+
 
     abstract boolean isHomed();
 
@@ -49,26 +57,47 @@ public abstract class WristSubsystem extends IronSubsystem {
     public abstract Command homeCmd(boolean force);
 
     protected WristSubsystem(
-            int motorId,
+            int primaryMotorId,
             double gearRatio,
             PID pid,
             TrapezoidProfile.Constraints constraints,
             int stallLimit,
-            boolean inverted) {
-        motor = new SparkMax(motorId, MotorType.kBrushless);
+            boolean PrimaryInversion,
+            MotorSetup ... additionalMotorsSetups
+            ) {
+        motor = new SparkMax(primaryMotorId, MotorType.kBrushless);
         this.gearRatio = gearRatio;
         this.pid = new PIDController(pid.p, pid.i, pid.d);
         movementProfile = new TrapezoidProfile(constraints);
+        
+        // Additional Motors 
+        for(MotorSetup setup : additionalMotorsSetups){
+            SparkMax additionalMotor = new SparkMax(setup.getId(), MotorType.kBrushless);
+            additionalMotors.add(additionalMotor);
+            SparkMaxConfig additonalMotorConfig = new SparkMaxConfig();
+            additonalMotorConfig
+                .smartCurrentLimit(stallLimit)
+                .idleMode(IdleMode.kBrake)
+                .follow(primaryMotorId,setup.getInversionStatus());
+            additionalMotorConfigs.add(additonalMotorConfig);
+        }
 
+        
         motorConfig
                 .smartCurrentLimit(stallLimit)
                 .idleMode(IdleMode.kBrake)
-                .inverted(inverted);
+                .inverted(PrimaryInversion);
+        
+        
         configureMotor();
     }
 
+
     protected void configureMotor() {
         motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        for(int i = 0; i<additionalMotors.size(); i++){
+            additionalMotors.get(i).configure(additionalMotorConfigs.get(i), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        }
     }
 
     @Override

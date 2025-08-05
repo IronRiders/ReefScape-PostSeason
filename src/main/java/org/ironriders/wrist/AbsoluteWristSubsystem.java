@@ -1,5 +1,6 @@
 package org.ironriders.wrist;
 
+import org.ironriders.lib.data.MotorSetup;
 import org.ironriders.lib.data.PID;
 
 import com.revrobotics.AbsoluteEncoder;
@@ -7,6 +8,7 @@ import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SoftLimitConfig;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,7 +25,7 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
     AbsoluteEncoder encoder;
 
     public AbsoluteWristSubsystem(
-            int motorId,
+            int primaryMotorId,
             double gearRatio,
             double encoderScale,
             Angle encoderOffset,
@@ -33,8 +35,9 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
             PID pid,
             TrapezoidProfile.Constraints constraints,
             int stallLimit,
-            boolean inverted) {
-        super(motorId, gearRatio, pid, constraints, stallLimit, inverted);
+            boolean PrimaryInversion,
+            MotorSetup ...additionalMotorsSetups) {
+        super(primaryMotorId, gearRatio, pid, constraints, stallLimit, PrimaryInversion, additionalMotorsSetups);
 
         this.encoderScale = encoderScale;
         this.encoderOffset = encoderOffset;
@@ -58,7 +61,7 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
         return getCurrentAngle().lt(reverseLimit);
     }
 
-    @Override
+   /*  @Override
     protected void configureMotor() {
         var softLimitConfig = new SoftLimitConfig();
 
@@ -80,11 +83,11 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
                 .reverseLimitSwitchEnabled(false)
                 .forwardLimitSwitchEnabled(false);
 
-        motorConfig
-                .apply(softLimitConfig);
+      //  motorConfig
+        //        .apply(softLimitConfig);
 
         super.configureMotor();
-    }
+    }*/
 
     @Override
     protected void setMotorLevel() {
@@ -119,7 +122,7 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
     @Override
     protected Angle getCurrentAngle() {
         var angle = Units.Rotations.of(encoder.getPosition());
-
+        publish("rawRotation",Units.Rotations.of(encoder.getPosition()).in(Units.Degrees) );
         angle = angle.times(encoderScale);
 
         if (invertEncoder) {

@@ -1,23 +1,24 @@
 package org.ironriders.wrist.coral;
 
-import org.ironriders.wrist.coral.CoralWristConstants.CoralWristState;
+import org.ironriders.wrist.coral.CoralWristConstants.WristState;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class CoralWristCommands {
-    private final CoralWristSubsystem coralWrist;
+    private final CoralAbsoluteWristSubsystem coralWrist;
 
-    public CoralWristCommands(CoralWristSubsystem wrist) {
+    public CoralWristCommands(CoralAbsoluteWristSubsystem wrist) {
         this.coralWrist = wrist;
 
         wrist.publish("Home", home());
-        wrist.publish("Wrist Coral Station", set(CoralWristState.STATION));
-        wrist.publish("Wrist Upright", set(CoralWristState.STOWED));
-        wrist.publish("Wrist L1-L3", set(CoralWristState.L1toL3));
-        wrist.publish("Wrist L4", set(CoralWristState.L4));
+        wrist.publish("Wrist Intaking", set(WristState.Intaking));
+        wrist.publish("Wrist Stowed", set(WristState.STOWED));
+        wrist.publish("Wrist L1", set(WristState.L1));
+        wrist.publish("Wrist L2-L3", set(WristState.L2toL3));
+        wrist.publish("Wrist L4", set(WristState.L4));
     }
 
-    public Command set(CoralWristState state) {
+    public Command set(WristState state) {
         return coralWrist.moveToCmd(state.getAngle());
     }
 
@@ -29,7 +30,7 @@ public class CoralWristCommands {
         return coralWrist.homeCmd();
     }
 
-    public CoralWristSubsystem getCoralWrist() {
+    public CoralAbsoluteWristSubsystem getCoralWrist() {
         return coralWrist;
     }
 }

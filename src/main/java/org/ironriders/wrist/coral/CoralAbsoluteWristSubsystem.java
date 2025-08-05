@@ -1,8 +1,8 @@
 package org.ironriders.wrist.coral;
 
-import static org.ironriders.wrist.coral.CoralWristConstants.CORAL_WRIST_CURRENT_STALL_LIMIT;
-import static org.ironriders.wrist.coral.CoralWristConstants.CORAL_WRIST_MOTOR;
-import static org.ironriders.wrist.coral.CoralWristConstants.CORAL_WRIST_TOLERANCE;
+import static org.ironriders.wrist.coral.CoralWristConstants.WRIST_CURRENT_STALL_LIMIT;
+import static org.ironriders.wrist.coral.CoralWristConstants.WRIST_MOTOR;
+import static org.ironriders.wrist.coral.CoralWristConstants.WRIST_TOLERANCE;
 import static org.ironriders.wrist.coral.CoralWristConstants.D;
 import static org.ironriders.wrist.coral.CoralWristConstants.ENCODER_OFFSET;
 import static org.ironriders.wrist.coral.CoralWristConstants.FORWARD_LIMIT;
@@ -12,20 +12,20 @@ import static org.ironriders.wrist.coral.CoralWristConstants.MAX_ACC;
 import static org.ironriders.wrist.coral.CoralWristConstants.MAX_VEL;
 import static org.ironriders.wrist.coral.CoralWristConstants.P;
 import static org.ironriders.wrist.coral.CoralWristConstants.REVERSE_LIMIT;
+import static org.ironriders.wrist.coral.CoralWristConstants.SECONDARYWRISTMOTOR;
 import static org.ironriders.wrist.coral.CoralWristConstants.SPROCKET_RATIO;
 
 import org.ironriders.lib.data.PID;
 import org.ironriders.wrist.AbsoluteWristSubsystem;
-import org.ironriders.wrist.AbsoluteWristSubsystemCoral;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
-public class CoralWristSubsystem extends AbsoluteWristSubsystemCoral {
+public class CoralAbsoluteWristSubsystem extends AbsoluteWristSubsystem{
     private final CoralWristCommands commands;
 
-    public CoralWristSubsystem() {
+    public CoralAbsoluteWristSubsystem() {
         super(
-                CORAL_WRIST_MOTOR,
+                WRIST_MOTOR,
                 GEAR_RATIO,
                 SPROCKET_RATIO,
                 ENCODER_OFFSET,
@@ -34,10 +34,11 @@ public class CoralWristSubsystem extends AbsoluteWristSubsystemCoral {
                 false,
                 new PID(P, I, D),
                 new TrapezoidProfile.Constraints(MAX_VEL, MAX_ACC),
-                CORAL_WRIST_CURRENT_STALL_LIMIT,
-                false);
+                WRIST_CURRENT_STALL_LIMIT,
+                false,
+                SECONDARYWRISTMOTOR);
 
-        pid.setTolerance(CORAL_WRIST_TOLERANCE);
+        pid.setTolerance(WRIST_TOLERANCE);
 
         commands = new CoralWristCommands(this);
     }

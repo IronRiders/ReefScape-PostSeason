@@ -35,8 +35,8 @@ public class ClimbConstants {
 
     public enum Targets {
         HOME(0),
-        MAX(-123.5), //max position up ward
-        TARGET(40); //TEST and figure out (40 should be safe and visible) (This is supposed to be the angle where the robot is off the ground but not touching the chain)
+        EXTENDED(-123.5), //max position up ward
+        CLIMBED(40); //TEST and figure out (40 should be safe and visible) (This is supposed to be the angle where the robot is off the ground but not touching the chain)
 
         public final double pos;
 

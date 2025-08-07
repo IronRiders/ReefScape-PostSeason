@@ -6,11 +6,12 @@ import org.ironriders.climb.ClimbCommands;
 import org.ironriders.drive.DriveCommands;
 import org.ironriders.elevator.ElevatorCommands;
 import org.ironriders.elevator.ElevatorConstants;
+import org.ironriders.intake.CoralIntakeCommands;
+import org.ironriders.intake.CoralIntakeConstants;
 import org.ironriders.targeting.TargetingCommands;
-import org.ironriders.wrist.coral.CoralIntakeCommands;
-import org.ironriders.wrist.coral.CoralIntakeConstants;
-import org.ironriders.wrist.coral.CoralWristCommands;
-import org.ironriders.wrist.coral.CoralWristConstants;
+import org.ironriders.wrist.CoralAbsoluteWristSubsystem;
+import org.ironriders.wrist.CoralWristCommands;
+import org.ironriders.wrist.CoralWristConstants;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -64,8 +65,7 @@ public class RobotCommands {
 	 */
 	public Command startup() {
 		coralIntakeCommands.setOnSuccess(() -> rumble());
-		return coralWristCommands.home()
-				.andThen(elevatorCommands.home());
+		return (elevatorCommands.home());
 	}
 
 	/**
@@ -104,11 +104,11 @@ public class RobotCommands {
 				// Commands.parallel(
 				// algaeWristCommands.set(AlgaeWristState.STOWED),
 				coralWristCommands.set(switch (level) {
-					case L1, L2, L3 -> CoralWristConstants.CoralWristState.L1toL3;
-					case L4 -> CoralWristConstants.CoralWristState.L4;
-					case CoralStation -> CoralWristConstants.CoralWristState.STATION;
-					case Down -> CoralWristConstants.CoralWristState.STOWED;
-					case HighAlgae -> CoralWristConstants.CoralWristState.STOWED;
+					case L1, L2, L3 -> CoralWristConstants.WristState.L2toL3;
+					case L4 -> CoralWristConstants.WristState.L4;
+					case CoralStation -> CoralWristConstants.WristState.Intaking;
+					case Down -> CoralWristConstants.WristState.STOWED;
+					case HighAlgae -> CoralWristConstants.WristState.STOWED;
 					default -> {
 						throw new IllegalArgumentException(
 								"Cannot score coral to level: " + level);
@@ -120,20 +120,20 @@ public class RobotCommands {
 		return Commands.sequence(
 				coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.EJECT),
 				Commands.parallel(
-						coralWristCommands.set(CoralWristConstants.CoralWristState.STOWED),
+					coralWristCommands.set(CoralWristConstants.WristState.STOWED),
 						elevatorCommands.set(ElevatorConstants.Level.Down)));
 	}
 
 	public Command prepareToGrabCoral() {
 		return Commands.parallel(
-				coralWristCommands.set(CoralWristConstants.CoralWristState.STATION),
+				coralWristCommands.set(CoralWristConstants.WristState.Intaking),
 				elevatorCommands.set(ElevatorConstants.Level.CoralStation));
 	}
 
 	public Command grabCoral() {
 		return Commands.sequence(
 				coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.GRAB),
-				coralWristCommands.set(CoralWristConstants.CoralWristState.STOWED),
+				coralWristCommands.set(CoralWristConstants.WristState.STOWED),
 				elevatorCommands.set(ElevatorConstants.Level.Down));
 	}
 }

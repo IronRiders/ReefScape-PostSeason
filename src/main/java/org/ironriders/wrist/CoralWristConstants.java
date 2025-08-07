@@ -1,4 +1,4 @@
-package org.ironriders.wrist.coral;
+package org.ironriders.wrist;
 
 import org.ironriders.lib.data.MotorSetup;
 

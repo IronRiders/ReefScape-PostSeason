@@ -1,9 +1,9 @@
-package org.ironriders.wrist.coral;
+package org.ironriders.intake;
 
-import static org.ironriders.wrist.coral.CoralIntakeConstants.DISCHARGE_TIMEOUT;
-import static org.ironriders.wrist.coral.CoralIntakeConstants.INTAKE_IMPATIENCE;
+import static org.ironriders.intake.CoralIntakeConstants.DISCHARGE_TIMEOUT;
+import static org.ironriders.intake.CoralIntakeConstants.INTAKE_IMPATIENCE;
 
-import org.ironriders.wrist.coral.CoralIntakeConstants.CoralIntakeState;
+import org.ironriders.intake.CoralIntakeConstants.CoralIntakeState;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -27,19 +27,28 @@ public class CoralIntakeCommands {
         switch (state) {
             case GRAB:
                 // making an actual command override here, mostly for convenience
-            
+
                 return new Command() {
+                    @Override
                     public void execute() {
                         intake.set(CoralIntakeState.GRAB);
                     }
+                    @Override
+                    public boolean isFinished(){
+                        return intake.hasGamePiece();
+                    }
 
-                    // public boolean isFinished() {
-                    //     if (intake.getLimitSwitchTriggered()) {
-                    //         onSuccess.run();
-                    //     }
-                    //     return intake.getLimitSwitchTriggered();
-                    // }
-                }.withDeadline(Commands.waitSeconds(INTAKE_IMPATIENCE));
+                    @Override
+                    public void end(boolean interupted){
+                        if(interupted){
+                            intake.set(CoralIntakeState.STOP);
+                        }
+                        else{
+                            intake.set(CoralIntakeState.HOLD);
+                        }
+                    }
+                    
+                };
             case EJECT:
                 return command.withTimeout(DISCHARGE_TIMEOUT).finallyDo(() -> intake.set(CoralIntakeState.STOP));
             default:

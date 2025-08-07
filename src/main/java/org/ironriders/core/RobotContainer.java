@@ -13,16 +13,16 @@ import org.ironriders.drive.DriveSubsystem;
 import org.ironriders.elevator.ElevatorCommands;
 import org.ironriders.elevator.ElevatorConstants;
 import org.ironriders.elevator.ElevatorSubsystem;
+import org.ironriders.intake.CoralIntakeCommands;
+import org.ironriders.intake.CoralIntakeConstants;
+import org.ironriders.intake.CoralIntakeSubsystem;
 import org.ironriders.lib.GameState;
 import org.ironriders.lib.RobotUtils;
 import org.ironriders.lib.field.FieldElement.ElementType;
 import org.ironriders.targeting.TargetingCommands;
 import org.ironriders.targeting.TargetingSubsystem;
-import org.ironriders.wrist.coral.CoralIntakeCommands;
-import org.ironriders.wrist.coral.CoralIntakeConstants;
-import org.ironriders.wrist.coral.CoralIntakeSubsystem;
-import org.ironriders.wrist.coral.CoralWristCommands;
-import org.ironriders.wrist.coral.CoralWristSubsystem;
+import org.ironriders.wrist.CoralAbsoluteWristSubsystem;
+import org.ironriders.wrist.CoralWristCommands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
@@ -54,7 +54,7 @@ public class RobotContainer {
 	public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 	public final ElevatorCommands elevatorCommands = elevatorSubsystem.getCommands();
 
-	public final CoralWristSubsystem coralWristSubsystem = new CoralWristSubsystem();
+	public final CoralAbsoluteWristSubsystem coralWristSubsystem = new CoralAbsoluteWristSubsystem();
 	public final CoralWristCommands coralWristCommands = coralWristSubsystem.getCommands();
 
 	public final CoralIntakeSubsystem coralIntakeSubsystem = new CoralIntakeSubsystem();
@@ -142,10 +142,8 @@ public class RobotContainer {
 		secondaryController.button(10).onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.Down));
 		secondaryController.pov(0).onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.HighAlgae));
 
-		secondaryController.button(14).whileTrue(climbCommands.set(ClimbConstants.State.UP))
-				.whileFalse(climbCommands.set(ClimbConstants.State.STOP));
-		secondaryController.button(15).whileTrue(climbCommands.set(ClimbConstants.State.DOWN))
-				.whileFalse(climbCommands.set(ClimbConstants.State.STOP));
+		secondaryController.button(14).whileTrue(climbCommands.set(ClimbConstants.Targets.CLIMBED));
+		secondaryController.button(15).whileTrue(climbCommands.set(ClimbConstants.Targets.EXTENDED));
 
 	}
 

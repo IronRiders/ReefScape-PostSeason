@@ -33,11 +33,11 @@ public class DriveSubsystem extends IronSubsystem {
   private boolean invertStatus = false;
 
   public Command pathfindCommand;
-  public double ControlSpeedMultipler = 1;
+  public double controlSpeedMultipler = 1;
 
   public DriveSubsystem() throws RuntimeException {
     try {
-      swerveDrive = new SwerveParser(SWERVE_JSON_DIRECTORY)// directory. // YAGSL reads from the deply/swerve
+      swerveDrive = new SwerveParser(SWERVE_JSON_DIRECTORY) // YAGSL reads from the deply/swerve directory
       .createSwerveDrive(SWERVE_DRIVE_MAX_SPEED);
     } catch (IOException e) { // instancing SwerveDrive can throw an error, so we need to catch that.
       throw new RuntimeException("Error configuring swerve drive", e);
@@ -145,11 +145,7 @@ public class DriveSubsystem extends IronSubsystem {
     }
   }
 
-  public void setSpeed(boolean slow) {
-    if (slow) {
-      ControlSpeedMultipler = .5;
-    } else {
-      ControlSpeedMultipler = 1;
-    }
+  public void setSpeed(double speed) {
+      controlSpeedMultipler = speed;
   }
 }

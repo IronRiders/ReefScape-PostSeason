@@ -1,9 +1,6 @@
 package org.ironriders.climb;
 
-import static org.ironriders.climb.ClimbConstants.ROTATION_MAXDOWN;
-import static org.ironriders.climb.ClimbConstants.ROTATION_MAXUP;
-
-import org.ironriders.lib.IronSubsystem;
+import static org.ironriders.climb.ClimbConstants.*;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -12,10 +9,10 @@ import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import org.ironriders.lib.IronSubsystem;
 
 public class ClimbSubsystem extends IronSubsystem {
 
@@ -28,16 +25,11 @@ public class ClimbSubsystem extends IronSubsystem {
   boolean reachedTopLimit = false;
   boolean reachedBottomLimit = false;
 
-  double kMaxVelocity = 60; //in degrees
-  double kMaxAcceleration = 60; // in degrees
-  double kP = 1.0; // idk what this is in //TODO
-  double kI = 0; // idk what this is in //TODO
-  double kD = 0; // idk what this is in //TODO
-  double kDt = 0.02; // default is 0.02
   private final TrapezoidProfile.Constraints m_constraints =
-    new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
+    new TrapezoidProfile.Constraints(ROTATION_MAXSPEED, ROTATION_MAXACCEL);
+
   private final ProfiledPIDController profiledPIDController =
-    new ProfiledPIDController(kP, kI, kD, m_constraints, kDt);
+    new ProfiledPIDController(P, I, D, m_constraints, T);
 
   private final ClimbCommands commands;
 
@@ -60,36 +52,19 @@ public class ClimbSubsystem extends IronSubsystem {
       .forwardSoftLimitEnabled(true);
   }
 
-  @Override
-  public void periodic() {
-    publish("Climber/encoder", encoder.getPosition());
-    publish("Climber/PIDsetpoint", profiledPIDController.getGoal().position);
-  }
-
   public void set(ClimbConstants.Targets target) {
     profiledPIDController.setGoal(
       MathUtil.clamp(target.pos, ROTATION_MAXDOWN, ROTATION_MAXUP)
     );
   }
 
-  // public void set(ClimbConstants.State state) {
-  //     if(state.speed < 0){
-  //         if(reachedTopLimit){
-  //             climbMotor.set(0);
-  //         } else {
-  //             climbMotor.set(state.speed);
-
-  //         }
-  //     } else {
-  //         if(reachedBottomLimit){
-  //             climbMotor.set(0);
-  //         } else {
-  //             climbMotor.set(state.speed);
-  //         }
-  //     }
-  // }
-
   public ClimbCommands getCommands() {
     return commands;
+  }
+
+  @Override
+  public void periodic() {
+    publish("Climber::encoder", encoder.getPosition());
+    publish("Climber::PIDsetpoint", profiledPIDController.getGoal().position);
   }
 }

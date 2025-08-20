@@ -1,8 +1,9 @@
 package org.ironriders.wrist;
 
+import org.ironriders.lib.data.MotorSetup;
+
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
-import org.ironriders.lib.data.MotorSetup;
 
 public class CoralWristConstants {
 
@@ -15,7 +16,6 @@ public class CoralWristConstants {
 
   public static final double SPROCKET_RATIO = 1;
   public static final double GEAR_RATIO = 1.0 / 100.0;
-  public static final double ENCODER_SCALE = 1;
 
   public static final Angle ENCODER_OFFSET = Units.Degrees.of(0); //TODO TUNE
   public static final Angle REVERSE_LIMIT = Units.Degrees.of(-35); // TODO: TUNE

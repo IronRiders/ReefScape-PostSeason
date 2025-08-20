@@ -104,7 +104,7 @@ public class RobotContainer {
         () ->
           RobotUtils.controlCurve(
             -primaryController.getLeftY() *
-            driveSubsystem.ControlSpeedMultipler *
+            driveSubsystem.controlSpeedMultipler *
             driveSubsystem.getinversionStatus(),
             DriveConstants.TRANSLATION_CONTROL_EXPONENT,
             DriveConstants.TRANSLATION_CONTROL_DEADBAND
@@ -112,7 +112,7 @@ public class RobotContainer {
         () ->
           RobotUtils.controlCurve(
             -primaryController.getLeftX() *
-            driveSubsystem.ControlSpeedMultipler *
+            driveSubsystem.controlSpeedMultipler *
             driveSubsystem.getinversionStatus(),
             DriveConstants.TRANSLATION_CONTROL_EXPONENT,
             DriveConstants.TRANSLATION_CONTROL_DEADBAND
@@ -120,7 +120,7 @@ public class RobotContainer {
         () ->
           RobotUtils.controlCurve(
             -primaryController.getRightX() *
-            driveSubsystem.ControlSpeedMultipler *
+            driveSubsystem.controlSpeedMultipler *
             driveSubsystem.getinversionStatus(),
             DriveConstants.ROTATION_CONTROL_EXPONENT,
             DriveConstants.ROTATION_CONTROL_DEADBAND
@@ -131,8 +131,8 @@ public class RobotContainer {
     // slows down drivetrain when pressed
     primaryController
       .leftTrigger()
-      .onTrue(driveCommands.setDriveTrainSpeed(true))
-      .onFalse(driveCommands.setDriveTrainSpeed(false));
+      .onTrue(driveCommands.setDriveTrainSpeed(0.5))
+      .onFalse(driveCommands.setDriveTrainSpeed(1));
 
     // jog commands on pov buttons
     for (var angle = 0; angle < 360; angle += 45) {

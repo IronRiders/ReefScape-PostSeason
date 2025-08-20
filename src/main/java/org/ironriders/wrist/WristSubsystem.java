@@ -18,7 +18,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -113,7 +112,6 @@ public abstract class WristSubsystem extends IronSubsystem {
   public void periodic() {
     setMotorLevel();
 
-    publish("Homed", isHomed());
     publish("Rotation", getCurrentAngle().in(Units.Degrees));
     publish("Output", motor.get());
     publish("Goal", goalSetpoint.position);
@@ -140,15 +138,6 @@ public abstract class WristSubsystem extends IronSubsystem {
 
   public void setGoal(Angle angle) {
     var degrees = angle.in(Units.Degrees);
-
-    if (!isHomed()) {
-      DriverStation.reportError(
-        "Blocking unhomed movement attempted for " +
-        this.getClass().getSimpleName(),
-        false
-      );
-      return;
-    }
 
     goalSetpoint = new TrapezoidProfile.State(degrees, 0);
 

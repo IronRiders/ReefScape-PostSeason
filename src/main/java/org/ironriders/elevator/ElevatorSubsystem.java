@@ -19,7 +19,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import org.ironriders.elevator.ElevatorConstants.Level;
 import org.ironriders.lib.IronSubsystem;
 
 /**
@@ -55,7 +54,7 @@ public class ElevatorSubsystem extends IronSubsystem {
   private TrapezoidProfile.State periodicSetpoint =
     new TrapezoidProfile.State();
 
-  private Level currentTarget = Level.Down;
+  private ElevatorConstants.Level currentTarget = ElevatorConstants.Level.Down;
   private boolean isHomed = false;
 
   public ElevatorSubsystem() {
@@ -107,9 +106,9 @@ public class ElevatorSubsystem extends IronSubsystem {
     );
 
     feedforward = new ElevatorFeedforward(
-      ElevatorConstants.K_S,
-      ElevatorConstants.K_G,
-      ElevatorConstants.K_V
+      ElevatorConstants.S,
+      ElevatorConstants.G,
+      ElevatorConstants.V
     );
     pidController.setTolerance(ELEVATOR_POSITION_TOLERANCE);
     commands = new ElevatorCommands(this);
@@ -139,10 +138,10 @@ public class ElevatorSubsystem extends IronSubsystem {
     }
 
     // update SmartDashboard
-    updateTelemetry();
+    UpdateDash();
   }
 
-  private void updateTelemetry() {
+  private void UpdateDash() {
     publish("Homed", isHomed);
     publish("Goal State", currentTarget.toString());
     publish("Goal Position", goalSetpoint.position);
@@ -160,7 +159,7 @@ public class ElevatorSubsystem extends IronSubsystem {
     publish("Follower Encoder", followerMotor.getEncoder().getPosition());
   }
 
-  public void setGoal(Level goal) {
+  public void setGoal(ElevatorConstants.Level goal) {
     this.goalSetpoint = new TrapezoidProfile.State(goal.positionInches, 0d);
   }
 

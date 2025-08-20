@@ -1,9 +1,7 @@
 package org.ironriders.core;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import java.util.function.DoubleSupplier;
+
 import org.ironriders.climb.ClimbCommands;
 import org.ironriders.drive.DriveCommands;
 import org.ironriders.elevator.ElevatorCommands;
@@ -11,9 +9,12 @@ import org.ironriders.elevator.ElevatorConstants;
 import org.ironriders.intake.CoralIntakeCommands;
 import org.ironriders.intake.CoralIntakeConstants;
 import org.ironriders.targeting.TargetingCommands;
-import org.ironriders.wrist.CoralAbsoluteWristSubsystem;
 import org.ironriders.wrist.CoralWristCommands;
 import org.ironriders.wrist.CoralWristConstants;
+
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 /**
  * These commands require more complex logic and are not directly tied to a
@@ -23,7 +24,6 @@ import org.ironriders.wrist.CoralWristConstants;
  *
  * These commands are those which the driver controls call.
  */
-@SuppressWarnings("unused")
 public class RobotCommands {
 
   private final DriveCommands driveCommands;
@@ -104,16 +104,9 @@ public class RobotCommands {
     );
   }
 
-  public Command toggleClimber() {
-    return Commands.none();
-    // return climbCommands.goTo(Targets.TARGET);
-  }
-
   public Command moveElevatorAndWrist(ElevatorConstants.Level level) {
     return Commands.sequence(
       elevatorCommands.set(level),
-      // Commands.parallel(
-      // algaeWristCommands.set(AlgaeWristState.STOWED),
       coralWristCommands.set(
         switch (level) {
           case L1, L2, L3 -> CoralWristConstants.WristState.L2toL3;

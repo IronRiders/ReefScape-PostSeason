@@ -8,6 +8,14 @@ public class ClimbConstants {
   public static double ROTATION_MAXUP = -150;
   public static double ROTATION_MAXDOWN = 40;
 
+  public static double ROTATION_MAXSPEED = 60;
+  public static double ROTATION_MAXACCEL = 60;
+
+  public static double P = 1.0;
+  public static double I = 0;
+  public static double D = 0;
+  public static double T = 0.02;
+
   public enum Targets {
     HOME(0),
     EXTENDED(-123.5), //max position up ward

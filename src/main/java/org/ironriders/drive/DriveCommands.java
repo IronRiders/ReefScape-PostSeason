@@ -150,9 +150,9 @@ public class DriveCommands {
     });
   }
 
-  public Command setDriveTrainSpeed(boolean slow) {
+  public Command setDriveTrainSpeed(double speed) {
     return driveSubsystem.runOnce(() -> {
-      driveSubsystem.setSpeed(slow);
+      driveSubsystem.setSpeed(speed);
     });
   }
 }

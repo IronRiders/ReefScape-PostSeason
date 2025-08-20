@@ -120,11 +120,6 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
   }
 
   @Override
-  protected boolean isHomed() {
-    return true;
-  }
-
-  @Override
   protected Angle getCurrentAngle() {
     var angle = Units.Rotations.of(encoder.getPosition());
     publish(
@@ -145,5 +140,10 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
   @Override
   public Command homeCmd(boolean force) {
     return this.runOnce(this::reset);
+  }
+
+  @Override
+  boolean isHomed() {
+    return true;
   }
 }

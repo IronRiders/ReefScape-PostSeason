@@ -6,9 +6,6 @@ import static org.ironriders.elevator.ElevatorConstants.FOLLOW_MOTOR_ID;
 import static org.ironriders.elevator.ElevatorConstants.INCHES_PER_ROTATION;
 import static org.ironriders.elevator.ElevatorConstants.PRIMARY_MOTOR_ID;
 
-import org.ironriders.elevator.ElevatorConstants.Level;
-import org.ironriders.lib.IronSubsystem;
-
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -19,10 +16,11 @@ import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import org.ironriders.elevator.ElevatorConstants.Level;
+import org.ironriders.lib.IronSubsystem;
 
 /**
  * This subsystem controls the big ol' elevator that moves the algae and coral
@@ -30,135 +28,174 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
  */
 public class ElevatorSubsystem extends IronSubsystem {
 
-    private final ElevatorCommands commands;
+  private final ElevatorCommands commands;
 
-    private final SparkMax primaryMotor = new SparkMax(PRIMARY_MOTOR_ID, MotorType.kBrushless); // lead motor
-    private final SparkMax followerMotor = new SparkMax(FOLLOW_MOTOR_ID, MotorType.kBrushless);
+  private final SparkMax primaryMotor = new SparkMax(
+    PRIMARY_MOTOR_ID,
+    MotorType.kBrushless
+  ); // lead motor
+  private final SparkMax followerMotor = new SparkMax(
+    FOLLOW_MOTOR_ID,
+    MotorType.kBrushless
+  );
 
-    private final SparkLimitSwitch bottomLimitSwitch = primaryMotor.getReverseLimitSwitch();
+  private final SparkLimitSwitch bottomLimitSwitch =
+    primaryMotor.getReverseLimitSwitch();
 
-    private final RelativeEncoder encoder = primaryMotor.getEncoder();
+  private final RelativeEncoder encoder = primaryMotor.getEncoder();
 
-    // profile is used to calculate our periodic outputs
-    private final TrapezoidProfile profile;
-    private final ElevatorFeedforward feedforward;
-    private final PIDController pidController;
+  // profile is used to calculate our periodic outputs
+  private final TrapezoidProfile profile;
+  private final ElevatorFeedforward feedforward;
+  private final PIDController pidController;
 
-    // goalSetpoint is the final goal. periodicSetpoint is a sort-of inbetween
-    // setpoint generated every periodic.
-    private TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State();
-    private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State();
+  // goalSetpoint is the final goal. periodicSetpoint is a sort-of inbetween
+  // setpoint generated every periodic.
+  private TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State();
+  private TrapezoidProfile.State periodicSetpoint =
+    new TrapezoidProfile.State();
 
-    private Level currentTarget = Level.Down;
-    private boolean isHomed = false;
+  private Level currentTarget = Level.Down;
+  private boolean isHomed = false;
 
-    public ElevatorSubsystem() {
+  public ElevatorSubsystem() {
+    // lots of config!!
+    SparkMaxConfig primaryConfig = new SparkMaxConfig();
+    SparkMaxConfig followerConfig = new SparkMaxConfig();
 
-        // lots of config!!
-        SparkMaxConfig primaryConfig = new SparkMaxConfig();
-        SparkMaxConfig followerConfig = new SparkMaxConfig();
+    LimitSwitchConfig forwardLimitSwitchConfig = new LimitSwitchConfig()
+      .forwardLimitSwitchEnabled(true)
+      .forwardLimitSwitchType(Type.kNormallyClosed);
+    LimitSwitchConfig reverseLimitSwitchConfig = new LimitSwitchConfig()
+      .reverseLimitSwitchEnabled(true)
+      .reverseLimitSwitchType(Type.kNormallyClosed);
 
-        LimitSwitchConfig forwardLimitSwitchConfig = new LimitSwitchConfig()
-                .forwardLimitSwitchEnabled(true)
-                .forwardLimitSwitchType(Type.kNormallyClosed);
-        LimitSwitchConfig reverseLimitSwitchConfig = new LimitSwitchConfig()
-                .reverseLimitSwitchEnabled(true)
-                .reverseLimitSwitchType(Type.kNormallyClosed);
+    primaryConfig
+      .idleMode(IdleMode.kBrake)
+      .smartCurrentLimit(ELEVATOR_MOTOR_STALL_LIMIT)
+      .inverted(true)
+      .apply(forwardLimitSwitchConfig)
+      .apply(reverseLimitSwitchConfig);
 
-        primaryConfig
-                .idleMode(IdleMode.kBrake)
-                .smartCurrentLimit(ELEVATOR_MOTOR_STALL_LIMIT)
-                .inverted(true)
-                .apply(forwardLimitSwitchConfig)
-                .apply(reverseLimitSwitchConfig);
+    followerConfig
+      .idleMode(IdleMode.kBrake)
+      .smartCurrentLimit(ELEVATOR_MOTOR_STALL_LIMIT)
+      .follow(ElevatorConstants.PRIMARY_MOTOR_ID, true);
 
-        followerConfig
-                .idleMode(IdleMode.kBrake)
-                .smartCurrentLimit(ELEVATOR_MOTOR_STALL_LIMIT)
-                .follow(ElevatorConstants.PRIMARY_MOTOR_ID, true);
+    primaryMotor.configure(
+      primaryConfig,
+      ResetMode.kResetSafeParameters,
+      PersistMode.kPersistParameters
+    );
+    followerMotor.configure(
+      followerConfig,
+      ResetMode.kResetSafeParameters,
+      PersistMode.kPersistParameters
+    );
 
-        primaryMotor.configure(primaryConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        followerMotor.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    profile = new TrapezoidProfile(
+      new TrapezoidProfile.Constraints(
+        ElevatorConstants.MAX_VEL,
+        ElevatorConstants.MAX_ACC
+      )
+    );
 
-        profile = new TrapezoidProfile(
-                new TrapezoidProfile.Constraints(ElevatorConstants.MAX_VEL, ElevatorConstants.MAX_ACC));
+    pidController = new PIDController(
+      ElevatorConstants.P,
+      ElevatorConstants.I,
+      ElevatorConstants.D
+    );
 
-        pidController = new PIDController(
-                ElevatorConstants.P,
-                ElevatorConstants.I,
-                ElevatorConstants.D);
+    feedforward = new ElevatorFeedforward(
+      ElevatorConstants.K_S,
+      ElevatorConstants.K_G,
+      ElevatorConstants.K_V
+    );
+    pidController.setTolerance(ELEVATOR_POSITION_TOLERANCE);
+    commands = new ElevatorCommands(this);
+  }
 
-        feedforward = new ElevatorFeedforward(ElevatorConstants.K_S, ElevatorConstants.K_G, ElevatorConstants.K_V);
-        pidController.setTolerance(ELEVATOR_POSITION_TOLERANCE);
-        commands = new ElevatorCommands(this);
+  @Override
+  public void periodic() {
+    // Calculate the next state and update the current state
+    periodicSetpoint = profile.calculate(
+      ElevatorConstants.T,
+      periodicSetpoint,
+      goalSetpoint
+    );
+
+    // Only run if homed
+    if (isHomed) {
+      double pidOutput = pidController.calculate(
+        getHeightInches(),
+        periodicSetpoint.position
+      );
+      double ff = feedforward.calculate(
+        periodicSetpoint.position,
+        periodicSetpoint.velocity
+      );
+
+      primaryMotor.set(pidOutput + ff);
     }
 
-    @Override
-    public void periodic() {
-        // Calculate the next state and update the current state
-        periodicSetpoint = profile.calculate(ElevatorConstants.T, periodicSetpoint, goalSetpoint);
+    // update SmartDashboard
+    updateTelemetry();
+  }
 
-        // Only run if homed
-        if (isHomed) {
-            double pidOutput = pidController.calculate(getHeightInches(), periodicSetpoint.position);
-            double ff = feedforward.calculate(periodicSetpoint.position, periodicSetpoint.velocity);
+  private void updateTelemetry() {
+    publish("Homed", isHomed);
+    publish("Goal State", currentTarget.toString());
+    publish("Goal Position", goalSetpoint.position);
 
-            primaryMotor.set(pidOutput + ff);
-        }
+    publish(
+      "Forward Limit Switch",
+      primaryMotor.getForwardLimitSwitch().isPressed()
+    );
+    publish(
+      "Reverse Limit Switch",
+      primaryMotor.getReverseLimitSwitch().isPressed()
+    );
 
-        // update SmartDashboard
-        updateTelemetry();
-    }
+    publish("Primary Encoder", primaryMotor.getEncoder().getPosition());
+    publish("Follower Encoder", followerMotor.getEncoder().getPosition());
+  }
 
-    private void updateTelemetry() {
+  public void setGoal(Level goal) {
+    this.goalSetpoint = new TrapezoidProfile.State(goal.positionInches, 0d);
+  }
 
-        publish("Homed", isHomed);
-        publish("Goal State", currentTarget.toString());
-        publish("Goal Position", goalSetpoint.position);
+  public void setMotor(double set) {
+    primaryMotor.set(set);
+    pidController.setSetpoint(set);
+  }
 
-        publish("Forward Limit Switch", primaryMotor.getForwardLimitSwitch().isPressed());
-        publish("Reverse Limit Switch", primaryMotor.getReverseLimitSwitch().isPressed());
+  public void reset() {
+    primaryMotor.set(0);
+    pidController.reset();
+  }
 
-        publish("Primary Encoder", primaryMotor.getEncoder().getPosition());
-        publish("Follower Encoder", followerMotor.getEncoder().getPosition());
-    }
+  public SparkLimitSwitch getBottomLimitSwitch() {
+    return bottomLimitSwitch;
+  }
 
-    public void setGoal(Level goal) {
-        this.goalSetpoint = new TrapezoidProfile.State(goal.positionInches, 0d);
-    }
+  public void reportHomed() {
+    isHomed = true;
+    encoder.setPosition(0); // reset
+  }
 
-    public void setMotor(double set) {
-        primaryMotor.set(set);
-        pidController.setSetpoint(set);
-    }
+  public boolean isHomed() {
+    return isHomed;
+  }
 
-    public void reset() {
-        primaryMotor.set(0);
-        pidController.reset();
-    }
+  public double getHeightInches() {
+    return encoder.getPosition() * INCHES_PER_ROTATION;
+  }
 
-    public SparkLimitSwitch getBottomLimitSwitch() {
-        return bottomLimitSwitch;
-    }
+  public boolean isAtPosition(ElevatorConstants.Level level) {
+    return pidController.atSetpoint();
+  }
 
-    public void reportHomed() {
-        isHomed = true;
-        encoder.setPosition(0); // reset
-    }
-
-    public boolean isHomed() {
-        return isHomed;
-    }
-
-    public double getHeightInches() {
-        return encoder.getPosition() * INCHES_PER_ROTATION;
-    }
-
-    public boolean isAtPosition(ElevatorConstants.Level level) {
-        return pidController.atSetpoint();
-    }
-
-    public ElevatorCommands getCommands() {
-        return commands;
-    }
+  public ElevatorCommands getCommands() {
+    return commands;
+  }
 }

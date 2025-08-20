@@ -19,30 +19,31 @@ import org.ironriders.lib.data.PID;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
-public class CoralAbsoluteWristSubsystem extends AbsoluteWristSubsystem{
-    private final CoralWristCommands commands;
+public class CoralAbsoluteWristSubsystem extends AbsoluteWristSubsystem {
 
-    public CoralAbsoluteWristSubsystem() {
-        super(
-                WRIST_MOTOR,
-                GEAR_RATIO,
-                SPROCKET_RATIO,
-                ENCODER_OFFSET,
-                REVERSE_LIMIT,
-                FORWARD_LIMIT,
-                false,
-                new PID(P, I, D),
-                new TrapezoidProfile.Constraints(MAX_VEL, MAX_ACC),
-                WRIST_CURRENT_STALL_LIMIT,
-                false,
-                SECONDARYWRISTMOTOR);
+  private final CoralWristCommands commands;
 
-        pid.setTolerance(WRIST_TOLERANCE);
+  public CoralAbsoluteWristSubsystem() {
+    super(
+      WRIST_MOTOR,
+      GEAR_RATIO,
+      SPROCKET_RATIO,
+      ENCODER_OFFSET,
+      REVERSE_LIMIT,
+      FORWARD_LIMIT,
+      false,
+      new PID(P, I, D),
+      new TrapezoidProfile.Constraints(MAX_VEL, MAX_ACC),
+      WRIST_CURRENT_STALL_LIMIT,
+      false,
+      SECONDARYWRISTMOTOR
+    );
+    pid.setTolerance(WRIST_TOLERANCE);
 
-        commands = new CoralWristCommands(this);
-    }
+    commands = new CoralWristCommands(this);
+  }
 
-    public CoralWristCommands getCommands() {
-        return commands;
-    }
+  public CoralWristCommands getCommands() {
+    return commands;
+  }
 }

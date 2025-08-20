@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ironriders.lib.IronSubsystem;
-import org.ironriders.lib.data.PID;
 import org.ironriders.lib.data.MotorSetup;
+import org.ironriders.lib.data.PID;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -19,155 +19,175 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 /**
  * Functionality common to all wrists.
- * 
+ *
  * We interpret wrist angles in degrees forward relative to the floor; down is
  * -90 and up is 90. Angle must increase as the motor moves forward.
  */
 public abstract class WristSubsystem extends IronSubsystem {
 
-    private final double PERIOD = .02;
+  private final double PERIOD = .02;
 
-    protected final SparkMax motor;
-    protected List<SparkMax>additionalMotors = new ArrayList<>();
-    protected final PIDController pid;
-    protected final double gearRatio;
+  protected final SparkMax motor;
+  protected List<SparkMax> additionalMotors = new ArrayList<>();
+  protected final PIDController pid;
+  protected final double gearRatio;
 
-    protected final SparkMaxConfig motorConfig = new SparkMaxConfig();
-    protected List<SparkMaxConfig> additionalMotorConfigs = new ArrayList<>();
+  protected final SparkMaxConfig motorConfig = new SparkMaxConfig();
+  protected List<SparkMaxConfig> additionalMotorConfigs = new ArrayList<>();
 
-    protected TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State(); //Acts as a final setpoint
-    private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State(); //Acts as a temporary setpoint for calculating the next speed value
-    private final TrapezoidProfile movementProfile;
+  protected TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State(); //Acts as a final setpoint
+  private TrapezoidProfile.State periodicSetpoint =
+    new TrapezoidProfile.State(); //Acts as a temporary setpoint for calculating the next speed value
+  private final TrapezoidProfile movementProfile;
 
+  abstract boolean isHomed();
 
-    abstract boolean isHomed();
+  protected abstract boolean isAtForwardLimit();
 
-    protected abstract boolean isAtForwardLimit();
+  protected abstract boolean isAtReverseLimit();
 
-    protected abstract boolean isAtReverseLimit();
+  protected abstract Angle getCurrentAngle();
 
-    protected abstract Angle getCurrentAngle();
+  public abstract Command homeCmd(boolean force);
 
-    public abstract Command homeCmd(boolean force);
+  protected WristSubsystem(
+    int primaryMotorId,
+    double gearRatio,
+    PID pid,
+    TrapezoidProfile.Constraints constraints,
+    int stallLimit,
+    boolean PrimaryInversion,
+    MotorSetup... additionalMotorsSetups
+  ) {
+    motor = new SparkMax(primaryMotorId, MotorType.kBrushless);
+    this.gearRatio = gearRatio;
+    this.pid = new PIDController(pid.p, pid.i, pid.d);
+    movementProfile = new TrapezoidProfile(constraints);
 
-    protected WristSubsystem(
-            int primaryMotorId,
-            double gearRatio,
-            PID pid,
-            TrapezoidProfile.Constraints constraints,
-            int stallLimit,
-            boolean PrimaryInversion,
-            MotorSetup ... additionalMotorsSetups
-            ) {
-        motor = new SparkMax(primaryMotorId, MotorType.kBrushless);
-        this.gearRatio = gearRatio;
-        this.pid = new PIDController(pid.p, pid.i, pid.d);
-        movementProfile = new TrapezoidProfile(constraints);
-        
-        // Additional Motors 
-        for(MotorSetup setup : additionalMotorsSetups){
-            SparkMax additionalMotor = new SparkMax(setup.getId(), MotorType.kBrushless);
-            additionalMotors.add(additionalMotor);
-            SparkMaxConfig additonalMotorConfig = new SparkMaxConfig();
-            additonalMotorConfig
-                .smartCurrentLimit(stallLimit)
-                .idleMode(IdleMode.kBrake)
-                .follow(primaryMotorId,setup.getInversionStatus());
-            additionalMotorConfigs.add(additonalMotorConfig);
-        }
-
-        
-        motorConfig
-                .smartCurrentLimit(stallLimit)
-                .idleMode(IdleMode.kBrake)
-                .inverted(PrimaryInversion);
-        
-        
-        configureMotor();
+    // Additional Motors
+    for (MotorSetup setup : additionalMotorsSetups) {
+      SparkMax additionalMotor = new SparkMax(
+        setup.getId(),
+        MotorType.kBrushless
+      );
+      additionalMotors.add(additionalMotor);
+      SparkMaxConfig additonalMotorConfig = new SparkMaxConfig();
+      additonalMotorConfig
+        .smartCurrentLimit(stallLimit)
+        .idleMode(IdleMode.kBrake)
+        .follow(primaryMotorId, setup.getInversionStatus());
+      additionalMotorConfigs.add(additonalMotorConfig);
     }
 
+    motorConfig
+      .smartCurrentLimit(stallLimit)
+      .idleMode(IdleMode.kBrake)
+      .inverted(PrimaryInversion);
 
-    protected void configureMotor() {
-        motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        for(int i = 0; i<additionalMotors.size(); i++){
-            additionalMotors.get(i).configure(additionalMotorConfigs.get(i), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        }
+    configureMotor();
+  }
+
+  protected void configureMotor() {
+    motor.configure(
+      motorConfig,
+      ResetMode.kResetSafeParameters,
+      PersistMode.kPersistParameters
+    );
+    for (int i = 0; i < additionalMotors.size(); i++) {
+      additionalMotors
+        .get(i)
+        .configure(
+          additionalMotorConfigs.get(i),
+          ResetMode.kResetSafeParameters,
+          PersistMode.kPersistParameters
+        );
+    }
+  }
+
+  @Override
+  public void periodic() {
+    setMotorLevel();
+
+    publish("Homed", isHomed());
+    publish("Rotation", getCurrentAngle().in(Units.Degrees));
+    publish("Output", motor.get());
+    publish("Goal", goalSetpoint.position);
+    publish("Current", motor.getOutputCurrent());
+    publish("ForwardLimit", isAtForwardLimit());
+    publish("ReverseLimit", isAtReverseLimit());
+  }
+
+  /**
+   * Update the periodic setpoint and set the motor level.
+   */
+  protected void setMotorLevel() {
+    var currentDegrees = getCurrentAngle().in(Units.Degrees);
+
+    // Apply profile and PID to determine output level
+    periodicSetpoint = movementProfile.calculate(
+      PERIOD,
+      periodicSetpoint,
+      goalSetpoint
+    );
+    var speed = pid.calculate(currentDegrees, periodicSetpoint.position);
+    motor.set(speed);
+  }
+
+  public void setGoal(Angle angle) {
+    var degrees = angle.in(Units.Degrees);
+
+    if (!isHomed()) {
+      DriverStation.reportError(
+        "Blocking unhomed movement attempted for " +
+        this.getClass().getSimpleName(),
+        false
+      );
+      return;
     }
 
-    @Override
-    public void periodic() {
-        setMotorLevel();
+    goalSetpoint = new TrapezoidProfile.State(degrees, 0);
 
-        publish("Homed", isHomed());
-        publish("Rotation", getCurrentAngle().in(Units.Degrees));
-        publish("Output", motor.get());
-        publish("Goal", goalSetpoint.position);
-        publish("Current", motor.getOutputCurrent());
-        publish("ForwardLimit", isAtForwardLimit());
-        publish("ReverseLimit", isAtReverseLimit());
+    var currentAngle = getCurrentAngle();
+    if (currentAngle.equals(angle)) {
+      return;
     }
+  }
 
-    /**
-     * Update the periodic setpoint and set the motor level.
-     */
-    protected void setMotorLevel() {
-        var currentDegrees = getCurrentAngle().in(Units.Degrees);
+  public void reset() {
+    var currentAngle = getCurrentAngle();
 
-        // Apply profile and PID to determine output level
-        periodicSetpoint = movementProfile.calculate(PERIOD, periodicSetpoint, goalSetpoint);
-        var speed = pid.calculate(currentDegrees, periodicSetpoint.position);
-        motor.set(speed);
-    }
+    goalSetpoint = createSetpoint(currentAngle);
+    periodicSetpoint = createSetpoint(currentAngle);
 
-    public void setGoal(Angle angle) {
-        var degrees = angle.in(Units.Degrees);
+    pid.reset();
+  }
 
-        if (!isHomed()) {
-            DriverStation.reportError("Blocking unhomed movement attempted for " + this.getClass().getSimpleName(),
-                    false);
-            return;
-        }
+  private TrapezoidProfile.State createSetpoint(Angle angle) {
+    return createSetpoint(angle, 0);
+  }
 
-        goalSetpoint = new TrapezoidProfile.State(degrees, 0);
+  private TrapezoidProfile.State createSetpoint(Angle angle, double velocity) {
+    return new TrapezoidProfile.State(angle.in(Units.Degrees), velocity);
+  }
 
-        var currentAngle = getCurrentAngle();
-        if (currentAngle.equals(angle)) {
-            return;
-        }
-    }
+  public boolean atPosition() {
+    return (
+      Math.abs(getCurrentAngle().in(Units.Degrees) - goalSetpoint.position) < 2
+    );
+  }
 
-    public void reset() {
-        var currentAngle = getCurrentAngle();
+  public Command moveToCmd(Angle angle) {
+    return this.runOnce(() -> this.setGoal(angle)).andThen(
+        Commands.waitUntil(this::atPosition)
+      );
+  }
 
-        goalSetpoint = createSetpoint(currentAngle);
-        periodicSetpoint = createSetpoint(currentAngle);
-
-        pid.reset();
-    }
-
-    private TrapezoidProfile.State createSetpoint(Angle angle) {
-        return createSetpoint(angle, 0);
-    }
-
-    private TrapezoidProfile.State createSetpoint(Angle angle, double velocity) {
-        return new TrapezoidProfile.State(angle.in(Units.Degrees), velocity);
-    }
-
-    public boolean atPosition() {
-        return Math.abs(getCurrentAngle().in(Units.Degrees) - goalSetpoint.position) < 2;
-    }
-
-    public Command moveToCmd(Angle angle) {
-        return this.runOnce(() -> this.setGoal(angle)).andThen(Commands.waitUntil(this::atPosition));
-    }
-
-    public Command homeCmd() {
-        return homeCmd(false);
-    }
+  public Command homeCmd() {
+    return homeCmd(false);
+  }
 }

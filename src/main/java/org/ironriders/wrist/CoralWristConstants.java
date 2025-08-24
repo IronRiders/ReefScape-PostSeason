@@ -9,11 +9,11 @@ public class CoralWristConstants {
 
 	public static final MotorSetup PRIMARY_WRIST_MOTOR = new MotorSetup(
 			12,
-			false); // TODOs
+			false);
 
 	public static final MotorSetup SECONDARY_WRIST_MOTOR = new MotorSetup(
 			13,
-			false); // TODO
+			true);
 
 	// Need to tune
 	public static final double P = 0.01; // TODO

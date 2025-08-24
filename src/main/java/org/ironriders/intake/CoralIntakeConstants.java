@@ -30,7 +30,6 @@ public class CoralIntakeConstants {
     public static final int CORAL_INTAKE_SUPPLY_CURRENT_LOWER_TIME = 1; // In Second. This determines how long Supply Current is applied and then limit is lowered to SupplyCurrentLowerLimit
 
     public static final int CORAL_INTAKE_BEAMBREAK = 1; //TODO plugged into digital input on rio
-  public static final int CORAL_INTAKE_BEAMBREAK = -1; //TODO plugged into di on rio
 
   public static final double DISCHARGE_TIMEOUT = 7.5; // these are both in SECONDS
   public static final double INTAKE_IMPATIENCE = 0.0; // how much time to wait for the limit switch before stopping the motor anyway

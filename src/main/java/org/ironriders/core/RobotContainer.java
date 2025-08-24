@@ -186,7 +186,7 @@ public class RobotContainer {
     secondaryController
       .button(9)
       .onTrue(
-        robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.CoralStation)
+        robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.Intaking)
       );
     secondaryController
       .button(10)

@@ -11,7 +11,6 @@ import static org.ironriders.intake.CoralIntakeConstants.CORAL_INTAKE_STATOR_CUR
 import static org.ironriders.intake.CoralIntakeConstants.CORAL_INTAKE_SUPPLY_CURRENT;
 import static org.ironriders.intake.CoralIntakeConstants.CORAL_INTAKE_SUPPLY_CURRENT_LOWER_LIMIT;
 import static org.ironriders.intake.CoralIntakeConstants.CORAL_INTAKE_SUPPLY_CURRENT_LOWER_TIME;
-import static org.ironriders.intake.CoralIntakeConstants.CORAL_INTAK_NEUTRAL_MODE;
 import static org.ironriders.intake.CoralIntakeConstants.CORAL_INTAKE_NEUTRAL_MODE;
 import static org.ironriders.intake.CoralIntakeConstants.LEFT_SPEED_MUL;
 import static org.ironriders.intake.CoralIntakeConstants.RIGHT_SPEED_MUL;

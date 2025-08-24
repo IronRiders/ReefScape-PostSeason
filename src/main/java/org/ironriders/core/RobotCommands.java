@@ -111,7 +111,7 @@ public class RobotCommands {
         switch (level) {
           case L1, L2, L3 -> CoralWristConstants.WristState.L2toL3;
           case L4 -> CoralWristConstants.WristState.L4;
-          case CoralStation -> CoralWristConstants.WristState.Intaking;
+          case Intaking -> CoralWristConstants.WristState.Intaking;
           case Down -> CoralWristConstants.WristState.STOWED;
           case HighAlgae -> CoralWristConstants.WristState.STOWED;
           default -> {
@@ -137,7 +137,7 @@ public class RobotCommands {
   public Command prepareToGrabCoral() {
     return Commands.parallel(
       coralWristCommands.set(CoralWristConstants.WristState.Intaking),
-      elevatorCommands.set(ElevatorConstants.Level.CoralStation)
+      elevatorCommands.set(ElevatorConstants.Level.Intaking)
     );
   }
 

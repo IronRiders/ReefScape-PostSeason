@@ -7,12 +7,15 @@ import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.io.IOException;
 import java.util.Optional;
 import org.ironriders.lib.GameState;
 import org.ironriders.lib.IronSubsystem;
+import org.ironriders.lib.RobotUtils;
+
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
@@ -38,7 +41,7 @@ public class DriveSubsystem extends IronSubsystem {
   public DriveSubsystem() throws RuntimeException {
     try {
       swerveDrive = new SwerveParser(SWERVE_JSON_DIRECTORY) // YAGSL reads from the deply/swerve directory
-      .createSwerveDrive(SWERVE_DRIVE_MAX_SPEED);
+          .createSwerveDrive(SWERVE_DRIVE_MAX_SPEED);
     } catch (IOException e) { // instancing SwerveDrive can throw an error, so we need to catch that.
       throw new RuntimeException("Error configuring swerve drive", e);
     }
@@ -57,21 +60,23 @@ public class DriveSubsystem extends IronSubsystem {
     }
 
     AutoBuilder.configure(
-      swerveDrive::getPose,
-      swerveDrive::resetOdometry,
-      swerveDrive::getRobotVelocity,
-      (speeds, feedforwards) -> swerveDrive.setChassisSpeeds(speeds),
-      DriveConstants.HOLONOMIC_CONFIG,
-      robotConfig,
-      () -> {
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
-          return alliance.get() == DriverStation.Alliance.Red;
-        }
-        return false;
-      },
-      this
-    );
+        swerveDrive::getPose,
+        swerveDrive::resetOdometry,
+        swerveDrive::getRobotVelocity,
+        (speeds, feedforwards) -> swerveDrive
+            .setChassisSpeeds(new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond,
+                RobotUtils.clamp(-SWERVE_MAXIMUM_ANGULAR_VELOCITY, SWERVE_MAXIMUM_ANGULAR_VELOCITY,
+                    speeds.omegaRadiansPerSecond))),
+        DriveConstants.HOLONOMIC_CONFIG,
+        robotConfig,
+        () -> {
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+        },
+        this);
 
     GameState.setField(swerveDrive.field);
     GameState.setRobotPose(() -> Optional.of(swerveDrive.getPose()));
@@ -97,10 +102,9 @@ public class DriveSubsystem extends IronSubsystem {
    *                      its own rotation.
    */
   public void drive(
-    Translation2d translation,
-    double rotation,
-    boolean fieldRelative
-  ) {
+      Translation2d translation,
+      double rotation,
+      boolean fieldRelative) {
     swerveDrive.drive(translation, rotation, fieldRelative, false);
   }
 
@@ -125,8 +129,7 @@ public class DriveSubsystem extends IronSubsystem {
   /** Resets the Odemetry to the current position */
   public void resetOdometry(Pose2d pose2d) {
     swerveDrive.resetOdometry(
-      new Pose2d(pose2d.getTranslation(), new Rotation2d(0))
-    );
+        new Pose2d(pose2d.getTranslation(), new Rotation2d(0)));
   }
 
   public void switchInvertControl() {
@@ -146,6 +149,6 @@ public class DriveSubsystem extends IronSubsystem {
   }
 
   public void setSpeed(double speed) {
-      controlSpeedMultipler = speed;
+    controlSpeedMultipler = speed;
   }
 }

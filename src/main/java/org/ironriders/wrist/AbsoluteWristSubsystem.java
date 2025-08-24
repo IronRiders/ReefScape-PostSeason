@@ -22,7 +22,7 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
   AbsoluteEncoder encoder;
 
   public AbsoluteWristSubsystem(
-    int primaryMotorId,
+    MotorSetup primaryMotor,
     double gearRatio,
     double encoderScale,
     Angle encoderOffset,
@@ -32,16 +32,14 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
     PID pid,
     TrapezoidProfile.Constraints constraints,
     int stallLimit,
-    boolean PrimaryInversion,
     MotorSetup... additionalMotorsSetups
   ) {
     super(
-      primaryMotorId,
+      primaryMotor,
       gearRatio,
       pid,
       constraints,
       stallLimit,
-      PrimaryInversion,
       additionalMotorsSetups
     );
     this.encoderScale = encoderScale;

@@ -39,9 +39,9 @@ public abstract class WristSubsystem extends IronSubsystem {
   protected final SparkMaxConfig motorConfig = new SparkMaxConfig();
   protected List<SparkMaxConfig> additionalMotorConfigs = new ArrayList<>();
 
-  protected TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State(); //Acts as a final setpoint
-  private TrapezoidProfile.State periodicSetpoint =
-    new TrapezoidProfile.State(); //Acts as a temporary setpoint for calculating the next speed value
+  protected TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State(); // Acts as a final setpoint
+  private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State(); // Acts as a temporary setpoint for
+                                                                                  // calculating the next speed value
   private final TrapezoidProfile movementProfile;
 
   abstract boolean isHomed();
@@ -55,15 +55,13 @@ public abstract class WristSubsystem extends IronSubsystem {
   public abstract Command homeCmd(boolean force);
 
   protected WristSubsystem(
-    int primaryMotorId,
-    double gearRatio,
-    PID pid,
-    TrapezoidProfile.Constraints constraints,
-    int stallLimit,
-    boolean PrimaryInversion,
-    MotorSetup... additionalMotorsSetups
-  ) {
-    motor = new SparkMax(primaryMotorId, MotorType.kBrushless);
+      MotorSetup primaryMotor,
+      double gearRatio,
+      PID pid,
+      TrapezoidProfile.Constraints constraints,
+      int stallLimit,
+      MotorSetup... additionalMotorsSetups) {
+    motor = new SparkMax(primaryMotor.motorId, MotorType.kBrushless);
     this.gearRatio = gearRatio;
     this.pid = new PIDController(pid.p, pid.i, pid.d);
     movementProfile = new TrapezoidProfile(constraints);
@@ -71,40 +69,37 @@ public abstract class WristSubsystem extends IronSubsystem {
     // Additional Motors
     for (MotorSetup setup : additionalMotorsSetups) {
       SparkMax additionalMotor = new SparkMax(
-        setup.getId(),
-        MotorType.kBrushless
-      );
+          setup.getId(),
+          MotorType.kBrushless);
       additionalMotors.add(additionalMotor);
       SparkMaxConfig additonalMotorConfig = new SparkMaxConfig();
       additonalMotorConfig
-        .smartCurrentLimit(stallLimit)
-        .idleMode(IdleMode.kBrake)
-        .follow(primaryMotorId, setup.getInversionStatus());
+          .smartCurrentLimit(stallLimit)
+          .idleMode(IdleMode.kBrake)
+          .follow(primaryMotor.motorId, setup.getInversionStatus());
       additionalMotorConfigs.add(additonalMotorConfig);
     }
 
     motorConfig
-      .smartCurrentLimit(stallLimit)
-      .idleMode(IdleMode.kBrake)
-      .inverted(PrimaryInversion);
+        .smartCurrentLimit(stallLimit)
+        .idleMode(IdleMode.kBrake)
+        .inverted(primaryMotor.InversionStatus);
 
     configureMotor();
   }
 
   protected void configureMotor() {
     motor.configure(
-      motorConfig,
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters
-    );
+        motorConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
     for (int i = 0; i < additionalMotors.size(); i++) {
       additionalMotors
-        .get(i)
-        .configure(
-          additionalMotorConfigs.get(i),
-          ResetMode.kResetSafeParameters,
-          PersistMode.kPersistParameters
-        );
+          .get(i)
+          .configure(
+              additionalMotorConfigs.get(i),
+              ResetMode.kResetSafeParameters,
+              PersistMode.kPersistParameters);
     }
   }
 
@@ -128,10 +123,9 @@ public abstract class WristSubsystem extends IronSubsystem {
 
     // Apply profile and PID to determine output level
     periodicSetpoint = movementProfile.calculate(
-      PERIOD,
-      periodicSetpoint,
-      goalSetpoint
-    );
+        PERIOD,
+        periodicSetpoint,
+        goalSetpoint);
     var speed = pid.calculate(currentDegrees, periodicSetpoint.position);
     motor.set(speed);
   }
@@ -165,15 +159,12 @@ public abstract class WristSubsystem extends IronSubsystem {
   }
 
   public boolean atPosition() {
-    return (
-      Math.abs(getCurrentAngle().in(Units.Degrees) - goalSetpoint.position) < 2
-    );
+    return (Math.abs(getCurrentAngle().in(Units.Degrees) - goalSetpoint.position) < 2);
   }
 
   public Command moveToCmd(Angle angle) {
     return this.runOnce(() -> this.setGoal(angle)).andThen(
-        Commands.waitUntil(this::atPosition)
-      );
+        Commands.waitUntil(this::atPosition));
   }
 
   public Command homeCmd() {

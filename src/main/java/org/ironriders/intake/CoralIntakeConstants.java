@@ -5,26 +5,28 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class CoralIntakeConstants {
 
-  // public static final int CORAL_INTAKE_MOTOR = 12;
-  public static final int CORAL_INTAKE_MOTOR_LEFT = -1; //TODO
-  public static final int CORAL_INTAKE_MOTOR_RIGHT = -1; //TODO
-  public static final int CORAL_INTAKE_MOTOR_TOP = -1; //TODO
+  public static final int CORAL_INTAKE_MOTOR_LEFT = 14;
+  public static final int CORAL_INTAKE_MOTOR_RIGHT = 15;
+  public static final int CORAL_INTAKE_MOTOR_TOP = 16;
 
   public static final InvertedValue CORAL_INTAKE_MOTOR_LEFT_INVERSION =
     InvertedValue.CounterClockwise_Positive; //TODO
   public static final InvertedValue CORAL_INTAKE_MOTOR_RIGHT_INVERSION =
     InvertedValue.CounterClockwise_Positive; //TODO
-  public static final InvertedValue CORAL_INTAKE_MOTOR_TOP_INVERSION =
+  public static final InvertedValue CORAL_INTAKE_MOTOR_ROLLER_INVERSION =
     InvertedValue.CounterClockwise_Positive; //TODO
 
-  public static final NeutralModeValue CORAL_INTAK_NEUTRAL_MODE =
+  public static final NeutralModeValue CORAL_INTAKE_NEUTRAL_MODE =
     NeutralModeValue.Brake; //TODO
+
+  public static final double LEFT_SPEED_MUL = 1;
+  public static final double RIGHT_SPEED_MUL = 1;
+  public static final double ROLLER_SPEED_MUL = 1;
 
   public static final int CORAL_INTAKE_BEAMBREAK = -1; //TODO plugged into di on rio
 
   public static final double DISCHARGE_TIMEOUT = 7.5; // these are both in SECONDS
-  public static final double INTAKE_IMPATIENCE = 0.0; // how much time to wait for the limit switch before stopping
-  // the motor anyway
+  public static final double INTAKE_IMPATIENCE = 0.0; // how much time to wait for the limit switch before stopping the motor anyway
 
   public static final double MAX_ACC = .1;
   public static final double MAX_VEL = .1;

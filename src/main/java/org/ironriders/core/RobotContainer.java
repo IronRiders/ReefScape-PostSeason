@@ -16,7 +16,6 @@ import org.ironriders.elevator.ElevatorSubsystem;
 import org.ironriders.intake.CoralIntakeCommands;
 import org.ironriders.intake.CoralIntakeConstants;
 import org.ironriders.intake.CoralIntakeSubsystem;
-import org.ironriders.lib.GameState;
 import org.ironriders.lib.RobotUtils;
 import org.ironriders.lib.field.FieldElement.ElementType;
 import org.ironriders.targeting.TargetingCommands;
@@ -44,113 +43,172 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  */
 public class RobotContainer {
 
-	// The robot's subsystems and commands are defined here...
-	public final DriveSubsystem driveSubsystem = new DriveSubsystem();
-	public final DriveCommands driveCommands = driveSubsystem.getCommands();
+  // The robot's subsystems and commands are defined here...
+  public final DriveSubsystem driveSubsystem = new DriveSubsystem();
+  public final DriveCommands driveCommands = driveSubsystem.getCommands();
 
-	public final TargetingSubsystem targetingSubsystem = new TargetingSubsystem();
-	public final TargetingCommands targetingCommands = targetingSubsystem.getCommands();
+  public final TargetingSubsystem targetingSubsystem = new TargetingSubsystem();
+  public final TargetingCommands targetingCommands =
+    targetingSubsystem.getCommands();
 
-	public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
-	public final ElevatorCommands elevatorCommands = elevatorSubsystem.getCommands();
+  public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  public final ElevatorCommands elevatorCommands =
+    elevatorSubsystem.getCommands();
 
-	public final CoralAbsoluteWristSubsystem coralWristSubsystem = new CoralAbsoluteWristSubsystem();
-	public final CoralWristCommands coralWristCommands = coralWristSubsystem.getCommands();
+  public final CoralAbsoluteWristSubsystem coralWristSubsystem =
+    new CoralAbsoluteWristSubsystem();
+  public final CoralWristCommands coralWristCommands =
+    coralWristSubsystem.getCommands();
 
-	public final CoralIntakeSubsystem coralIntakeSubsystem = new CoralIntakeSubsystem();
-	public final CoralIntakeCommands coralIntakeCommands = coralIntakeSubsystem.getCommands();
+  public final CoralIntakeSubsystem coralIntakeSubsystem =
+    new CoralIntakeSubsystem();
+  public final CoralIntakeCommands coralIntakeCommands =
+    coralIntakeSubsystem.getCommands();
 
-	public final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
-	public final ClimbCommands climbCommands = climbSubsystem.getCommands();
+  public final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
+  public final ClimbCommands climbCommands = climbSubsystem.getCommands();
 
-	private final SendableChooser<Command> autoChooser;
+  private final SendableChooser<Command> autoChooser;
 
-	private final CommandXboxController primaryController = new CommandXboxController(
-			DriveConstants.PRIMARY_CONTROLLER_PORT);
-	private final CommandGenericHID secondaryController = new CommandJoystick(DriveConstants.KEYPAD_CONTROLLER_PORT);
-	private double inversionCoeff = 1;
+  private final CommandXboxController primaryController =
+    new CommandXboxController(DriveConstants.PRIMARY_CONTROLLER_PORT);
+  private final CommandGenericHID secondaryController = new CommandJoystick(
+    DriveConstants.KEYPAD_CONTROLLER_PORT
+  );
 
-	public final RobotCommands robotCommands = new RobotCommands(
-			driveCommands, targetingCommands, elevatorCommands,
-			coralWristCommands, coralIntakeCommands,
-			climbCommands,
-			primaryController.getHID());
+  public final RobotCommands robotCommands = new RobotCommands(
+    driveCommands,
+    targetingCommands,
+    elevatorCommands,
+    coralWristCommands,
+    coralIntakeCommands,
+    climbCommands,
+    primaryController.getHID()
+  );
 
-	/**
-	 * The container for the robot. Contains subsystems, IO devices, and commands.
-	 */
-	public RobotContainer() {
-		// Configure the trigger bindings
-		configureBindings();
+  /**
+   * The container for the robot. Contains subsystems, IO devices, and commands.
+   */
+  public RobotContainer() {
+    // Configure the trigger bindings
+    configureBindings();
 
-		autoChooser = AutoBuilder.buildAutoChooser();
-		SmartDashboard.putData("Auto Select", autoChooser);
-	}
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Select", autoChooser);
+  }
 
-	private int getInvert() {
-		return GameState.getInvertControl() ? -1 : 1;
-	}
+  private void configureBindings() {
+    // DRIVE CONTROLS
+    driveSubsystem.setDefaultCommand(
+      robotCommands.driveTeleop(
+        () ->
+          RobotUtils.controlCurve(
+            -primaryController.getLeftY() *
+            driveSubsystem.controlSpeedMultipler *
+            driveSubsystem.getinversionStatus(),
+            DriveConstants.TRANSLATION_CONTROL_EXPONENT,
+            DriveConstants.TRANSLATION_CONTROL_DEADBAND
+          ),
+        () ->
+          RobotUtils.controlCurve(
+            -primaryController.getLeftX() *
+            driveSubsystem.controlSpeedMultipler *
+            driveSubsystem.getinversionStatus(),
+            DriveConstants.TRANSLATION_CONTROL_EXPONENT,
+            DriveConstants.TRANSLATION_CONTROL_DEADBAND
+          ),
+        () ->
+          RobotUtils.controlCurve(
+            -primaryController.getRightX() *
+            driveSubsystem.controlSpeedMultipler *
+            driveSubsystem.getinversionStatus(),
+            DriveConstants.ROTATION_CONTROL_EXPONENT,
+            DriveConstants.ROTATION_CONTROL_DEADBAND
+          )
+      )
+    );
 
-	private void configureBindings() {
+    // slows down drivetrain when pressed
+    primaryController
+      .leftTrigger()
+      .onTrue(driveCommands.setDriveTrainSpeed(0.5))
+      .onFalse(driveCommands.setDriveTrainSpeed(1));
 
-		// DRIVE CONTROLS
-		driveSubsystem.setDefaultCommand(
-				robotCommands.driveTeleop(
-						() -> RobotUtils.controlCurve(
-								-primaryController.getLeftY()* driveSubsystem.ControlSpeedMultipler *driveSubsystem.getinversionStatus(),
-								DriveConstants.TRANSLATION_CONTROL_EXPONENT,
-								DriveConstants.TRANSLATION_CONTROL_DEADBAND),
-						() -> RobotUtils.controlCurve(
-								-primaryController.getLeftX()* driveSubsystem.ControlSpeedMultipler *driveSubsystem.getinversionStatus(),
-								DriveConstants.TRANSLATION_CONTROL_EXPONENT,
-								DriveConstants.TRANSLATION_CONTROL_DEADBAND),
-						() -> RobotUtils.controlCurve(
-								-primaryController.getRightX()* driveSubsystem.ControlSpeedMultipler *driveSubsystem.getinversionStatus(),
-								DriveConstants.ROTATION_CONTROL_EXPONENT,
-								DriveConstants.ROTATION_CONTROL_DEADBAND)));
+    // jog commands on pov buttons
+    for (var angle = 0; angle < 360; angle += 45) {
+      primaryController.pov(angle).onTrue(driveCommands.jog(-angle));
+    }
+    // y vision align station not implmented yet //TODO
+    // x vision align reef not implmented yet //TODO
 
-		// slows down drivetrain when pressed
-		primaryController.leftTrigger().onTrue(driveCommands.setDriveTrainSpeed(true))
-				.onFalse(driveCommands.setDriveTrainSpeed(false));
+    primaryController
+      .y()
+      .onTrue(
+        targetingCommands
+          .targetNearest(ElementType.STATION)
+          .andThen(driveCommands.pathfindToTarget())
+      );
+    primaryController.x().onTrue(driveCommands.invertControls());
 
-		// jog commands on pov buttons
-		for (var angle = 0; angle < 360; angle += 45) {
-			primaryController.pov(angle).onTrue(driveCommands.jog(-angle));
-		}
-		// y vision align station not implmented yet //TODO
-		// x vision align reef not implmented yet //TODO
+    primaryController.button(5).onTrue(driveCommands.jog(90.0));
+    primaryController.button(6).onTrue(driveCommands.jog(270.0));
 
-		primaryController.y()
-				.onTrue(targetingCommands.targetNearest(ElementType.STATION).andThen(driveCommands.pathfindToTarget()));
-		primaryController.x()
-				.onTrue(driveCommands.invertControls());
+    // Secondary Driver left side buttons
+    secondaryController
+      .button(1)
+      .whileTrue(
+        coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.EJECT)
+      )
+      .whileFalse(
+        coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.STOP)
+      );
+    secondaryController
+      .button(2)
+      .whileTrue(
+        coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.GRAB)
+      )
+      .whileFalse(
+        coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.STOP)
+      );
 
-		primaryController.button(5).onTrue(driveCommands.jog(90.0));
-		primaryController.button(6).onTrue(driveCommands.jog(270.0));
+    secondaryController
+      .button(5)
+      .onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L1));
+    secondaryController
+      .button(6)
+      .onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L2));
+    secondaryController
+      .button(7)
+      .onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L3));
+    secondaryController
+      .button(8)
+      .onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L4));
+    secondaryController
+      .button(9)
+      .onTrue(
+        robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.CoralStation)
+      );
+    secondaryController
+      .button(10)
+      .onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.Down));
+    secondaryController
+      .pov(0)
+      .onTrue(
+        robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.HighAlgae)
+      );
 
-		// Secondary Driver left side buttons
-		secondaryController.button(1).whileTrue(coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.EJECT))
-				.whileFalse(coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.STOP));
-		secondaryController.button(2).whileTrue(coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.GRAB))
-				.whileFalse(coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.STOP));
+    secondaryController
+      .button(14)
+      .whileTrue(climbCommands.set(ClimbConstants.Targets.CLIMBED));
+    secondaryController
+      .button(15)
+      .whileTrue(climbCommands.set(ClimbConstants.Targets.EXTENDED));
+  }
 
-		secondaryController.button(5).onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L1));
-		secondaryController.button(6).onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L2));
-		secondaryController.button(7).onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L3));
-		secondaryController.button(8).onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L4));
-		secondaryController.button(9).onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.CoralStation));
-		secondaryController.button(10).onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.Down));
-		secondaryController.pov(0).onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.HighAlgae));
-
-		secondaryController.button(14).whileTrue(climbCommands.set(ClimbConstants.Targets.CLIMBED));
-		secondaryController.button(15).whileTrue(climbCommands.set(ClimbConstants.Targets.EXTENDED));
-
-	}
-
-	/**
-	 * @return the command to run in autonomous
-	 */
-	public Command getAutonomousCommand() {
-		return autoChooser.getSelected();
-	}
+  /**
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand() {
+    return autoChooser.getSelected();
+  }
 }

@@ -20,51 +20,51 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
 
-	private final RobotContainer robotContainer;
+  private final RobotContainer robotContainer;
 
-	private Command autonomousCommand;
+  private Command autonomousCommand;
 
-	public Robot() {
-		robotContainer = new RobotContainer();
-		WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
-		CameraServer.startAutomaticCapture();
-	}
+  public Robot() {
+    robotContainer = new RobotContainer();
+    WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+    CameraServer.startAutomaticCapture();
+  }
 
-	@Override
-	public void robotPeriodic() {
-		CommandScheduler.getInstance().run();
-	}
+  @Override
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
+  }
 
-	@Override
-	public void autonomousInit() {
-		generalInit();
+  @Override
+  public void autonomousInit() {
+    generalInit();
 
-		autonomousCommand = robotContainer.getAutonomousCommand();
+    autonomousCommand = robotContainer.getAutonomousCommand();
 
-		if (autonomousCommand != null) {
-			autonomousCommand.schedule();
-		}
-	}
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
+    }
+  }
 
-	@Override
-	public void teleopInit() {
-		generalInit();
-	}
+  @Override
+  public void teleopInit() {
+    generalInit();
+  }
 
-	@Override
-	public void testInit() {
-		CommandScheduler.getInstance().cancelAll();
-	}
+  @Override
+  public void testInit() {
+    CommandScheduler.getInstance().cancelAll();
+  }
 
-	/**
-	 * Initialization that applies to autonomous and teleop.
-	 */
-	private void generalInit() {
-		if (autonomousCommand != null) {
-			autonomousCommand.cancel();
-			autonomousCommand = null;
-		}
+  /**
+   * Initialization that applies to autonomous and teleop.
+   */
+  private void generalInit() {
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
+      autonomousCommand = null;
+    }
 
-		robotContainer.robotCommands.startup().schedule();
-	}
+    robotContainer.robotCommands.startup().schedule();
+  }
 }

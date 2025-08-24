@@ -4,64 +4,69 @@ import org.ironriders.lib.data.MotorSetup;
 import org.ironriders.lib.data.PID;
 
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.spark.config.LimitSwitchConfig;
-import com.revrobotics.spark.config.SoftLimitConfig;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class AbsoluteWristSubsystem extends WristSubsystem {
 
-    private final boolean invertEncoder;
-    private final Angle encoderOffset;
-    private final double encoderScale;
-    private final Angle reverseLimit;
-    private final Angle forwardLimit;
-    private boolean hasGoal = false;
+  private final boolean invertEncoder;
+  private final Angle encoderOffset;
+  private final double encoderScale;
+  private final Angle reverseLimit;
+  private final Angle forwardLimit;
+  private boolean hasGoal = false;
 
-    AbsoluteEncoder encoder;
+  AbsoluteEncoder encoder;
 
-    public AbsoluteWristSubsystem(
-            int primaryMotorId,
-            double gearRatio,
-            double encoderScale,
-            Angle encoderOffset,
-            Angle reverseLimit,
-            Angle forwardLimit,
-            boolean invertEncoder,
-            PID pid,
-            TrapezoidProfile.Constraints constraints,
-            int stallLimit,
-            boolean PrimaryInversion,
-            MotorSetup ...additionalMotorsSetups) {
-        super(primaryMotorId, gearRatio, pid, constraints, stallLimit, PrimaryInversion, additionalMotorsSetups);
+  public AbsoluteWristSubsystem(
+    int primaryMotorId,
+    double gearRatio,
+    double encoderScale,
+    Angle encoderOffset,
+    Angle reverseLimit,
+    Angle forwardLimit,
+    boolean invertEncoder,
+    PID pid,
+    TrapezoidProfile.Constraints constraints,
+    int stallLimit,
+    boolean PrimaryInversion,
+    MotorSetup... additionalMotorsSetups
+  ) {
+    super(
+      primaryMotorId,
+      gearRatio,
+      pid,
+      constraints,
+      stallLimit,
+      PrimaryInversion,
+      additionalMotorsSetups
+    );
+    this.encoderScale = encoderScale;
+    this.encoderOffset = encoderOffset;
+    this.reverseLimit = reverseLimit;
+    this.forwardLimit = forwardLimit;
+    this.invertEncoder = invertEncoder;
 
-        this.encoderScale = encoderScale;
-        this.encoderOffset = encoderOffset;
-        this.reverseLimit = reverseLimit;
-        this.forwardLimit = forwardLimit;
-        this.invertEncoder = invertEncoder;
+    encoder = motor.getAbsoluteEncoder();
+    encoder.getPosition();
 
-        encoder = motor.getAbsoluteEncoder();
-        encoder.getPosition();
+    reset();
+  }
 
-        reset();
-    }
+  @Override
+  protected boolean isAtForwardLimit() {
+    return getCurrentAngle().gt(forwardLimit);
+  }
 
-    @Override
-    protected boolean isAtForwardLimit() {
-        return getCurrentAngle().gt(forwardLimit);
-    }
+  @Override
+  protected boolean isAtReverseLimit() {
+    return getCurrentAngle().lt(reverseLimit);
+  }
 
-    @Override
-    protected boolean isAtReverseLimit() {
-        return getCurrentAngle().lt(reverseLimit);
-    }
-
-   /*  @Override
+  /*  @Override
     protected void configureMotor() {
         var softLimitConfig = new SoftLimitConfig();
 
@@ -89,53 +94,56 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
         super.configureMotor();
     }*/
 
-    @Override
-    protected void setMotorLevel() {
-        // Leave motor idling in break mode until we are told to go somewhere
-        if (!hasGoal) {
-            return;
-        }
-
-        super.setMotorLevel();
+  @Override
+  protected void setMotorLevel() {
+    // Leave motor idling in break mode until we are told to go somewhere
+    if (!hasGoal) {
+      return;
     }
 
-    @Override
-    public void setGoal(Angle goal) {
-        if (goal.lt(reverseLimit)) {
-            goal = reverseLimit;
-        }
+    super.setMotorLevel();
+  }
 
-        if (goal.gt(forwardLimit)) {
-            goal = forwardLimit;
-        }
-
-        super.setGoal(goal);
-
-        hasGoal = true;
+  @Override
+  public void setGoal(Angle goal) {
+    if (goal.lt(reverseLimit)) {
+      goal = reverseLimit;
     }
 
-    @Override
-    protected boolean isHomed() {
-        return true;
+    if (goal.gt(forwardLimit)) {
+      goal = forwardLimit;
     }
 
-    @Override
-    protected Angle getCurrentAngle() {
-        var angle = Units.Rotations.of(encoder.getPosition());
-        publish("rawRotation",Units.Rotations.of(encoder.getPosition()).in(Units.Degrees) );
-        angle = angle.times(encoderScale);
+    super.setGoal(goal);
 
-        if (invertEncoder) {
-            angle = angle.times(-1);
-        }
+    hasGoal = true;
+  }
 
-        angle = angle.plus(encoderOffset);
+  @Override
+  protected Angle getCurrentAngle() {
+    var angle = Units.Rotations.of(encoder.getPosition());
+    publish(
+      "rawRotation",
+      Units.Rotations.of(encoder.getPosition()).in(Units.Degrees)
+    );
+    angle = angle.times(encoderScale);
 
-        return angle;
+    if (invertEncoder) {
+      angle = angle.times(-1);
     }
 
-    @Override
-    public Command homeCmd(boolean force) {
-        return this.runOnce(this::reset);
-    }
+    angle = angle.plus(encoderOffset);
+
+    return angle;
+  }
+
+  @Override
+  public Command homeCmd(boolean force) {
+    return this.runOnce(this::reset);
+  }
+
+  @Override
+  boolean isHomed() {
+    return true;
+  }
 }

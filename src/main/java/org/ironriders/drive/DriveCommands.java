@@ -20,103 +20,139 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 @Logged
 public class DriveCommands {
-	private final DriveSubsystem driveSubsystem;
 
-	public DriveCommands(DriveSubsystem driveSubsystem) {
-		this.driveSubsystem = driveSubsystem;
+  private final DriveSubsystem driveSubsystem;
 
-		this.driveSubsystem.publish("Drive to Target", pathfindToTarget());
-		this.driveSubsystem.publish("Invert", Commands.runOnce(() -> GameState.invertControl()));
-	}
+  public DriveCommands(DriveSubsystem driveSubsystem) {
+    this.driveSubsystem = driveSubsystem;
 
-	public Command drive(Supplier<Translation2d> translation, DoubleSupplier rotation, BooleanSupplier fieldRelative) {
-		return driveSubsystem.runOnce(() -> {
-			driveSubsystem.drive(translation.get(), rotation.getAsDouble(), fieldRelative.getAsBoolean());
-		});
-	}
+    this.driveSubsystem.publish("Drive to Target", pathfindToTarget());
+    this.driveSubsystem.publish(
+        "Invert",
+        Commands.runOnce(() -> GameState.invertControl())
+      );
+  }
 
-	public Command driveTeleop(DoubleSupplier inputTranslationX, DoubleSupplier inputTranslationY,
-			DoubleSupplier inputRotation, boolean fieldRelative) {
-		if (DriverStation.isAutonomous())
-			return Commands.none();
+  public Command drive(
+    Supplier<Translation2d> translation,
+    DoubleSupplier rotation,
+    BooleanSupplier fieldRelative
+  ) {
+    return driveSubsystem.runOnce(() -> {
+      driveSubsystem.drive(
+        translation.get(),
+        rotation.getAsDouble(),
+        fieldRelative.getAsBoolean()
+      );
+    });
+  }
 
-		double invert = DriverStation.getAlliance().isEmpty()
-				|| DriverStation.getAlliance().get() == DriverStation.Alliance.Blue
-						? 1
-						: -1;
+  public Command driveTeleop(
+    DoubleSupplier inputTranslationX,
+    DoubleSupplier inputTranslationY,
+    DoubleSupplier inputRotation,
+    boolean fieldRelative
+  ) {
+    if (DriverStation.isAutonomous()) return Commands.none();
 
-		return drive(
-				() -> new Translation2d(inputTranslationX.getAsDouble(), inputTranslationY.getAsDouble())
-						.times(DriveConstants.SWERVE_DRIVE_MAX_SPEED)
-						.times(invert),
-				() -> inputRotation.getAsDouble() * DriveConstants.SWERVE_DRIVE_MAX_SPEED * invert,
-				() -> fieldRelative);
-	}
+    double invert = DriverStation.getAlliance().isEmpty() ||
+      DriverStation.getAlliance().get() == DriverStation.Alliance.Blue
+      ? 1
+      : -1;
 
-	public Command jog(double robotRelativeAngleDegrees) {
-		// Note - PathFinder does not do well with small moves so we move manually
+    return drive(
+      () ->
+        new Translation2d(
+          inputTranslationX.getAsDouble(),
+          inputTranslationY.getAsDouble()
+        )
+          .times(DriveConstants.SWERVE_DRIVE_MAX_SPEED)
+          .times(invert),
+      () ->
+        inputRotation.getAsDouble() *
+        DriveConstants.SWERVE_DRIVE_MAX_SPEED *
+        invert,
+      () -> fieldRelative
+    );
+  }
 
-		// Compute distance to travel (TODO - distance is slightly fictional without PID
-		// control)
-		var distance = Units.inchesToMeters(DriveConstants.JOG_DISTANCE_INCHES);
+  public Command jog(double robotRelativeAngleDegrees) {
+    // Note - PathFinder does not do well with small moves so we move manually
 
-		// Compute velocity
-		var vector = new Translation2d(
-				distance,
-				Rotation2d.fromDegrees(robotRelativeAngleDegrees));
-		var scale = Math.max(Math.abs(vector.getX()), Math.abs(vector.getY())) / DriveConstants.JOG_SPEED;
-		var velocity = vector.div(scale);
+    // Compute distance to travel (TODO - distance is slightly fictional without PID
+    // control)
+    var distance = Units.inchesToMeters(DriveConstants.JOG_DISTANCE_INCHES);
 
-		return driveSubsystem.runOnce(() -> {
-			var startPosition = driveSubsystem.getPose().getTranslation();
+    // Compute velocity
+    var vector = new Translation2d(
+      distance,
+      Rotation2d.fromDegrees(robotRelativeAngleDegrees)
+    );
+    var scale =
+      Math.max(Math.abs(vector.getX()), Math.abs(vector.getY())) /
+      DriveConstants.JOG_SPEED;
+    var velocity = vector.div(scale);
 
-			driveTeleop(velocity::getX, velocity::getY, () -> 0, false)
-					.repeatedly()
-					.until(() -> driveSubsystem.getPose().getTranslation().getDistance(startPosition) > distance)
-					.schedule();
-		});
-	}
+    return driveSubsystem.runOnce(() -> {
+      var startPosition = driveSubsystem.getPose().getTranslation();
 
-	public Command pathfindToPose(Pose2d targetPose) {
-		return driveSubsystem.defer(() -> {
-			driveSubsystem.pathfindCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(
-					DriveConstants.SWERVE_MAXIMUM_SPEED_AUTO,
-					DriveConstants.SWERVE_MAXIMUM_ACCELERATION_AUTO,
-					DriveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY_AUTO,
-					DriveConstants.SWERVE_MAXIMUM_ANGULAR_ACCELERATION_AUTO));
-			return driveSubsystem.pathfindCommand;
-		});
-	}
+      driveTeleop(velocity::getX, velocity::getY, () -> 0, false)
+        .repeatedly()
+        .until(
+          () ->
+            driveSubsystem
+              .getPose()
+              .getTranslation()
+              .getDistance(startPosition) >
+            distance
+        )
+        .schedule();
+    });
+  }
 
-	public Command invertControls(){
-		return driveSubsystem.runOnce(() ->{
-			driveSubsystem.switchInvertControl();
-		}
-		);
-	}
+  public Command pathfindToPose(Pose2d targetPose) {
+    return driveSubsystem.defer(() -> {
+      driveSubsystem.pathfindCommand = AutoBuilder.pathfindToPose(
+        targetPose,
+        new PathConstraints(
+          DriveConstants.SWERVE_MAXIMUM_SPEED_AUTO,
+          DriveConstants.SWERVE_MAXIMUM_ACCELERATION_AUTO,
+          DriveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY_AUTO,
+          DriveConstants.SWERVE_MAXIMUM_ANGULAR_ACCELERATION_AUTO
+        )
+      );
+      return driveSubsystem.pathfindCommand;
+    });
+  }
 
-	public Command pathfindToTarget() {
-		return driveSubsystem.defer(() -> {
-			var pose = GameState.getTargetRobotPose();
-			if (pose.isEmpty()) {
-				return Commands.none();
-			}
+  public Command invertControls() {
+    return driveSubsystem.runOnce(() -> {
+      driveSubsystem.switchInvertControl();
+    });
+  }
 
-			return pathfindToPose(pose.get().toPose2d());
-		});
-	}
+  public Command pathfindToTarget() {
+    return driveSubsystem.defer(() -> {
+      var pose = GameState.getTargetRobotPose();
+      if (pose.isEmpty()) {
+        return Commands.none();
+      }
 
-	public Command cancelPathfind() {
-		return driveSubsystem.runOnce(() -> {
-			if (driveSubsystem.pathfindCommand != null) {
-				driveSubsystem.pathfindCommand.cancel();
-			}
-		});
-	}
+      return pathfindToPose(pose.get().toPose2d());
+    });
+  }
 
-	public Command setDriveTrainSpeed(boolean slow){
-		return driveSubsystem.runOnce(() -> {
-			driveSubsystem.setSpeed(slow);
-		});
-	}
+  public Command cancelPathfind() {
+    return driveSubsystem.runOnce(() -> {
+      if (driveSubsystem.pathfindCommand != null) {
+        driveSubsystem.pathfindCommand.cancel();
+      }
+    });
+  }
+
+  public Command setDriveTrainSpeed(double speed) {
+    return driveSubsystem.runOnce(() -> {
+      driveSubsystem.setSpeed(speed);
+    });
+  }
 }

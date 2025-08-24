@@ -5,19 +5,19 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class CoralIntakeConstants {
 
-  public static final int CORAL_INTAKE_MOTOR_LEFT = 14;
-  public static final int CORAL_INTAKE_MOTOR_RIGHT = 15;
+  public static final int CORAL_INTAKE_MOTOR_RIGHT = 14;
+  public static final int CORAL_INTAKE_MOTOR_LEFT = 15;
   public static final int CORAL_INTAKE_MOTOR_TOP = 16;
 
   public static final InvertedValue CORAL_INTAKE_MOTOR_LEFT_INVERSION =
-    InvertedValue.CounterClockwise_Positive; //TODO
+    InvertedValue.CounterClockwise_Positive;
   public static final InvertedValue CORAL_INTAKE_MOTOR_RIGHT_INVERSION =
-    InvertedValue.CounterClockwise_Positive; //TODO
+    InvertedValue.Clockwise_Positive;
   public static final InvertedValue CORAL_INTAKE_MOTOR_ROLLER_INVERSION =
-    InvertedValue.CounterClockwise_Positive; //TODO
+    InvertedValue.CounterClockwise_Positive;
 
   public static final NeutralModeValue CORAL_INTAKE_NEUTRAL_MODE =
-    NeutralModeValue.Brake; //TODO
+    NeutralModeValue.Brake;
 
   public static final double LEFT_SPEED_MUL = 1;
   public static final double RIGHT_SPEED_MUL = 1;

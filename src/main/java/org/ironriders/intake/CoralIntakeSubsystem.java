@@ -85,7 +85,7 @@ public class CoralIntakeSubsystem extends IronSubsystem {
   }
 
   public boolean hasGamePiece() {
-    return true; // TODO: NO BEAM BREAK
+    return false; // TODO: NO BEAM BREAK
     // return beamBreak.get();
   }
 

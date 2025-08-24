@@ -20,7 +20,7 @@ public class CoralIntakeConstants {
     NeutralModeValue.Brake;
 
   public static final double LEFT_SPEED_MUL = 1;
-  public static final double RIGHT_SPEED_MUL = 1;
+  public static final double RIGHT_SPEED_MUL = 1.25;
   public static final double ROLLER_SPEED_MUL = 1;
 
     //TODO Tune These

@@ -8,11 +8,11 @@ import edu.wpi.first.units.measure.Angle;
 public class CoralWristConstants {
 
 	public static final MotorSetup PRIMARY_WRIST_MOTOR = new MotorSetup(
-			-2,
+			12,
 			false); // TODOs
 
 	public static final MotorSetup SECONDARY_WRIST_MOTOR = new MotorSetup(
-			-1,
+			13,
 			false); // TODO
 
 	// Need to tune

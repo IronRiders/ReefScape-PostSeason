@@ -18,7 +18,7 @@ public class ElevatorCommands {
         elevator.publish("Elevator to L3", set(Level.L3));
         elevator.publish("Elevator to L4", set(Level.L4));
 
-        elevator.publish("Elevator to Coral Station", set(Level.CoralStation));
+        elevator.publish("Elevator to Intaking", set(Level.Intaking));
         elevator.publish("Elevator Down", set(Level.Down));
     }
 

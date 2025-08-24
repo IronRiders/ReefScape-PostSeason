@@ -6,6 +6,10 @@ import static org.ironriders.intake.CoralIntakeConstants.CORAL_INTAKE_MOTOR_LEFT
 import static org.ironriders.intake.CoralIntakeConstants.CORAL_INTAKE_MOTOR_RIGHT;
 import static org.ironriders.intake.CoralIntakeConstants.CORAL_INTAKE_MOTOR_RIGHT_INVERSION;
 import static org.ironriders.intake.CoralIntakeConstants.CORAL_INTAKE_MOTOR_TOP;
+import static org.ironriders.intake.CoralIntakeConstants.CORAL_INTAKE_STATOR_CURRENT;
+import static org.ironriders.intake.CoralIntakeConstants.CORAL_INTAKE_SUPPLY_CURRENT;
+import static org.ironriders.intake.CoralIntakeConstants.CORAL_INTAKE_SUPPLY_CURRENT_LOWER_LIMIT;
+import static org.ironriders.intake.CoralIntakeConstants.CORAL_INTAKE_SUPPLY_CURRENT_LOWER_TIME;
 import static org.ironriders.intake.CoralIntakeConstants.CORAL_INTAK_NEUTRAL_MODE;
 
 import org.ironriders.intake.CoralIntakeConstants.CoralIntakeState;
@@ -50,10 +54,10 @@ public class CoralIntakeSubsystem extends IronSubsystem {
             new CurrentLimitsConfigs()
                 .withStatorCurrentLimitEnable(true)
                 .withSupplyCurrentLimitEnable(true)
-                .withStatorCurrentLimit(30)
-                .withSupplyCurrentLimit(40)
-                .withSupplyCurrentLowerLimit(30)
-                .withSupplyCurrentLowerTime(1.0)
+                .withStatorCurrentLimit(CORAL_INTAKE_STATOR_CURRENT)
+                .withSupplyCurrentLimit(CORAL_INTAKE_SUPPLY_CURRENT)
+                .withSupplyCurrentLowerLimit(CORAL_INTAKE_SUPPLY_CURRENT_LOWER_LIMIT)
+                .withSupplyCurrentLowerTime(CORAL_INTAKE_SUPPLY_CURRENT_LOWER_TIME)
             ).withMotorOutput(
             new MotorOutputConfigs()
                 .withInverted(CORAL_INTAKE_MOTOR_LEFT_INVERSION)

@@ -27,7 +27,7 @@ public class ElevatorConstants {
     public static final double INCHES_PER_ROTATION = GEAR_RATIO * SPROCKET_DIAMETER * Math.PI * NUMBER_OF_STAGES;
 
     public static final double DOWN_HEIGHT = 0;
-    public static final double CORAL_STATION_HEIGHT = 8.8;
+    public static final double INTAKING = 0;
     public static final double L1_HEIGHT = 4;
     public static final double L2_HEIGHT = 7.5;//untested
     public static final double L3_HEIGHT = 21; //tested (could be tested more)
@@ -39,7 +39,7 @@ public class ElevatorConstants {
      */
     public enum Level {
         Down(DOWN_HEIGHT),
-        CoralStation(CORAL_STATION_HEIGHT),
+        Intaking(INTAKING),
         L1(L1_HEIGHT),
         L2(L2_HEIGHT),
         L3(L3_HEIGHT),

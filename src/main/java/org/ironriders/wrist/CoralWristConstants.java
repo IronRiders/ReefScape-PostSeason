@@ -15,8 +15,8 @@ public class CoralWristConstants {
     public static final double D = 0.0;
 
     public static final double SPROCKET_RATIO = 1; 
-    public static final double GEAR_RATIO = 1.0 / 100.0;
-    public static final double ENCODER_SCALE = 1;
+    public static final double GEAR_RATIO = 1.0 / 33.75;
+    public static final double ENCODER_SCALE = GEAR_RATIO;
 
     public static final Angle ENCODER_OFFSET = Units.Degrees.of(0);//TODO TUNE
     public static final Angle REVERSE_LIMIT = Units.Degrees.of(-35); // TODO: TUNE
@@ -28,14 +28,14 @@ public class CoralWristConstants {
     public static final int WRIST_CURRENT_STALL_LIMIT = 20;
     public static final double WRIST_TOLERANCE = 1; // tune me please
 
-    public static final MotorSetup SECONDARYWRISTMOTOR = new MotorSetup(-1, false); // TODO Check inversion status
+    public static final MotorSetup SECONDARYWRISTMOTOR = new MotorSetup(1, false); // TODO Check inversion status
 
     public enum WristState {
-        Intaking(0),//TODO
-        STOWED(0), // TODO
-        L1(0), //TODO
-        L2toL3(0), //TODO
-        L4(0); //TODO
+        Intaking(-100),//TODO
+        STOWED(30), // TODO
+        L1(40), //TODO
+        L2toL3(40), //TODO
+        L4(-10); //TODO
 
         final Angle angle;
 

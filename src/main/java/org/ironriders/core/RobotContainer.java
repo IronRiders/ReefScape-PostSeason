@@ -138,7 +138,7 @@ public class RobotContainer {
 		secondaryController.button(6).onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L2));
 		secondaryController.button(7).onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L3));
 		secondaryController.button(8).onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L4));
-		secondaryController.button(9).onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.CoralStation));
+		secondaryController.button(9).onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.Intaking));
 		secondaryController.button(10).onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.Down));
 		secondaryController.pov(0).onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.HighAlgae));
 

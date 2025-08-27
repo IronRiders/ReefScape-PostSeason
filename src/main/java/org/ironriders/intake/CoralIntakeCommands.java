@@ -25,28 +25,10 @@ public class CoralIntakeCommands {
 
     switch (state) {
       case GRAB:
-        // making an actual command override here, mostly for convenience
+        return command 
+          .until(()->intake.hasGamePiece())
+          .finallyDo(()-> intake.set(CoralIntakeState.STOP));
 
-        return new Command() {
-          @Override
-          public void execute() {
-            intake.set(CoralIntakeState.GRAB);
-          }
-
-          @Override
-          public boolean isFinished() {
-            return intake.hasGamePiece();
-          }
-
-          @Override
-          public void end(boolean interupted) {
-            if (interupted) {
-              intake.set(CoralIntakeState.STOP);
-            } else {
-              intake.set(CoralIntakeState.HOLD);
-            }
-          }
-        };
       case EJECT:
         return command
           .withTimeout(DISCHARGE_TIMEOUT)

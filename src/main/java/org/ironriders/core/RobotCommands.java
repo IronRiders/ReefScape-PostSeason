@@ -1,5 +1,7 @@
 package org.ironriders.core;
 
+import static org.ironriders.elevator.ElevatorConstants.L4_HEIGHT;
+
 import java.util.function.DoubleSupplier;
 
 import org.ironriders.climb.ClimbCommands;
@@ -105,6 +107,22 @@ public class RobotCommands {
   }
 
   public Command moveElevatorAndWrist(ElevatorConstants.Level level) {
+    if(level.equals(ElevatorConstants.Level.L4)){
+      return Commands.sequence(
+        coralWristCommands.set(
+          switch (level) {
+            case L4 -> CoralWristConstants.WristState.L4;
+            default -> {
+              throw new IllegalArgumentException(
+                "Cannot score coral to level: " + level
+              );
+            }
+          }
+        ),
+        elevatorCommands.set(level)
+      );
+    }
+    else{
     return Commands.sequence(
       elevatorCommands.set(level),
       coralWristCommands.set(
@@ -122,6 +140,7 @@ public class RobotCommands {
         }
       )
     );
+    }
   }
 
   public Command scoreCoral() {

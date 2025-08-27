@@ -4,6 +4,7 @@ import org.ironriders.lib.data.MotorSetup;
 import org.ironriders.lib.data.PID;
 
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.Units;
@@ -19,7 +20,8 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
   private final Angle forwardLimit;
   private boolean hasGoal = false;
 
-  AbsoluteEncoder encoder;
+  // AbsoluteEncoder encoder;
+  RelativeEncoder encoder;
 
   public AbsoluteWristSubsystem(
     MotorSetup primaryMotor,
@@ -48,7 +50,8 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
     this.forwardLimit = forwardLimit;
     this.invertEncoder = invertEncoder;
 
-    encoder = motor.getAbsoluteEncoder();
+    // encoder = motor.getAbsoluteEncoder();
+    encoder = motor.getEncoder();
     encoder.getPosition();
 
     reset();

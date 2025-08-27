@@ -77,11 +77,19 @@ public class CoralIntakeSubsystem extends IronSubsystem {
   }
 
   public void set(CoralIntakeState state) {
-    leftIntake.set(state.getSpeed() * LEFT_SPEED_MUL);
-    rightIntake.set(state.getSpeed() * RIGHT_SPEED_MUL);
-    rollerIntake.set(state.getSpeed() * ROLLER_SPEED_MUL);
+    publish("Updated Intake State", state.toString());
+    leftIntake.set(state.getSpeed() * outputDifferential(state, LEFT_SPEED_MUL));
+    rightIntake.set(state.getSpeed() * outputDifferential(state, RIGHT_SPEED_MUL));
+    rollerIntake.set(state.getSpeed() * outputDifferential(state, ROLLER_SPEED_MUL));
 
     publish("Set State", state.name());
+  }
+
+  public double outputDifferential(CoralIntakeState state, double controlSpeedMultipler){
+    if(state.toString().equals(CoralIntakeState.GRAB.toString())){
+      return controlSpeedMultipler;
+    }
+    return 1;
   }
 
   public boolean hasGamePiece() {

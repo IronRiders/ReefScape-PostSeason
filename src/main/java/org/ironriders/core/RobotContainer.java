@@ -13,18 +13,22 @@ import org.ironriders.drive.DriveSubsystem;
 import org.ironriders.elevator.ElevatorCommands;
 import org.ironriders.elevator.ElevatorConstants;
 import org.ironriders.elevator.ElevatorSubsystem;
+import org.ironriders.elevator.ElevatorConstants.Level;
 import org.ironriders.intake.CoralIntakeCommands;
 import org.ironriders.intake.CoralIntakeConstants;
 import org.ironriders.intake.CoralIntakeSubsystem;
+import org.ironriders.intake.CoralIntakeConstants.CoralIntakeState;
 import org.ironriders.lib.RobotUtils;
 import org.ironriders.lib.field.FieldElement.ElementType;
 import org.ironriders.targeting.TargetingCommands;
 import org.ironriders.targeting.TargetingSubsystem;
 import org.ironriders.wrist.CoralAbsoluteWristSubsystem;
 import org.ironriders.wrist.CoralWristCommands;
+import org.ironriders.wrist.CoralWristConstants.WristState;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -98,6 +102,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+    int buttonConfiguration =0; // 0 is the primary driver focused, 1 is bumper boosts with primary focus, 2 is secondary driver elevator with boosts bumpers
     // DRIVE CONTROLS
     driveSubsystem.setDefaultCommand(
       robotCommands.driveTeleop(
@@ -128,81 +133,95 @@ public class RobotContainer {
       )
     );
 
+
+    if(buttonConfiguration == 0){
+      for (var angle = 0; angle < 360; angle += 45) {
+        primaryController.pov(angle).onTrue(driveCommands.jog(-angle));
+      }
+
+      primaryController.rightTrigger(.4).onTrue(robotCommands.moveElevatorAndWrist(Level.Intaking)).onTrue(coralIntakeCommands.set(CoralIntakeState.GRAB)).onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
+      primaryController.leftTrigger(.4).onTrue(coralIntakeCommands.set(CoralIntakeState.SCORE)).onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
+      primaryController.rightBumper().onTrue(robotCommands.moveElevatorAndWrist(Level.Down));
+      primaryController.leftBumper().onTrue(coralIntakeCommands.set(CoralIntakeState.EJECT)).onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
+      primaryController.button(1).onTrue(robotCommands.moveElevatorAndWrist(Level.L1));
+      primaryController.button(2).onTrue(robotCommands.moveElevatorAndWrist(Level.L2));
+      primaryController.button(3).onTrue(robotCommands.moveElevatorAndWrist(Level.L3));
+      primaryController.button(4).onTrue(robotCommands.moveElevatorAndWrist(Level.L4));
+      
+    }
     // slows down drivetrain when pressed
-    primaryController
-      .leftTrigger()
-      .onTrue(driveCommands.setDriveTrainSpeed(0.5))
-      .onFalse(driveCommands.setDriveTrainSpeed(1));
+    // primaryController
+    //   .leftTrigger()
+    //   .onTrue(driveCommands.setDriveTrainSpeed(0.5))
+    //   .onFalse(driveCommands.setDriveTrainSpeed(1));
 
     // jog commands on pov buttons
-    for (var angle = 0; angle < 360; angle += 45) {
-      primaryController.pov(angle).onTrue(driveCommands.jog(-angle));
-    }
+    // for (var angle = 0; angle < 360; angle += 45) {
+    //   primaryController.pov(angle).onTrue(driveCommands.jog(-angle));
+    // }
     // y vision align station not implmented yet //TODO
     // x vision align reef not implmented yet //TODO
 
-    primaryController
-      .y()
-      .onTrue(
-        targetingCommands
-          .targetNearest(ElementType.STATION)
-          .andThen(driveCommands.pathfindToTarget())
-      );
-    primaryController.x().onTrue(driveCommands.invertControls());
+    // primaryController
+    //   .y()
+    //   .onTrue(
+    //     targetingCommands
+    //       .targetNearest(ElementType.STATION)
+    //       .andThen(driveCommands.pathfindToTarget())
+    //   );
+    // primaryController.x().onTrue(driveCommands.invertControls());
 
-    primaryController.button(5).onTrue(driveCommands.jog(90.0));
-    primaryController.button(6).onTrue(driveCommands.jog(270.0));
 
     // Secondary Driver left side buttons
-    secondaryController
-      .button(1)
-      .whileTrue(
-        coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.EJECT)
-      )
-      .whileFalse(
-        coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.STOP)
-      );
-    secondaryController
-      .button(2)
-      .whileTrue(
-        coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.GRAB)
-      )
-      .whileFalse(
-        coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.STOP)
-      );
+  //   secondaryController
+  //     .button(1)
+  //     .whileTrue(
+  //       coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.EJECT)
+  //     )
+  //     .whileFalse(
+  //       coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.STOP)
+  //     );
+  //   secondaryController
+  //     .button(2)
+  //     .whileTrue(
+  //       coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.GRAB)
+  //     )
+  //     .whileFalse(
+  //       coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.STOP)
+  //     );
 
-    secondaryController
-      .button(5)
-      .onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L1));
-    secondaryController
-      .button(6)
-      .onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L2));
-    secondaryController
-      .button(7)
-      .onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L3));
-    secondaryController
-      .button(8)
-      .onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L4));
-    secondaryController
-      .button(9)
-      .onTrue(
-        robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.Intaking)
-      );
-    secondaryController
-      .button(10)
-      .onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.Down));
-    secondaryController
-      .pov(0)
-      .onTrue(
-        robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.HighAlgae)
-      );
+  //   secondaryController
+  //     .button(5)
+  //     .onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L1));
+  //   secondaryController
+  //     .button(6)
+  //     .onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L2));
+  //   secondaryController
+  //     .button(7)
+  //     .onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L3));
+  //   secondaryController
+  //     .button(8)
+  //     .onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.L4));
+  //   secondaryController
+  //     .button(9)
+  //     .onTrue(
+  //       robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.Intaking)
+  //     );
+  //   secondaryController
+  //     .button(10)
+  //     .onTrue(robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.Down));
+  //   secondaryController
+  //     .pov(0)
+  //     .onTrue(
+  //       robotCommands.moveElevatorAndWrist(ElevatorConstants.Level.HighAlgae)
+  //     );
 
-    secondaryController
-      .button(14)
-      .whileTrue(climbCommands.set(ClimbConstants.Targets.CLIMBED));
-    secondaryController
-      .button(15)
-      .whileTrue(climbCommands.set(ClimbConstants.Targets.EXTENDED));
+  //   secondaryController
+  //     .button(14)
+  //     .whileTrue(climbCommands.set(ClimbConstants.Targets.CLIMBED));
+  //   secondaryController
+  //     .button(15)
+  //     .whileTrue(climbCommands.set(ClimbConstants.Targets.EXTENDED));
   }
 
   /**

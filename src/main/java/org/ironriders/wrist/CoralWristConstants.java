@@ -16,7 +16,7 @@ public class CoralWristConstants {
 			true);
 
 	// Need to tune
-	public static final double P = 0.01; // TODO
+	public static final double P = 0.02; // TODO
 	public static final double I = 0.0;
 	public static final double D = 0.0;
 
@@ -25,21 +25,21 @@ public class CoralWristConstants {
 	public static final double ENCODER_SCALE = GEAR_RATIO;
 
 	public static final Angle ENCODER_OFFSET = Units.Degrees.of(45); // TODO TUNE
-	public static final Angle REVERSE_LIMIT = Units.Degrees.of(-35); // TODO: TUNE
-	public static final Angle FORWARD_LIMIT = Units.Degrees.of(55); // TODO: TUNE
+	public static final Angle REVERSE_LIMIT = Units.Degrees.of(-90); // TODO: TUNE
+	public static final Angle FORWARD_LIMIT = Units.Degrees.of(45); // TODO: TUNE
 
-	public static final double MAX_ACC = 90; // TODO
-	public static final double MAX_VEL = 45;
+	public static final double MAX_ACC = 360; // TODO
+	public static final double MAX_VEL = 180;
 
-	public static final int WRIST_CURRENT_STALL_LIMIT = 10; // lower for testing
-	public static final double WRIST_TOLERANCE = 1; // tune me please
+	public static final int WRIST_CURRENT_STALL_LIMIT = 40; // lower for testing
+	public static final double WRIST_TOLERANCE = .5; // tune me please
 
 	public enum WristState {
-		Intaking(-100), // TODO
+		Intaking(-89), // TODO
 		STOWED(30), // TODO
 		L1(40), // TODO
 		L2toL3(40), // TODO
-		L4(-10); // TODO
+		L4(-7); // TODO
 
 		final Angle angle;
 

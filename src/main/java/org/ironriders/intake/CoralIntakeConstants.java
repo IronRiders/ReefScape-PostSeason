@@ -19,8 +19,8 @@ public class CoralIntakeConstants {
   public static final NeutralModeValue CORAL_INTAKE_NEUTRAL_MODE =
     NeutralModeValue.Brake;
 
-  public static final double LEFT_SPEED_MUL = 1;
-  public static final double RIGHT_SPEED_MUL = 1;
+  public static final double LEFT_SPEED_MUL = 2;
+  public static final double RIGHT_SPEED_MUL = .5;
   public static final double ROLLER_SPEED_MUL = 1;
 
     //TODO Tune These
@@ -39,6 +39,7 @@ public class CoralIntakeConstants {
 
   public enum CoralIntakeState {
     GRAB(.25),
+    SCORE(.30),
     EJECT(-.25),
     STOP(0.00),
     HOLD(.01);

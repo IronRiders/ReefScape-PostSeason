@@ -111,7 +111,27 @@ public class RobotCommands {
   }
 
   public Command moveElevatorAndWrist(ElevatorConstants.Level level) {
-      return Commands.sequence(
+    if(level.equals(ElevatorConstants.Level.Intaking)){
+    return Commands.sequence(
+        elevatorCommands.set(level),
+        coralWristCommands.set(
+          switch (level) {
+            case L1, L2, L3 -> CoralWristConstants.WristState.L2toL3;
+            case L4 -> CoralWristConstants.WristState.L4;
+            case Intaking -> CoralWristConstants.WristState.Intaking;
+            case Down -> CoralWristConstants.WristState.STOWED;
+            case HighAlgae -> CoralWristConstants.WristState.STOWED;
+            default -> {
+              throw new IllegalArgumentException(
+                "Cannot score coral to level: " + level
+              );
+            }
+          }
+        )
+      );
+      }
+    else {
+    return Commands.sequence(
         coralWristCommands.set(CoralWristConstants.WristState.STOWED),
         elevatorCommands.set(level),
         coralWristCommands.set(
@@ -129,6 +149,7 @@ public class RobotCommands {
           }
         )
       );
+      }    
     };
 
   public Command scoreCoral() {

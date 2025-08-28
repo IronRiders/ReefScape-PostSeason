@@ -13,6 +13,7 @@ import org.ironriders.intake.CoralIntakeConstants;
 import org.ironriders.targeting.TargetingCommands;
 import org.ironriders.wrist.CoralWristCommands;
 import org.ironriders.wrist.CoralWristConstants;
+import org.ironriders.wrist.CoralWristConstants.WristState;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -65,7 +66,10 @@ public class RobotCommands {
    */
   public Command startup() {
     coralIntakeCommands.setOnSuccess(() -> rumble());
-    return (elevatorCommands.home());
+    return Commands.sequence(
+      coralWristCommands.set(WristState.STOWED),
+      elevatorCommands.home()
+    );
   }
 
   /**
@@ -107,41 +111,25 @@ public class RobotCommands {
   }
 
   public Command moveElevatorAndWrist(ElevatorConstants.Level level) {
-    if(level.equals(ElevatorConstants.Level.L4)){
       return Commands.sequence(
+        coralWristCommands.set(CoralWristConstants.WristState.STOWED),
+        elevatorCommands.set(level),
         coralWristCommands.set(
           switch (level) {
+            case L1, L2, L3 -> CoralWristConstants.WristState.L2toL3;
             case L4 -> CoralWristConstants.WristState.L4;
+            case Intaking -> CoralWristConstants.WristState.Intaking;
+            case Down -> CoralWristConstants.WristState.STOWED;
+            case HighAlgae -> CoralWristConstants.WristState.STOWED;
             default -> {
               throw new IllegalArgumentException(
                 "Cannot score coral to level: " + level
               );
             }
           }
-        ),
-        elevatorCommands.set(level)
+        )
       );
-    }
-    else{
-    return Commands.sequence(
-      elevatorCommands.set(level),
-      coralWristCommands.set(
-        switch (level) {
-          case L1, L2, L3 -> CoralWristConstants.WristState.L2toL3;
-          case L4 -> CoralWristConstants.WristState.L4;
-          case Intaking -> CoralWristConstants.WristState.Intaking;
-          case Down -> CoralWristConstants.WristState.STOWED;
-          case HighAlgae -> CoralWristConstants.WristState.STOWED;
-          default -> {
-            throw new IllegalArgumentException(
-              "Cannot score coral to level: " + level
-            );
-          }
-        }
-      )
-    );
-    }
-  }
+    };
 
   public Command scoreCoral() {
     return Commands.sequence(

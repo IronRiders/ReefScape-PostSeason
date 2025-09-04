@@ -78,9 +78,9 @@ public class CoralIntakeSubsystem extends IronSubsystem {
 
   public void set(CoralIntakeState state) {
     publish("Updated Intake State", state.toString());
-    leftIntake.set(state.getSpeed() * outputDifferential(state, LEFT_SPEED_MUL));
-    rightIntake.set(state.getSpeed() * outputDifferential(state, RIGHT_SPEED_MUL));
-    rollerIntake.set(state.getSpeed() * outputDifferential(state, ROLLER_SPEED_MUL));
+    leftIntake.set(state.getSpeed() * outputDifferential(state, (LEFT_SPEED_MUL * state.offset)));
+    rightIntake.set(state.getSpeed() * outputDifferential(state, (RIGHT_SPEED_MUL * state.offset)));
+    rollerIntake.set(state.getSpeed() * outputDifferential(state, (ROLLER_SPEED_MUL * state.offset)));
 
     publish("Set State", state.name());
   }

@@ -97,7 +97,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    int buttonConfiguration =0; // 0 is the primary driver focused, 1 is bumper boosts with primary focus, 2 is secondary driver elevator with boosts bumpers
+    int buttonConfiguration = 0; // 0 is the primary driver focused, 1 is bumper boosts with primary focus, 2 is secondary driver elevator with boosts bumpers
     // DRIVE CONTROLS
     driveSubsystem.setDefaultCommand(
       robotCommands.driveTeleop(

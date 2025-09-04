@@ -65,6 +65,8 @@ public class Robot extends TimedRobot {
       autonomousCommand = null;
     }
 
+    robotContainer.elevatorCommands.home();
+
     robotContainer.robotCommands.startup().schedule();
   }
 }

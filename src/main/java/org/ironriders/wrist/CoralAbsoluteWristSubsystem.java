@@ -25,18 +25,17 @@ public class CoralAbsoluteWristSubsystem extends AbsoluteWristSubsystem {
 
   public CoralAbsoluteWristSubsystem() {
     super(
-      PRIMARY_WRIST_MOTOR,
-      GEAR_RATIO,
-      ENCODER_SCALE,
-      ENCODER_OFFSET,
-      REVERSE_LIMIT,
-      FORWARD_LIMIT,
-      false,
-      new PID(P, I, D),
-      new TrapezoidProfile.Constraints(MAX_VEL, MAX_ACC),
-      WRIST_CURRENT_STALL_LIMIT,
-      SECONDARY_WRIST_MOTOR
-    );
+        PRIMARY_WRIST_MOTOR,
+        GEAR_RATIO,
+        ENCODER_SCALE,
+        ENCODER_OFFSET,
+        REVERSE_LIMIT,
+        FORWARD_LIMIT,
+        false,
+        new PID(P, I, D),
+        new TrapezoidProfile.Constraints(MAX_VEL, MAX_ACC),
+        WRIST_CURRENT_STALL_LIMIT,
+        SECONDARY_WRIST_MOTOR);
     pid.setTolerance(WRIST_TOLERANCE);
 
     commands = new CoralWristCommands(this);

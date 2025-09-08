@@ -29,8 +29,7 @@ public class FieldPose {
     @Override
     protected Distance getYOffset() {
       return STATION_SLOT_SPACING.times(slot - STATION_SLOT_COUNT / 2).minus(
-        CORAL_INTAKE_OFFSET.div(2)
-      );
+          CORAL_INTAKE_OFFSET.div(2));
     }
   }
 
@@ -106,21 +105,19 @@ public class FieldPose {
     final var elementPose = this.element.pose.toPose2d();
 
     final var robotRotation = elementPose
-      .getRotation()
-      .rotateBy(Rotation2d.k180deg);
+        .getRotation()
+        .rotateBy(Rotation2d.k180deg);
 
     final var zeroAngleRelativeTranslation = new Translation2d(
-      getXOffset(),
-      getYOffset()
-    );
+        getXOffset(),
+        getYOffset());
 
     final var relativeTranslation = zeroAngleRelativeTranslation.rotateBy(
-      robotRotation
-    );
+        robotRotation);
 
     final var robotTranslation = elementPose
-      .getTranslation()
-      .plus(relativeTranslation);
+        .getTranslation()
+        .plus(relativeTranslation);
 
     return new Pose2d(robotTranslation, robotRotation);
   }

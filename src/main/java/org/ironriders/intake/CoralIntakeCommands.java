@@ -25,14 +25,14 @@ public class CoralIntakeCommands {
 
     switch (state) {
       case GRAB:
-        return command 
-          .until(()->intake.hasGamePiece())
-          .finallyDo(()-> intake.set(CoralIntakeState.STOP));
+        return command
+            .until(() -> intake.hasGamePiece())
+            .finallyDo(() -> intake.set(CoralIntakeState.STOP));
 
       case EJECT:
         return command
-          .withTimeout(DISCHARGE_TIMEOUT)
-          .finallyDo(() -> intake.set(CoralIntakeState.STOP));
+            .withTimeout(DISCHARGE_TIMEOUT)
+            .finallyDo(() -> intake.set(CoralIntakeState.STOP));
       default:
         return command.finallyDo(() -> intake.set(CoralIntakeState.STOP));
     }

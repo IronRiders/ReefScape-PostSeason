@@ -30,16 +30,13 @@ public class ElevatorSubsystem extends IronSubsystem {
   private final ElevatorCommands commands;
 
   private final SparkMax primaryMotor = new SparkMax(
-    PRIMARY_MOTOR_ID,
-    MotorType.kBrushless
-  ); // lead motor
+      PRIMARY_MOTOR_ID,
+      MotorType.kBrushless); // lead motor
   private final SparkMax followerMotor = new SparkMax(
-    FOLLOW_MOTOR_ID,
-    MotorType.kBrushless
-  );
+      FOLLOW_MOTOR_ID,
+      MotorType.kBrushless);
 
-  private final SparkLimitSwitch bottomLimitSwitch =
-    primaryMotor.getReverseLimitSwitch();
+  private final SparkLimitSwitch bottomLimitSwitch = primaryMotor.getReverseLimitSwitch();
 
   private final RelativeEncoder encoder = primaryMotor.getEncoder();
 
@@ -51,8 +48,7 @@ public class ElevatorSubsystem extends IronSubsystem {
   // goalSetpoint is the final goal. periodicSetpoint is a sort-of inbetween
   // setpoint generated every periodic.
   private TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State();
-  private TrapezoidProfile.State periodicSetpoint =
-    new TrapezoidProfile.State();
+  private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State();
 
   private ElevatorConstants.Level currentTarget = ElevatorConstants.Level.Down;
   private boolean isHomed = false;
@@ -63,53 +59,47 @@ public class ElevatorSubsystem extends IronSubsystem {
     SparkMaxConfig followerConfig = new SparkMaxConfig();
 
     LimitSwitchConfig forwardLimitSwitchConfig = new LimitSwitchConfig()
-      .forwardLimitSwitchEnabled(true)
-      .forwardLimitSwitchType(Type.kNormallyClosed);
+        .forwardLimitSwitchEnabled(true)
+        .forwardLimitSwitchType(Type.kNormallyClosed);
     LimitSwitchConfig reverseLimitSwitchConfig = new LimitSwitchConfig()
-      .reverseLimitSwitchEnabled(true)
-      .reverseLimitSwitchType(Type.kNormallyClosed);
+        .reverseLimitSwitchEnabled(true)
+        .reverseLimitSwitchType(Type.kNormallyClosed);
 
     primaryConfig
-      .idleMode(IdleMode.kBrake)
-      .smartCurrentLimit(ELEVATOR_MOTOR_STALL_LIMIT)
-      .inverted(true)
-      .apply(forwardLimitSwitchConfig)
-      .apply(reverseLimitSwitchConfig);
+        .idleMode(IdleMode.kBrake)
+        .smartCurrentLimit(ELEVATOR_MOTOR_STALL_LIMIT)
+        .inverted(true)
+        .apply(forwardLimitSwitchConfig)
+        .apply(reverseLimitSwitchConfig);
 
     followerConfig
-      .idleMode(IdleMode.kBrake)
-      .smartCurrentLimit(ELEVATOR_MOTOR_STALL_LIMIT)
-      .follow(ElevatorConstants.PRIMARY_MOTOR_ID, true);
+        .idleMode(IdleMode.kBrake)
+        .smartCurrentLimit(ELEVATOR_MOTOR_STALL_LIMIT)
+        .follow(ElevatorConstants.PRIMARY_MOTOR_ID, true);
 
     primaryMotor.configure(
-      primaryConfig,
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters
-    );
+        primaryConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
     followerMotor.configure(
-      followerConfig,
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters
-    );
+        followerConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
     profile = new TrapezoidProfile(
-      new TrapezoidProfile.Constraints(
-        ElevatorConstants.MAX_VEL,
-        ElevatorConstants.MAX_ACC
-      )
-    );
+        new TrapezoidProfile.Constraints(
+            ElevatorConstants.MAX_VEL,
+            ElevatorConstants.MAX_ACC));
 
     pidController = new PIDController(
-      ElevatorConstants.P,
-      ElevatorConstants.I,
-      ElevatorConstants.D
-    );
+        ElevatorConstants.P,
+        ElevatorConstants.I,
+        ElevatorConstants.D);
 
     feedforward = new ElevatorFeedforward(
-      ElevatorConstants.S,
-      ElevatorConstants.G,
-      ElevatorConstants.V
-    );
+        ElevatorConstants.S,
+        ElevatorConstants.G,
+        ElevatorConstants.V);
     pidController.setTolerance(ELEVATOR_POSITION_TOLERANCE);
     commands = new ElevatorCommands(this);
   }
@@ -118,21 +108,18 @@ public class ElevatorSubsystem extends IronSubsystem {
   public void periodic() {
     // Calculate the next state and update the current state
     periodicSetpoint = profile.calculate(
-      ElevatorConstants.T,
-      periodicSetpoint,
-      goalSetpoint
-    );
+        ElevatorConstants.T,
+        periodicSetpoint,
+        goalSetpoint);
 
     // Only run if homed
     if (isHomed) {
       double pidOutput = pidController.calculate(
-        getHeightInches(),
-        periodicSetpoint.position
-      );
+          getHeightInches(),
+          periodicSetpoint.position);
       double ff = feedforward.calculate(
-        periodicSetpoint.position,
-        periodicSetpoint.velocity
-      );
+          periodicSetpoint.position,
+          periodicSetpoint.velocity);
 
       primaryMotor.set(pidOutput + ff);
     }
@@ -147,13 +134,11 @@ public class ElevatorSubsystem extends IronSubsystem {
     publish("Goal Position", goalSetpoint.position);
 
     publish(
-      "Forward Limit Switch",
-      primaryMotor.getForwardLimitSwitch().isPressed()
-    );
+        "Forward Limit Switch",
+        primaryMotor.getForwardLimitSwitch().isPressed());
     publish(
-      "Reverse Limit Switch",
-      primaryMotor.getReverseLimitSwitch().isPressed()
-    );
+        "Reverse Limit Switch",
+        primaryMotor.getReverseLimitSwitch().isPressed());
 
     publish("Primary Encoder", primaryMotor.getEncoder().getPosition());
     publish("Follower Encoder", followerMotor.getEncoder().getPosition());

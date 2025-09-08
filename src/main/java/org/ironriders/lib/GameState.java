@@ -18,16 +18,15 @@ public class GameState {
 
   private static Field2d field = new Field2d();
   private static Supplier<Optional<Pose2d>> robotPose = () -> Optional.empty();
-  private static Supplier<Optional<FieldPose>> targetRobotPose = () ->
-    Optional.empty();
+  private static Supplier<Optional<FieldPose>> targetRobotPose = () -> Optional.empty();
 
-  // these represent our current elevator targets for their respective game pieces.
-  private static ElevatorConstants.Level coralTarget =
-    ElevatorConstants.Level.L1;
-  private static ElevatorConstants.Level algaeTarget =
-    ElevatorConstants.Level.L2;
+  // these represent our current elevator targets for their respective game
+  // pieces.
+  private static ElevatorConstants.Level coralTarget = ElevatorConstants.Level.L1;
+  private static ElevatorConstants.Level algaeTarget = ElevatorConstants.Level.L2;
 
-  private GameState() {}
+  private GameState() {
+  }
 
   public static Field2d getField() {
     return field;
@@ -50,8 +49,7 @@ public class GameState {
   }
 
   public static void setTargetRobotPose(
-    Supplier<Optional<FieldPose>> robotPose
-  ) {
+      Supplier<Optional<FieldPose>> robotPose) {
     GameState.targetRobotPose = robotPose;
   }
 

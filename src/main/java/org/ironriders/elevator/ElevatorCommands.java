@@ -18,13 +18,16 @@ public class ElevatorCommands {
     elevator.publish("Elevator to L3", set(Level.L3));
     elevator.publish("Elevator to L4", set(Level.L4));
 
-        elevator.publish("Elevator to Intaking", set(Level.Intaking));
-        elevator.publish("Elevator Down", set(Level.Down));
-    }
+    elevator.publish("Elevator to Intaking", set(Level.Intaking));
+    elevator.publish("Elevator Down", set(Level.Down));
+  }
 
   /**
-   * Command to set the elevator's target position to one of several predefined levels.
-   * @return a Command to change target, finishes when the elevator has reached it.
+   * Command to set the elevator's target position to one of several predefined
+   * levels.
+   * 
+   * @return a Command to change target, finishes when the elevator has reached
+   *         it.
    */
   public Command set(ElevatorConstants.Level level) {
     return new Command() {
@@ -40,6 +43,7 @@ public class ElevatorCommands {
 
   /**
    * Command to home the elevator, finding the bottom pos and remembering it.
+   * 
    * @return a Command that finishes when the bottom limit switch is pressed.
    */
   public Command home() {

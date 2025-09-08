@@ -23,28 +23,28 @@ public class ElevatorConstants {
   public static final double GEAR_RATIO = 0.05;
   public static final double SPROCKET_DIAMETER = 1.7567;
   public static final int NUMBER_OF_STAGES = 2;
-  public static final double INCHES_PER_ROTATION =
-    GEAR_RATIO * SPROCKET_DIAMETER * Math.PI * NUMBER_OF_STAGES;
+  public static final double INCHES_PER_ROTATION = GEAR_RATIO * SPROCKET_DIAMETER * Math.PI * NUMBER_OF_STAGES;
 
-    public static final double DOWN_HEIGHT = 0;
-    public static final double INTAKING = 0;
-    public static final double L1_HEIGHT = 4;
-    public static final double L2_HEIGHT = 7.5;//untested
-    public static final double L3_HEIGHT = 21; //tested (could be tested more)
-    public static final double L4_HEIGHT = 53;//tested
-    public static final double HighAlgae_HIEGHT = 33; // untested
+  public static final double DOWN_HEIGHT = 0;
+  public static final double INTAKING = 0;
+  public static final double L1_HEIGHT = 4;
+  public static final double L2_HEIGHT = 7.5;// untested
+  public static final double L3_HEIGHT = 21; // tested (could be tested more)
+  public static final double L4_HEIGHT = 53;// tested
+  public static final double HighAlgae_HIEGHT = 33; // untested
 
-    /**
-     * This enum represents each specific/discrete position the elevator needs to go to.
-     */
-    public enum Level {
-        Down(DOWN_HEIGHT),
-        Intaking(INTAKING),
-        L1(L1_HEIGHT),
-        L2(L2_HEIGHT),
-        L3(L3_HEIGHT),
-        L4(L4_HEIGHT),
-        HighAlgae(HighAlgae_HIEGHT);
+  /**
+   * This enum represents each specific/discrete position the elevator needs to go
+   * to.
+   */
+  public enum Level {
+    Down(DOWN_HEIGHT),
+    Intaking(INTAKING),
+    L1(L1_HEIGHT),
+    L2(L2_HEIGHT),
+    L3(L3_HEIGHT),
+    L4(L4_HEIGHT),
+    HighAlgae(HighAlgae_HIEGHT);
 
     public double positionInches;
 

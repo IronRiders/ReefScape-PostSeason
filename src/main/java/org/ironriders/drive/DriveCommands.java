@@ -29,51 +29,44 @@ public class DriveCommands {
     this.driveSubsystem.publish("Drive to Target", pathfindToTarget());
     this.driveSubsystem.publish(
         "Invert",
-        Commands.runOnce(() -> GameState.invertControl())
-      );
+        Commands.runOnce(() -> GameState.invertControl()));
   }
 
   public Command drive(
-    Supplier<Translation2d> translation,
-    DoubleSupplier rotation,
-    BooleanSupplier fieldRelative
-  ) {
+      Supplier<Translation2d> translation,
+      DoubleSupplier rotation,
+      BooleanSupplier fieldRelative) {
     return driveSubsystem.runOnce(() -> {
       driveSubsystem.drive(
-        translation.get(),
-        rotation.getAsDouble(),
-        fieldRelative.getAsBoolean()
-      );
+          translation.get(),
+          rotation.getAsDouble(),
+          fieldRelative.getAsBoolean());
     });
   }
 
   public Command driveTeleop(
-    DoubleSupplier inputTranslationX,
-    DoubleSupplier inputTranslationY,
-    DoubleSupplier inputRotation,
-    boolean fieldRelative
-  ) {
-    if (DriverStation.isAutonomous()) return Commands.none();
+      DoubleSupplier inputTranslationX,
+      DoubleSupplier inputTranslationY,
+      DoubleSupplier inputRotation,
+      boolean fieldRelative) {
+    if (DriverStation.isAutonomous())
+      return Commands.none();
 
     double invert = DriverStation.getAlliance().isEmpty() ||
-      DriverStation.getAlliance().get() == DriverStation.Alliance.Blue
-      ? 1
-      : -1;
+        DriverStation.getAlliance().get() == DriverStation.Alliance.Blue
+            ? 1
+            : -1;
 
     return drive(
-      () ->
-        new Translation2d(
-          inputTranslationX.getAsDouble(),
-          inputTranslationY.getAsDouble()
-        )
-          .times(DriveConstants.SWERVE_DRIVE_MAX_SPEED)
-          .times(invert),
-      () ->
-        inputRotation.getAsDouble() *
-        DriveConstants.SWERVE_DRIVE_MAX_SPEED *
-        invert,
-      () -> fieldRelative
-    );
+        () -> new Translation2d(
+            inputTranslationX.getAsDouble(),
+            inputTranslationY.getAsDouble())
+            .times(DriveConstants.SWERVE_DRIVE_MAX_SPEED)
+            .times(invert),
+        () -> inputRotation.getAsDouble() *
+            DriveConstants.SWERVE_DRIVE_MAX_SPEED *
+            invert,
+        () -> fieldRelative);
   }
 
   public Command jog(double robotRelativeAngleDegrees) {
@@ -85,42 +78,35 @@ public class DriveCommands {
 
     // Compute velocity
     var vector = new Translation2d(
-      distance,
-      Rotation2d.fromDegrees(robotRelativeAngleDegrees)
-    );
-    var scale =
-      Math.max(Math.abs(vector.getX()), Math.abs(vector.getY())) /
-      DriveConstants.JOG_SPEED;
+        distance,
+        Rotation2d.fromDegrees(robotRelativeAngleDegrees));
+    var scale = Math.max(Math.abs(vector.getX()), Math.abs(vector.getY())) /
+        DriveConstants.JOG_SPEED;
     var velocity = vector.div(scale);
 
     return driveSubsystem.runOnce(() -> {
       var startPosition = driveSubsystem.getPose().getTranslation();
 
       driveTeleop(velocity::getX, velocity::getY, () -> 0, false)
-        .repeatedly()
-        .until(
-          () ->
-            driveSubsystem
-              .getPose()
-              .getTranslation()
-              .getDistance(startPosition) >
-            distance
-        )
-        .schedule();
+          .repeatedly()
+          .until(
+              () -> driveSubsystem
+                  .getPose()
+                  .getTranslation()
+                  .getDistance(startPosition) > distance)
+          .schedule();
     });
   }
 
   public Command pathfindToPose(Pose2d targetPose) {
     return driveSubsystem.defer(() -> {
       driveSubsystem.pathfindCommand = AutoBuilder.pathfindToPose(
-        targetPose,
-        new PathConstraints(
-          DriveConstants.SWERVE_MAXIMUM_SPEED_AUTO,
-          DriveConstants.SWERVE_MAXIMUM_ACCELERATION_AUTO,
-          DriveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY_AUTO,
-          DriveConstants.SWERVE_MAXIMUM_ANGULAR_ACCELERATION_AUTO
-        )
-      );
+          targetPose,
+          new PathConstraints(
+              DriveConstants.SWERVE_MAXIMUM_SPEED_AUTO,
+              DriveConstants.SWERVE_MAXIMUM_ACCELERATION_AUTO,
+              DriveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY_AUTO,
+              DriveConstants.SWERVE_MAXIMUM_ANGULAR_ACCELERATION_AUTO));
       return driveSubsystem.pathfindCommand;
     });
   }

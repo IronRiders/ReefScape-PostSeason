@@ -61,13 +61,11 @@ public class FieldElement {
   private static int[] RED_TAGS = { 1, 2, 7, 6, 11, 10, 9, 8, 3, 5 };
 
   private static List<FieldElement> BLUE_ELEMENTS = loadElements(
-    DriverStation.Alliance.Blue,
-    BLUE_TAGS
-  );
+      DriverStation.Alliance.Blue,
+      BLUE_TAGS);
   private static List<FieldElement> RED_ELEMENTS = loadElements(
-    DriverStation.Alliance.Red,
-    RED_TAGS
-  );
+      DriverStation.Alliance.Red,
+      RED_TAGS);
 
   private FieldElement(Position element, Pose3d pose) {
     this.position = element;
@@ -80,8 +78,7 @@ public class FieldElement {
    * Retrieve all elements for an alliance.
    */
   public static Collection<FieldElement> of(
-    Optional<DriverStation.Alliance> alliance
-  ) {
+      Optional<DriverStation.Alliance> alliance) {
     if (alliance.isEmpty()) {
       return new ArrayList<FieldElement>();
     }
@@ -109,9 +106,8 @@ public class FieldElement {
    * Retrieve the closest alliance element of a desired type.
    */
   public static Optional<FieldElement> nearestTo(
-    Pose2d pose,
-    ElementType type
-  ) {
+      Pose2d pose,
+      ElementType type) {
     return findNearest(pose, Optional.of(type));
   }
 
@@ -123,26 +119,24 @@ public class FieldElement {
   }
 
   private static List<FieldElement> loadElements(
-    DriverStation.Alliance alliance,
-    int[] tags
-  ) {
+      DriverStation.Alliance alliance,
+      int[] tags) {
     return Stream.of(Position.values())
-      .map(element -> {
-        var pose = FieldUtils.FIELD_LAYOUT.getTagPose(tags[element.id]);
-        if (pose.isEmpty()) {
-          Optional.empty();
-        }
-        return Optional.of(new FieldElement(element, pose.get()));
-      })
-      .filter(Optional::isPresent)
-      .map(Optional::get)
-      .toList();
+        .map(element -> {
+          var pose = FieldUtils.FIELD_LAYOUT.getTagPose(tags[element.id]);
+          if (pose.isEmpty()) {
+            Optional.empty();
+          }
+          return Optional.of(new FieldElement(element, pose.get()));
+        })
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .toList();
   }
 
   private static Optional<FieldElement> findNearest(
-    Pose2d pose,
-    Optional<ElementType> type
-  ) {
+      Pose2d pose,
+      Optional<ElementType> type) {
     double distance = -1;
     Optional<FieldElement> found = Optional.empty();
 
@@ -152,8 +146,8 @@ public class FieldElement {
       }
 
       double thisDistance = pose
-        .getTranslation()
-        .getDistance(element.pose.toPose2d().getTranslation());
+          .getTranslation()
+          .getDistance(element.pose.toPose2d().getTranslation());
       if (found.isEmpty() || distance > thisDistance) {
         distance = thisDistance;
         found = Optional.of(element);

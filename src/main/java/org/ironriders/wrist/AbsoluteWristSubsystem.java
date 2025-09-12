@@ -20,8 +20,8 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
   private final Angle forwardLimit;
   private boolean hasGoal = false;
 
-  // AbsoluteEncoder encoder;
-  RelativeEncoder encoder;
+  AbsoluteEncoder encoder;
+  //RelativeEncoder encoder;
 
   public AbsoluteWristSubsystem(
     MotorSetup primaryMotor,
@@ -50,8 +50,8 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
     this.forwardLimit = forwardLimit;
     this.invertEncoder = invertEncoder;
 
-    // encoder = motor.getAbsoluteEncoder();
-    encoder = motor.getEncoder();
+    encoder = additionalMotors.get(0).getAbsoluteEncoder();
+    //encoder = motor.getEncoder();
     encoder.getPosition();
 
     reset();

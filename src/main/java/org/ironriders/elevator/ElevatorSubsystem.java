@@ -55,7 +55,7 @@ public class ElevatorSubsystem extends IronSubsystem {
     new TrapezoidProfile.State();
 
   private ElevatorConstants.Level currentTarget = ElevatorConstants.Level.Down;
-  private boolean isHomed = false;
+  public boolean isHomed = false;
 
   public ElevatorSubsystem() {
     // lots of config!!

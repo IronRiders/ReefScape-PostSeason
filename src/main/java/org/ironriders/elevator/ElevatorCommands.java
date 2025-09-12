@@ -46,6 +46,8 @@ public class ElevatorCommands {
     // we use defer here so that the elevatorSubsystem.isHomed() occurs at runtime
     return elevatorSubsystem.defer(() -> {
       if (elevatorSubsystem.isHomed()) {
+        elevatorSubsystem.publish("is homed in startup", true);
+        //elevatorSubsystem.isHomed = false; scary
         return set(Level.Down);
       }
 

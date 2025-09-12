@@ -107,6 +107,8 @@ public abstract class WristSubsystem extends IronSubsystem {
   public void periodic() {
     setMotorLevel();
 
+    publish("not stupid Rotation", additionalMotors.get(0).getEncoder().getPosition());
+
     publish("Rotation", getCurrentAngle().in(Units.Degrees));
     publish("Output", motor.get());
     publish("Goal", goalSetpoint.position);

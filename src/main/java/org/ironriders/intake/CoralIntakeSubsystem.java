@@ -47,11 +47,11 @@ public class CoralIntakeSubsystem extends IronSubsystem {
                 .withStatorCurrentLimit(CORAL_INTAKE_STATOR_CURRENT)
                 .withSupplyCurrentLimit(CORAL_INTAKE_SUPPLY_CURRENT)
                 .withSupplyCurrentLowerLimit(CORAL_INTAKE_SUPPLY_CURRENT_LOWER_LIMIT)
-                .withSupplyCurrentLowerTime(CORAL_INTAKE_SUPPLY_CURRENT_LOWER_TIME)
-            ).withMotorOutput(
+                .withSupplyCurrentLowerTime(CORAL_INTAKE_SUPPLY_CURRENT_LOWER_TIME))
+        .withMotorOutput(
             new MotorOutputConfigs()
                 .withNeutralMode(CORAL_INTAKE_NEUTRAL_MODE));
-    
+
     // TODO: This is ugly as hell
     leftIntake.getConfigurator().apply(mainConfig);
     leftIntake.getConfigurator().apply(new MotorOutputConfigs().withInverted(CORAL_INTAKE_MOTOR_LEFT_INVERSION));
@@ -85,8 +85,8 @@ public class CoralIntakeSubsystem extends IronSubsystem {
     publish("Set State", state.name());
   }
 
-  public double outputDifferential(CoralIntakeState state, double controlSpeedMultipler){
-    if(state.toString().equals(CoralIntakeState.GRAB.toString())){
+  public double outputDifferential(CoralIntakeState state, double controlSpeedMultipler) {
+    if (state.toString().equals(CoralIntakeState.GRAB.toString())) {
       return controlSpeedMultipler;
     }
     return 1;

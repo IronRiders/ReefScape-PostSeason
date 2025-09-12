@@ -24,26 +24,24 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
   //RelativeEncoder encoder;
 
   public AbsoluteWristSubsystem(
-    MotorSetup primaryMotor,
-    double gearRatio,
-    double encoderScale,
-    Angle encoderOffset,
-    Angle reverseLimit,
-    Angle forwardLimit,
-    boolean invertEncoder,
-    PID pid,
-    TrapezoidProfile.Constraints constraints,
-    int stallLimit,
-    MotorSetup... additionalMotorsSetups
-  ) {
+      MotorSetup primaryMotor,
+      double gearRatio,
+      double encoderScale,
+      Angle encoderOffset,
+      Angle reverseLimit,
+      Angle forwardLimit,
+      boolean invertEncoder,
+      PID pid,
+      TrapezoidProfile.Constraints constraints,
+      int stallLimit,
+      MotorSetup... additionalMotorsSetups) {
     super(
-      primaryMotor,
-      gearRatio,
-      pid,
-      constraints,
-      stallLimit,
-      additionalMotorsSetups
-    );
+        primaryMotor,
+        gearRatio,
+        pid,
+        constraints,
+        stallLimit,
+        additionalMotorsSetups);
     this.encoderScale = encoderScale;
     this.encoderOffset = encoderOffset;
     this.reverseLimit = reverseLimit;
@@ -67,33 +65,35 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
     return getCurrentAngle().lt(reverseLimit);
   }
 
-  /*  @Override
-    protected void configureMotor() {
-        var softLimitConfig = new SoftLimitConfig();
-
-        // I *think* soft limits are set in rotations of the internal encoder,
-        // not the absolute encoder. This isn't documented. However, on current
-        // bot, disabling limit is worse than crashing because current is low and
-        // if the motor disables the arm will crash into bearing brackets on
-        // elevator. So leaving disabled for now
-        softLimitConfig
-                .reverseSoftLimitEnabled(false)
-                .forwardSoftLimitEnabled(false);
-        // .reverseSoftLimitEnabled(true)
-        // .reverseSoftLimit(TODO)
-        // .forwardSoftLimitEnabled(true)
-        // .forwardSoftLimit(TODO);
-
-        var limitSwitchConfig = new LimitSwitchConfig();
-        limitSwitchConfig
-                .reverseLimitSwitchEnabled(false)
-                .forwardLimitSwitchEnabled(false);
-
-      //  motorConfig
-        //        .apply(softLimitConfig);
-
-        super.configureMotor();
-    }*/
+  /*
+   * @Override
+   * protected void configureMotor() {
+   * var softLimitConfig = new SoftLimitConfig();
+   * 
+   * // I *think* soft limits are set in rotations of the internal encoder,
+   * // not the absolute encoder. This isn't documented. However, on current
+   * // bot, disabling limit is worse than crashing because current is low and
+   * // if the motor disables the arm will crash into bearing brackets on
+   * // elevator. So leaving disabled for now
+   * softLimitConfig
+   * .reverseSoftLimitEnabled(false)
+   * .forwardSoftLimitEnabled(false);
+   * // .reverseSoftLimitEnabled(true)
+   * // .reverseSoftLimit(TODO)
+   * // .forwardSoftLimitEnabled(true)
+   * // .forwardSoftLimit(TODO);
+   * 
+   * var limitSwitchConfig = new LimitSwitchConfig();
+   * limitSwitchConfig
+   * .reverseLimitSwitchEnabled(false)
+   * .forwardLimitSwitchEnabled(false);
+   * 
+   * // motorConfig
+   * // .apply(softLimitConfig);
+   * 
+   * super.configureMotor();
+   * }
+   */
 
   @Override
   protected void setMotorLevel() {
@@ -124,9 +124,8 @@ public class AbsoluteWristSubsystem extends WristSubsystem {
   protected Angle getCurrentAngle() {
     var angle = Units.Rotations.of(encoder.getPosition());
     publish(
-      "rawRotation",
-      Units.Rotations.of(encoder.getPosition()).in(Units.Degrees)
-    );
+        "rawRotation",
+        Units.Rotations.of(encoder.getPosition()).in(Units.Degrees));
     angle = angle.times(encoderScale);
 
     if (invertEncoder) {

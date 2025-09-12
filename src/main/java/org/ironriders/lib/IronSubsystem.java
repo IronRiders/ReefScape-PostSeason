@@ -13,8 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public abstract class IronSubsystem extends SubsystemBase {
 
-  private final String diagnosticName =
-    this.getClass().getSimpleName().replaceAll("Subsystem$", "");
+  private final String diagnosticName = this.getClass().getSimpleName().replaceAll("Subsystem$", "");
   private final String dashboardPrefix = "Subsystems/" + diagnosticName + "/";
   private final String messagePrefix = diagnosticName + ": ";
 

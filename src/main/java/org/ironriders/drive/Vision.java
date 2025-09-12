@@ -42,35 +42,31 @@ public class Vision {
   public Vision(SwerveDrive drive) {
     this.swerveDrive = drive;
     cams.add(
-      new VisionCamera(
-        "frontLeft",
-        createOffset(11.5, 11.5, 6.5, 15, 22.5),
-        VecBuilder.fill(0.5, 0.5, 1.0)
-      )
-    );
+        new VisionCamera(
+            "frontLeft",
+            createOffset(11.5, 11.5, 6.5, 15, 22.5),
+            VecBuilder.fill(0.5, 0.5, 1.0)));
     // cams.add(new VisionCamera("backLeft",
-    //        createOffset(11.5, -11.5, 6.5, 15, 157.5),
-    //       VecBuilder.fill(0.5, 0.5, 1.0)));
+    // createOffset(11.5, -11.5, 6.5, 15, 157.5),
+    // VecBuilder.fill(0.5, 0.5, 1.0)));
     // cams.add(new VisionCamera("backRight",
     // createOffset(-11.5, 11.5, 6.5, 15, -157.5),
     // VecBuilder.fill(0.5, 0.5, 1.0)));
     cams.add(
-      new VisionCamera(
-        "frontRight",
-        createOffset(11.5, -11.5, 6.5, 15, -22.5),
-        VecBuilder.fill(0.5, 0.5, 1.0)
-      )
-    );
+        new VisionCamera(
+            "frontRight",
+            createOffset(11.5, -11.5, 6.5, 15, -22.5),
+            VecBuilder.fill(0.5, 0.5, 1.0)));
   }
 
   public void addPoseEstimates() {
     for (VisionCamera v : cams) {
       Optional<EstimatedRobotPose> estimate = v.getEstimate();
-      if (estimate.isPresent()) swerveDrive.addVisionMeasurement(
-        estimate.get().estimatedPose.toPose2d(),
-        v.latestResult.getTimestampSeconds(),
-        v.deviations
-      );
+      if (estimate.isPresent())
+        swerveDrive.addVisionMeasurement(
+            estimate.get().estimatedPose.toPose2d(),
+            v.latestResult.getTimestampSeconds(),
+            v.deviations);
     }
   }
 
@@ -84,24 +80,20 @@ public class Vision {
    * @param yaw   The yaw offset in degrees.
    */
   public Transform3d createOffset(
-    double x,
-    double y,
-    double z,
-    double pitch,
-    double yaw
-  ) {
+      double x,
+      double y,
+      double z,
+      double pitch,
+      double yaw) {
     return new Transform3d(
-      new Translation3d(
-        Units.inchesToMeters(x),
-        Units.inchesToMeters(y),
-        Units.inchesToMeters(z)
-      ),
-      new Rotation3d(
-        0,
-        Units.degreesToRadians(pitch),
-        Units.degreesToRadians(yaw)
-      )
-    );
+        new Translation3d(
+            Units.inchesToMeters(x),
+            Units.inchesToMeters(y),
+            Units.inchesToMeters(z)),
+        new Rotation3d(
+            0,
+            Units.degreesToRadians(pitch),
+            Units.degreesToRadians(yaw)));
   }
 
   /**
@@ -111,7 +103,8 @@ public class Vision {
    */
   public VisionCamera getCamera(String name) throws RuntimeException {
     for (VisionCamera v : cams) {
-      if (v.photonCamera.getName().equals(name)) return v;
+      if (v.photonCamera.getName().equals(name))
+        return v;
     }
     throw new RuntimeException("Camera with name '" + name + "' not found");
   }
@@ -136,17 +129,15 @@ public class Vision {
     private Optional<EstimatedRobotPose> currentEstimate = Optional.empty();
 
     private VisionCamera(
-      String camName,
-      Transform3d offset,
-      Matrix<N3, N1> deviations
-    ) {
+        String camName,
+        Transform3d offset,
+        Matrix<N3, N1> deviations) {
       photonCamera = new PhotonCamera(camName);
 
       estimator = new PhotonPoseEstimator(
-        FieldUtils.FIELD_LAYOUT,
-        PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-        offset
-      );
+          FieldUtils.FIELD_LAYOUT,
+          PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+          offset);
       estimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
 
       this.deviations = deviations;
@@ -166,9 +157,8 @@ public class Vision {
       // find most recent result
       latestResult = results.get(0);
       for (PhotonPipelineResult r : results) {
-        if (
-          r.getTimestampSeconds() > latestResult.getTimestampSeconds()
-        ) latestResult = r;
+        if (r.getTimestampSeconds() > latestResult.getTimestampSeconds())
+          latestResult = r;
       }
 
       Optional<EstimatedRobotPose> optional = estimator.update(latestResult);
@@ -186,19 +176,17 @@ public class Vision {
      * @return An optional int, empty if there are no targets visible.
      */
     public OptionalInt getClosestVisible() {
-      if (!latestResult.hasTargets()) return OptionalInt.empty();
+      if (!latestResult.hasTargets())
+        return OptionalInt.empty();
 
       Iterator<PhotonTrackedTarget> iterator = latestResult
-        .getTargets()
-        .iterator();
+          .getTargets()
+          .iterator();
       PhotonTrackedTarget closest = iterator.next();
 
       while (iterator.hasNext()) {
         PhotonTrackedTarget target = iterator.next();
-        if (
-          target.getBestCameraToTarget().getX() <
-          closest.getBestCameraToTarget().getX()
-        ) {
+        if (target.getBestCameraToTarget().getX() < closest.getBestCameraToTarget().getX()) {
           closest = target;
         }
       }
@@ -214,39 +202,37 @@ public class Vision {
      * A TV show reference? In my code? It's more likely than you think.
      */
     private Optional<EstimatedRobotPose> refineMacrodata(
-      EstimatedRobotPose pose
-    ) {
+        EstimatedRobotPose pose) {
       double minAmbiguity = 1;
       // find best ambiguity between all targets
       for (PhotonTrackedTarget t : pose.targetsUsed) {
-        if (
-          t.poseAmbiguity != -1 && t.poseAmbiguity < minAmbiguity
-        ) minAmbiguity = t.poseAmbiguity;
+        if (t.poseAmbiguity != -1 && t.poseAmbiguity < minAmbiguity)
+          minAmbiguity = t.poseAmbiguity;
       }
       // trash past 30% ambiguity
-      if (minAmbiguity >= AMBIGUITY_TOLERANCE) return Optional.empty();
+      if (minAmbiguity >= AMBIGUITY_TOLERANCE)
+        return Optional.empty();
 
       double minDistance = DISTANCE_TOLERANCE;
       // find closest distance between all targets
       for (PhotonTrackedTarget t : pose.targetsUsed) {
         double dist = Math.sqrt(
-          Math.pow(t.bestCameraToTarget.getX(), 2) +
-          Math.pow(t.bestCameraToTarget.getY(), 2)
-        );
+            Math.pow(t.bestCameraToTarget.getX(), 2) +
+                Math.pow(t.bestCameraToTarget.getY(), 2));
 
-        if (dist < minDistance) minDistance = dist;
+        if (dist < minDistance)
+          minDistance = dist;
       }
       // trash past tolerance
-      if (minDistance >= DISTANCE_TOLERANCE) return Optional.empty();
+      if (minDistance >= DISTANCE_TOLERANCE)
+        return Optional.empty();
 
       // trash if estimate is too far from the believed current pose
       Transform2d differenceTransform = pose.estimatedPose
-        .toPose2d()
-        .minus(swerveDrive.getPose());
-      if (
-        Math.abs(differenceTransform.getX()) > 1.5 ||
-        Math.abs(differenceTransform.getY()) > 1.5
-      ) {
+          .toPose2d()
+          .minus(swerveDrive.getPose());
+      if (Math.abs(differenceTransform.getX()) > 1.5 ||
+          Math.abs(differenceTransform.getY()) > 1.5) {
         return Optional.empty();
       }
 

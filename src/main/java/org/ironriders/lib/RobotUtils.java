@@ -14,10 +14,9 @@ public class RobotUtils {
    * @return The end result of the curve.
    */
   public static double controlCurve(
-    double input,
-    double exponent,
-    double deadband
-  ) {
+      double input,
+      double exponent,
+      double deadband) {
     return Math.pow(input, exponent);
   }
 

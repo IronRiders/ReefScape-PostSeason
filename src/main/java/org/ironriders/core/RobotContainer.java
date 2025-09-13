@@ -20,6 +20,7 @@ import org.ironriders.targeting.TargetingSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -80,6 +81,8 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+        DriverStation.silenceJoystickConnectionWarning(true);
+
         enum Config {
             PRIMARY_DRIVER,
             PRIMARY_DRIVER_WITH_BOOST,

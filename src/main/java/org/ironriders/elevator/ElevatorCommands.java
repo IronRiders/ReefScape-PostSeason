@@ -58,11 +58,7 @@ public class ElevatorCommands {
     });
   }
 
-  public Command reset() {
-    return elevatorSubsystem.runOnce(elevatorSubsystem::reset);
-  }
-
   public Command downRehomeReset() {
-    return Commands.sequence(set(ElevatorLevel.DOWN), home(), reset());
+    return Commands.sequence(set(ElevatorLevel.DOWN), home(), elevatorSubsystem.runOnce(elevatorSubsystem::reset));
   }
 }

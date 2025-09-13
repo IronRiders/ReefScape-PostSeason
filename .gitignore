@@ -23,7 +23,7 @@ simgui-ds.json
 simgui-windown.json
 simgui.json
 
-ctre_sim/
+ctre_sim/*
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*

@@ -24,7 +24,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import org.ironriders.lib.IronSubsystem;
 
 /**
- * This subsystem controls the big ol' elevator that moves the coral
+ * This subsystem controls the big ol' elevator that moves the
  * manipulator vertically.
  */
 public class ElevatorSubsystem extends IronSubsystem {

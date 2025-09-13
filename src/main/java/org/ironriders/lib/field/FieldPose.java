@@ -29,7 +29,7 @@ public class FieldPose {
     @Override
     protected Distance getYOffset() {
       return STATION_SLOT_SPACING.times(slot - STATION_SLOT_COUNT / 2).minus(
-          CORAL_INTAKE_OFFSET.div(2));
+          INTAKE_OFFSET.div(2));
     }
   }
 
@@ -66,7 +66,7 @@ public class FieldPose {
   }
 
   static final Distance ROBOT_LENGTH = Units.Inches.of(37);
-  static final Distance CORAL_INTAKE_OFFSET = Units.Inches.of(7);
+  static final Distance INTAKE_OFFSET = Units.Inches.of(7);
   static final Distance STATION_SLOT_SPACING = Units.Inches.of(8);
   public static final int STATION_SLOT_COUNT = 9;
   static final Distance REEF_POLE_SPACING = Units.Inches.of(-12.94);

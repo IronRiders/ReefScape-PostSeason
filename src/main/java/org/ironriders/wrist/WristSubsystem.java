@@ -1,10 +1,9 @@
 package org.ironriders.wrist;
 
-import static org.ironriders.intake.CoralIntakeConstants.MAX_ACC;
-import static org.ironriders.intake.CoralIntakeConstants.MAX_VEL;
+import static org.ironriders.intake.IntakeConstants.MAX_ACC;
+import static org.ironriders.intake.IntakeConstants.MAX_VEL;
 
 import org.ironriders.core.ElevatorWirstCTL.WristRotation;
-import org.ironriders.intake.CoralIntakeCommands;
 import org.ironriders.lib.IronSubsystem;
 
 import com.revrobotics.spark.SparkBase.PersistMode;

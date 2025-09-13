@@ -5,8 +5,8 @@ import java.util.function.DoubleSupplier;
 import org.ironriders.climb.ClimbCommands;
 import org.ironriders.core.ElevatorWirstCTL.EWState;
 import org.ironriders.drive.DriveCommands;
-import org.ironriders.intake.CoralIntakeCommands;
-import org.ironriders.intake.CoralIntakeConstants.CoralIntakeState;
+import org.ironriders.intake.IntakeCommands;
+import org.ironriders.intake.IntakeConstants.IntakeState;
 import org.ironriders.targeting.TargetingCommands;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -27,7 +27,7 @@ public class RobotCommands {
 
   private final DriveCommands driveCommands;
   private final TargetingCommands targetingCommands;
-  private final CoralIntakeCommands coralIntakeCommands;
+  private final IntakeCommands intakeCommands;
   private final ClimbCommands climbCommands;
   private final ElevatorWirstCTL EWCTLCommands;
 
@@ -36,13 +36,13 @@ public class RobotCommands {
   public RobotCommands(
       DriveCommands driveCommands,
       TargetingCommands targetingCommands,
-      CoralIntakeCommands coralIntakeCommands,
+      IntakeCommands intakeCommands,
       ElevatorWirstCTL EWCTLCommands,
       ClimbCommands climbCommands,
       GenericHID controller) {
     this.driveCommands = driveCommands;
     this.targetingCommands = targetingCommands;
-    this.coralIntakeCommands = coralIntakeCommands;
+    this.intakeCommands = intakeCommands;
     this.EWCTLCommands = EWCTLCommands;
     this.climbCommands = climbCommands;
     this.controller = controller;
@@ -51,13 +51,9 @@ public class RobotCommands {
 
   /**
    * Initialize all subsystems when first enabled.
-   *
-   * This primarily involves homing. We need to home sequentially coral -> algae
-   * -> elevator due to physical
-   * limitations.
    */
   public Command startup() {
-    coralIntakeCommands.setOnSuccess(() -> rumble());
+    intakeCommands.setOnSuccess(() -> rumble());
 
     return EWCTLCommands.reset(); // moves everything to zero
   }
@@ -85,11 +81,11 @@ public class RobotCommands {
   }
 
   public Command intake() {
-    return Commands.parallel(EWCTLCommands.setEW(EWState.INTAKING), coralIntakeCommands.set(CoralIntakeState.GRAB));
+    return Commands.parallel(EWCTLCommands.setEW(EWState.INTAKING), intakeCommands.set(IntakeState.GRAB));
   }
 
   public Command stopIntake() {
-    return Commands.parallel(EWCTLCommands.setEW(EWState.STOW), coralIntakeCommands.set(CoralIntakeState.STOP));
+    return Commands.parallel(EWCTLCommands.setEW(EWState.STOW), intakeCommands.set(IntakeState.STOP));
   }
 
 

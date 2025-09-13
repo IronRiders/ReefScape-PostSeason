@@ -11,9 +11,9 @@ import org.ironriders.core.ElevatorWirstCTL.EWState;
 import org.ironriders.drive.DriveCommands;
 import org.ironriders.drive.DriveConstants;
 import org.ironriders.drive.DriveSubsystem;
-import org.ironriders.intake.CoralIntakeCommands;
-import org.ironriders.intake.CoralIntakeConstants.CoralIntakeState;
-import org.ironriders.intake.CoralIntakeSubsystem;
+import org.ironriders.intake.IntakeCommands;
+import org.ironriders.intake.IntakeConstants.IntakeState;
+import org.ironriders.intake.IntakeSubsystem;
 import org.ironriders.lib.RobotUtils;
 import org.ironriders.targeting.TargetingCommands;
 import org.ironriders.targeting.TargetingSubsystem;
@@ -47,8 +47,8 @@ public class RobotContainer {
 
     public final ElevatorWirstCTL EWCTLCommands = new ElevatorWirstCTL();
 
-    public final CoralIntakeSubsystem coralIntakeSubsystem = new CoralIntakeSubsystem();
-    public final CoralIntakeCommands coralIntakeCommands = coralIntakeSubsystem.getCommands();
+    public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+    public final IntakeCommands intakeCommands = intakeSubsystem.getCommands();
 
     public final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
     public final ClimbCommands climbCommands = climbSubsystem.getCommands();
@@ -63,7 +63,7 @@ public class RobotContainer {
     public final RobotCommands robotCommands = new RobotCommands(
             driveCommands,
             targetingCommands,
-            coralIntakeCommands,
+            intakeCommands,
             EWCTLCommands,
             climbCommands,
             primaryController.getHID());
@@ -123,13 +123,13 @@ public class RobotContainer {
                 // Go to intaking, then grab until told to stop
                 primaryController.rightTrigger(.4)
                         .onTrue(EWCTLCommands.setEW(EWState.INTAKING))
-                        .onTrue(coralIntakeCommands.set(CoralIntakeState.GRAB))
-                        .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
+                        .onTrue(intakeCommands.set(IntakeState.GRAB))
+                        .onFalse(intakeCommands.set(IntakeState.STOP));
 
                 // Score coral
                 primaryController.leftTrigger(.4)
-                        .onTrue(coralIntakeCommands.set(CoralIntakeState.SCORE))
-                        .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
+                        .onTrue(intakeCommands.set(IntakeState.SCORE))
+                        .onFalse(intakeCommands.set(IntakeState.STOP));
 
                 // Elevator Down
                 primaryController.rightBumper()
@@ -137,8 +137,8 @@ public class RobotContainer {
 
                 // Eject coral
                 primaryController.leftBumper()
-                        .onTrue(coralIntakeCommands.set(CoralIntakeState.EJECT))
-                        .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
+                        .onTrue(intakeCommands.set(IntakeState.EJECT))
+                        .onFalse(intakeCommands.set(IntakeState.STOP));
 
                 primaryController.button(1) // works for L2 as well
                         .onTrue(EWCTLCommands.setEW(EWState.L2));
@@ -162,8 +162,8 @@ public class RobotContainer {
                         .onFalse(robotCommands.stopIntake());
 
                 primaryController.leftTrigger(.4)
-                        .onTrue(coralIntakeCommands.set(CoralIntakeState.SCORE))
-                        .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
+                        .onTrue(intakeCommands.set(IntakeState.SCORE))
+                        .onFalse(intakeCommands.set(IntakeState.STOP));
 
                 primaryController.leftBumper()
                         .onTrue(driveCommands.setDriveTrainSpeed(0.5))
@@ -194,8 +194,8 @@ public class RobotContainer {
                         .onFalse(robotCommands.stopIntake());
 
                 primaryController.leftTrigger(.4)
-                        .onTrue(coralIntakeCommands.set(CoralIntakeState.SCORE))
-                        .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
+                        .onTrue(intakeCommands.set(IntakeState.SCORE))
+                        .onFalse(intakeCommands.set(IntakeState.STOP));
 
                 primaryController.leftBumper()
                         .onTrue(driveCommands.setDriveTrainSpeed(0.5))

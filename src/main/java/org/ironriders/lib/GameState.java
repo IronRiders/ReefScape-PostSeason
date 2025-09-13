@@ -21,9 +21,8 @@ public class GameState {
   private static Supplier<Optional<Pose2d>> robotPose = () -> Optional.empty();
   private static Supplier<Optional<FieldPose>> targetRobotPose = () -> Optional.empty();
 
-  // these represent our current elevator targets for their respective game
-  // pieces.
-  private static ElevatorLevel coralTarget = ElevatorLevel.DOWN;
+  // this represents our current elevator target
+  private static ElevatorLevel target = ElevatorLevel.DOWN;
 
   private GameState() {
   }
@@ -53,12 +52,12 @@ public class GameState {
     GameState.targetRobotPose = robotPose;
   }
 
-  public static ElevatorLevel getCoralTarget() {
-    return coralTarget;
+  public static ElevatorLevel getTarget() {
+    return target;
   }
 
-  public static void setCoralTarget(ElevatorLevel coralTarget) {
-    GameState.coralTarget = coralTarget;
+  public static void setTarget(ElevatorLevel target) {
+    GameState.target = target;
   }
 
   public static boolean getInvertControl() {

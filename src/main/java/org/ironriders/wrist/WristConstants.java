@@ -5,8 +5,8 @@ public class WristConstants {
 
     public static final Integer SECONDARY_WRIST_MOTOR = 13;
 
-    // Need to tune
-    public static final double P = 0.02; // TODO
+    // TODO: Need to tune
+    public static final double P = 0.02;
     public static final double I = 0.0;
     public static final double D = 0.0;
 

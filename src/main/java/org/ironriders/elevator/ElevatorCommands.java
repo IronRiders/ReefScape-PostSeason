@@ -1,8 +1,9 @@
 package org.ironriders.elevator;
 
-import org.ironriders.elevator.ElevatorConstants.Level;
+import org.ironriders.core.ElevatorWirstCTL.ElevatorLevel;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 public class ElevatorCommands {
 
@@ -12,14 +13,6 @@ public class ElevatorCommands {
     this.elevatorSubsystem = elevator;
 
     elevator.publish("Rehome", home());
-
-    elevator.publish("Elevator to L1", set(Level.L1));
-    elevator.publish("Elevator to L2", set(Level.L2));
-    elevator.publish("Elevator to L3", set(Level.L3));
-    elevator.publish("Elevator to L4", set(Level.L4));
-
-    elevator.publish("Elevator to Intaking", set(Level.Intaking));
-    elevator.publish("Elevator Down", set(Level.Down));
   }
 
   /**
@@ -29,14 +22,14 @@ public class ElevatorCommands {
    * @return a Command to change target, finishes when the elevator has reached
    *         it.
    */
-  public Command set(ElevatorConstants.Level level) {
+  public Command set(ElevatorLevel level) {
     return new Command() {
       public void execute() {
-        elevatorSubsystem.setGoal(level);
+        elevatorSubsystem.setGoal(level.pos);
       }
 
       public boolean isFinished() {
-        return elevatorSubsystem.isAtPosition(level);
+        return elevatorSubsystem.isAtPosition();
       }
     };
   }
@@ -50,21 +43,16 @@ public class ElevatorCommands {
     // we use defer here so that the elevatorSubsystem.isHomed() occurs at runtime
     return elevatorSubsystem.defer(() -> {
       if (elevatorSubsystem.isHomed()) {
-        return set(Level.Down);
+        return set(ElevatorLevel.DOWN);
       }
 
       return new Command() {
         public void execute() {
-          elevatorSubsystem.setMotor(-0.1);
+          elevatorSubsystem.setNotHomed();
         }
 
         public boolean isFinished() {
           return elevatorSubsystem.getBottomLimitSwitch().isPressed();
-        }
-
-        public void end(boolean interrupted) {
-          elevatorSubsystem.reset();
-          elevatorSubsystem.reportHomed();
         }
       };
     });
@@ -72,5 +60,9 @@ public class ElevatorCommands {
 
   public Command reset() {
     return elevatorSubsystem.runOnce(elevatorSubsystem::reset);
+  }
+
+  public Command downRehomeReset() {
+    return Commands.sequence(set(ElevatorLevel.DOWN), home(), reset());
   }
 }

@@ -7,20 +7,16 @@ package org.ironriders.core;
 import org.ironriders.climb.ClimbCommands;
 import org.ironriders.climb.ClimbConstants;
 import org.ironriders.climb.ClimbSubsystem;
+import org.ironriders.core.ElevatorWirstCTL.EWState;
 import org.ironriders.drive.DriveCommands;
 import org.ironriders.drive.DriveConstants;
 import org.ironriders.drive.DriveSubsystem;
-import org.ironriders.elevator.ElevatorCommands;
-import org.ironriders.elevator.ElevatorConstants.Level;
-import org.ironriders.elevator.ElevatorSubsystem;
 import org.ironriders.intake.CoralIntakeCommands;
 import org.ironriders.intake.CoralIntakeConstants.CoralIntakeState;
 import org.ironriders.intake.CoralIntakeSubsystem;
 import org.ironriders.lib.RobotUtils;
 import org.ironriders.targeting.TargetingCommands;
 import org.ironriders.targeting.TargetingSubsystem;
-import org.ironriders.wrist.CoralAbsoluteWristSubsystem;
-import org.ironriders.wrist.CoralWristCommands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
@@ -42,225 +38,207 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  */
 public class RobotContainer {
 
-  // The robot's subsystems and commands are defined here...
-  public final DriveSubsystem driveSubsystem = new DriveSubsystem();
-  public final DriveCommands driveCommands = driveSubsystem.getCommands();
+    // The robot's subsystems and commands are defined here...
+    public final DriveSubsystem driveSubsystem = new DriveSubsystem();
+    public final DriveCommands driveCommands = driveSubsystem.getCommands();
 
-  public final TargetingSubsystem targetingSubsystem = new TargetingSubsystem();
-  public final TargetingCommands targetingCommands = targetingSubsystem.getCommands();
+    public final TargetingSubsystem targetingSubsystem = new TargetingSubsystem();
+    public final TargetingCommands targetingCommands = targetingSubsystem.getCommands();
 
-  public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
-  public final ElevatorCommands elevatorCommands = elevatorSubsystem.getCommands();
+    public final ElevatorWirstCTL EWCTLCommands = new ElevatorWirstCTL();
 
-  public final CoralAbsoluteWristSubsystem coralWristSubsystem = new CoralAbsoluteWristSubsystem();
-  public final CoralWristCommands coralWristCommands = coralWristSubsystem.getCommands();
+    public final CoralIntakeSubsystem coralIntakeSubsystem = new CoralIntakeSubsystem();
+    public final CoralIntakeCommands coralIntakeCommands = coralIntakeSubsystem.getCommands();
 
-  public final CoralIntakeSubsystem coralIntakeSubsystem = new CoralIntakeSubsystem();
-  public final CoralIntakeCommands coralIntakeCommands = coralIntakeSubsystem.getCommands();
+    public final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
+    public final ClimbCommands climbCommands = climbSubsystem.getCommands();
 
-  public final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
-  public final ClimbCommands climbCommands = climbSubsystem.getCommands();
+    private final SendableChooser<Command> autoChooser;
 
-  private final SendableChooser<Command> autoChooser;
+    private final CommandXboxController primaryController = new CommandXboxController(
+            DriveConstants.PRIMARY_CONTROLLER_PORT);
+    private final CommandGenericHID secondaryController = new CommandJoystick(
+            DriveConstants.KEYPAD_CONTROLLER_PORT);
 
-  private final CommandXboxController primaryController = new CommandXboxController(
-      DriveConstants.PRIMARY_CONTROLLER_PORT);
-  private final CommandGenericHID secondaryController = new CommandJoystick(
-      DriveConstants.KEYPAD_CONTROLLER_PORT);
+    public final RobotCommands robotCommands = new RobotCommands(
+            driveCommands,
+            targetingCommands,
+            coralIntakeCommands,
+            EWCTLCommands,
+            climbCommands,
+            primaryController.getHID());
 
-  public final RobotCommands robotCommands = new RobotCommands(
-      driveCommands,
-      targetingCommands,
-      elevatorCommands,
-      coralWristCommands,
-      coralIntakeCommands,
-      climbCommands,
-      primaryController.getHID());
+    /**
+     * The container for the robot. Contains subsystems, IO devices, and commands.
+     */
+    public RobotContainer() {
+        // Configure the trigger bindings
+        configureBindings();
 
-  /**
-   * The container for the robot. Contains subsystems, IO devices, and commands.
-   */
-  public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
-
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Select", autoChooser);
-  }
-
-  private void configureBindings() {
-    int buttonConfiguration = 0; // 0 is the primary driver focused, 1 is bumper boosts with primary focus, 2 is
-                                 // secondary driver elevator with boosts bumpers
-    // DRIVE CONTROLS
-    driveSubsystem.setDefaultCommand(
-        robotCommands.driveTeleop(
-            () -> RobotUtils.controlCurve(
-                -primaryController.getLeftY() *
-                    driveSubsystem.controlSpeedMultipler *
-                    driveSubsystem.getinversionStatus(),
-                DriveConstants.TRANSLATION_CONTROL_EXPONENT,
-                DriveConstants.TRANSLATION_CONTROL_DEADBAND),
-            () -> RobotUtils.controlCurve(
-                -primaryController.getLeftX() *
-                    driveSubsystem.controlSpeedMultipler *
-                    driveSubsystem.getinversionStatus(),
-                DriveConstants.TRANSLATION_CONTROL_EXPONENT,
-                DriveConstants.TRANSLATION_CONTROL_DEADBAND),
-            () -> RobotUtils.controlCurve(
-                -primaryController.getRightX() *
-                    driveSubsystem.controlSpeedMultipler *
-                    driveSubsystem.getinversionStatus(),
-                DriveConstants.ROTATION_CONTROL_EXPONENT,
-                DriveConstants.ROTATION_CONTROL_DEADBAND)));
-
-    if (buttonConfiguration == 0) {
-      for (var angle = 0; angle < 360; angle += 45) {
-        primaryController.pov(angle).onTrue(driveCommands.jog(-angle));
-      }
-
-      primaryController.rightTrigger(.4)
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.Intaking))
-          .onTrue(coralIntakeCommands.set(CoralIntakeState.GRAB))
-          .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
-      primaryController.leftTrigger(.4)
-          .onTrue(coralIntakeCommands.set(CoralIntakeState.SCORE))
-          .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
-      primaryController.rightBumper()
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.Down));
-      primaryController.leftBumper()
-          .onTrue(coralIntakeCommands.set(CoralIntakeState.EJECT))
-          .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
-      primaryController.button(1)
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.L1));
-      primaryController.button(2)
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.L2));
-      primaryController.button(3)
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.L3));
-      primaryController.button(4)
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.L4));
-
-    } else if (buttonConfiguration == 1) {
-      for (var angle = 0; angle < 360; angle += 45) {
-        primaryController.pov(angle).onTrue(driveCommands.jog(-angle));
-      }
-
-      primaryController.rightTrigger(.4)
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.Intaking))
-          .onTrue(coralIntakeCommands.set(CoralIntakeState.GRAB))
-          .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP))
-          .onFalse(robotCommands.moveElevatorAndWrist(Level.Down));
-      primaryController.leftTrigger(.4)
-          .onTrue(coralIntakeCommands.set(CoralIntakeState.SCORE))
-          .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
-      primaryController.leftBumper()
-          .onTrue(driveCommands.setDriveTrainSpeed(0.5))
-          .onFalse(driveCommands.setDriveTrainSpeed(1));
-      primaryController.rightBumper()
-          .onTrue(driveCommands.setDriveTrainSpeed(1.5))
-          .onFalse(driveCommands.setDriveTrainSpeed(1));
-      primaryController.button(1)
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.L1));
-      primaryController.button(2)
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.L2));
-      primaryController.button(3)
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.L3));
-      primaryController.button(4)
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.L4));
-    } else if (buttonConfiguration == 2) {
-      for (var angle = 0; angle < 360; angle += 45) {
-        primaryController.pov(angle).onTrue(driveCommands.jog(-angle));
-      }
-
-      primaryController.rightTrigger(.4)
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.Intaking))
-          .onTrue(coralIntakeCommands.set(CoralIntakeState.GRAB))
-          .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP))
-          .onFalse(robotCommands.moveElevatorAndWrist(Level.Down));
-      primaryController.leftTrigger(.4)
-          .onTrue(coralIntakeCommands.set(CoralIntakeState.SCORE))
-          .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
-      primaryController.leftBumper()
-          .onTrue(driveCommands.setDriveTrainSpeed(0.5))
-          .onFalse(driveCommands.setDriveTrainSpeed(1));
-      primaryController.rightBumper()
-          .onTrue(driveCommands.setDriveTrainSpeed(1.5))
-          .onFalse(driveCommands.setDriveTrainSpeed(1));
-
-      secondaryController
-          .button(5) // TODO but actual button #
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.L1));
-      secondaryController
-          .button(6) // TODO but actual button #
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.L2));
-      secondaryController
-          .button(7) // TODO but actual button #
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.L3));
-      secondaryController
-          .button(8) // TODO but actual button #
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.L4));
-      secondaryController
-          .button(9) // TODO but actual button #
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.Intaking));
-      secondaryController
-          .button(10) // TODO but actual button #
-          .onTrue(robotCommands.moveElevatorAndWrist(Level.Down));
-      secondaryController
-          .button(11) // TODO but actual button #
-          .onTrue(
-              robotCommands.moveElevatorAndWrist(Level.HighAlgae));
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Select", autoChooser);
     }
-    // slows down drivetrain when pressed
-    // primaryController
-    // .leftTrigger()
-    // .onTrue(driveCommands.setDriveTrainSpeed(0.5))
-    // .onFalse(driveCommands.setDriveTrainSpeed(1));
 
-    // jog commands on pov buttons
-    // for (var angle = 0; angle < 360; angle += 45) {
-    // primaryController.pov(angle).onTrue(driveCommands.jog(-angle));
-    // }
-    // y vision align station not implmented yet //TODO
-    // x vision align reef not implmented yet //TODO
+    private void configureBindings() {
+        enum Config {
+            PRIMARY_DRIVER,
+            PRIMARY_DRIVER_WITH_BOOST,
+            SECONDARY_DRIVER_WITH_BOOST;
+        }
 
-    // primaryController
-    // .y()
-    // .onTrue(
-    // targetingCommands
-    // .targetNearest(ElementType.STATION)
-    // .andThen(driveCommands.pathfindToTarget())
-    // );
-    // primaryController.x().onTrue(driveCommands.invertControls());
+        Config buttonConfiguration = Config.PRIMARY_DRIVER; /*
+                                                             * 0 is the primary driver focused, 1 is bumper boosts with
+                                                             * primary focus, 2 is secondary driver elevator with boosts
+                                                             * bumpers
+                                                             */
 
-    // Secondary Driver left side buttons
-    // secondaryController
-    // .button(1)
-    // .whileTrue(
-    // coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.EJECT)
-    // )
-    // .whileFalse(
-    // coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.STOP)
-    // );
-    // secondaryController
-    // .button(2)
-    // .whileTrue(
-    // coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.GRAB)
-    // )
-    // .whileFalse(
-    // coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.STOP)
-    // );
+        // DRIVE CONTROLS
+        driveSubsystem.setDefaultCommand(
+                robotCommands.driveTeleop(
+                        () -> RobotUtils.controlCurve(
+                                -primaryController.getLeftY() *
+                                        driveSubsystem.controlSpeedMultipler *
+                                        driveSubsystem.getinversionStatus(),
+                                DriveConstants.TRANSLATION_CONTROL_EXPONENT,
+                                DriveConstants.TRANSLATION_CONTROL_DEADBAND),
+                        () -> RobotUtils.controlCurve(
+                                -primaryController.getLeftX() *
+                                        driveSubsystem.controlSpeedMultipler *
+                                        driveSubsystem.getinversionStatus(),
+                                DriveConstants.TRANSLATION_CONTROL_EXPONENT,
+                                DriveConstants.TRANSLATION_CONTROL_DEADBAND),
+                        () -> RobotUtils.controlCurve(
+                                -primaryController.getRightX() *
+                                        driveSubsystem.controlSpeedMultipler *
+                                        driveSubsystem.getinversionStatus(),
+                                DriveConstants.ROTATION_CONTROL_EXPONENT,
+                                DriveConstants.ROTATION_CONTROL_DEADBAND)));
 
-    secondaryController
-        .button(14) // TODO set correct value
-        .whileTrue(climbCommands.set(ClimbConstants.Targets.CLIMBED));
-    secondaryController
-        .button(15) // TODO set correct value
-        .whileTrue(climbCommands.set(ClimbConstants.Targets.EXTENDED));
-  }
+        switch (buttonConfiguration) {
+            case PRIMARY_DRIVER:
+                for (var angle = 0; angle < 360; angle += 45) {
+                    primaryController.pov(angle).onTrue(driveCommands.jog(-angle));
+                }
 
-  /**
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
-  }
+                // Go to intaking, then grab until told to stop
+                primaryController.rightTrigger(.4)
+                        .onTrue(EWCTLCommands.setEW(EWState.INTAKING))
+                        .onTrue(coralIntakeCommands.set(CoralIntakeState.GRAB))
+                        .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
+
+                // Score coral
+                primaryController.leftTrigger(.4)
+                        .onTrue(coralIntakeCommands.set(CoralIntakeState.SCORE))
+                        .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
+
+                // Elevator Down
+                primaryController.rightBumper()
+                        .onTrue(EWCTLCommands.setEW(EWState.INTAKING));
+
+                // Eject coral
+                primaryController.leftBumper()
+                        .onTrue(coralIntakeCommands.set(CoralIntakeState.EJECT))
+                        .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
+
+                primaryController.button(1) // works for L2 as well
+                        .onTrue(EWCTLCommands.setEW(EWState.L2));
+                primaryController.button(2) // works for L1 as well
+                        .onTrue(EWCTLCommands.setEW(EWState.L2));
+
+                primaryController.button(3)
+                        .onTrue(EWCTLCommands.setEW(EWState.L3));
+                primaryController.button(4)
+                        .onTrue(EWCTLCommands.setEW(EWState.L4));
+                break;
+
+            case PRIMARY_DRIVER_WITH_BOOST:
+                for (var angle = 0; angle < 360; angle += 45) {
+                    primaryController.pov(angle).onTrue(driveCommands.jog(-angle));
+                }
+
+                // Intake and then go down
+                primaryController.rightTrigger(.4)
+                        .onTrue(robotCommands.intake())
+                        .onFalse(robotCommands.stopIntake());
+
+                primaryController.leftTrigger(.4)
+                        .onTrue(coralIntakeCommands.set(CoralIntakeState.SCORE))
+                        .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
+
+                primaryController.leftBumper()
+                        .onTrue(driveCommands.setDriveTrainSpeed(0.5))
+                        .onFalse(driveCommands.setDriveTrainSpeed(1));
+
+                primaryController.rightBumper()
+                        .onTrue(driveCommands.setDriveTrainSpeed(1.5))
+                        .onFalse(driveCommands.setDriveTrainSpeed(1));
+
+                primaryController.button(1) // works for L2 as well
+                        .onTrue(EWCTLCommands.setEW(EWState.L2));
+                primaryController.button(2) // works for L1 as well
+                        .onTrue(EWCTLCommands.setEW(EWState.L2));
+
+                primaryController.button(3)
+                        .onTrue(EWCTLCommands.setEW(EWState.L3));
+                primaryController.button(4)
+                        .onTrue(EWCTLCommands.setEW(EWState.L4));
+                break;
+
+            case SECONDARY_DRIVER_WITH_BOOST:
+                for (var angle = 0; angle < 360; angle += 45) {
+                    primaryController.pov(angle).onTrue(driveCommands.jog(-angle));
+                }
+
+                primaryController.rightTrigger(.4)
+                        .onTrue(robotCommands.intake())
+                        .onFalse(robotCommands.stopIntake());
+
+                primaryController.leftTrigger(.4)
+                        .onTrue(coralIntakeCommands.set(CoralIntakeState.SCORE))
+                        .onFalse(coralIntakeCommands.set(CoralIntakeState.STOP));
+
+                primaryController.leftBumper()
+                        .onTrue(driveCommands.setDriveTrainSpeed(0.5))
+                        .onFalse(driveCommands.setDriveTrainSpeed(1));
+                primaryController.rightBumper()
+                        .onTrue(driveCommands.setDriveTrainSpeed(1.5))
+                        .onFalse(driveCommands.setDriveTrainSpeed(1));
+
+                secondaryController
+                        .button(5) // TODO but actual button #
+                        .onTrue(EWCTLCommands.setEW(EWState.L2));
+                secondaryController
+                        .button(6) // TODO but actual button #
+                        .onTrue(EWCTLCommands.setEW(EWState.L2));
+                secondaryController
+                        .button(7) // TODO but actual button #
+                        .onTrue(EWCTLCommands.setEW(EWState.L3));
+                secondaryController
+                        .button(8) // TODO but actual button #
+                        .onTrue(EWCTLCommands.setEW(EWState.L4));
+                secondaryController
+                        .button(9) // TODO but actual button #
+                        .onTrue(EWCTLCommands.setEW(EWState.INTAKING));
+                secondaryController
+                        .button(10) // TODO but actual button #
+                        .onTrue(EWCTLCommands.setEW(EWState.STOW));
+                break;
+            default:
+                throw new Error("Invalid buttonmap type!");
+        }
+
+        secondaryController
+                .button(14) // TODO set correct value
+                .whileTrue(climbCommands.set(ClimbConstants.Targets.CLIMBED));
+        secondaryController
+                .button(15) // TODO set correct value
+                .whileTrue(climbCommands.set(ClimbConstants.Targets.EXTENDED));
+    }
+
+    /**
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand() {
+        return autoChooser.getSelected();
+    }
 }

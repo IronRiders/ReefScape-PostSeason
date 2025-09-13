@@ -6,6 +6,8 @@ import static org.ironriders.elevator.ElevatorConstants.FOLLOW_MOTOR_ID;
 import static org.ironriders.elevator.ElevatorConstants.INCHES_PER_ROTATION;
 import static org.ironriders.elevator.ElevatorConstants.PRIMARY_MOTOR_ID;
 
+import org.ironriders.core.ElevatorWirstCTL.ElevatorLevel;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -22,8 +24,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import org.ironriders.lib.IronSubsystem;
 
 /**
- * This subsystem controls the big ol' elevator that moves the algae and coral
- * manipulators vertically.
+ * This subsystem controls the big ol' elevator that moves the coral
+ * manipulator vertically.
  */
 public class ElevatorSubsystem extends IronSubsystem {
 
@@ -50,7 +52,7 @@ public class ElevatorSubsystem extends IronSubsystem {
   private TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State();
   private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State();
 
-  private ElevatorConstants.Level currentTarget = ElevatorConstants.Level.Down;
+  private ElevatorLevel currentTarget = ElevatorLevel.DOWN;
   private boolean isHomed = false;
 
   public ElevatorSubsystem() {
@@ -100,28 +102,38 @@ public class ElevatorSubsystem extends IronSubsystem {
         ElevatorConstants.S,
         ElevatorConstants.G,
         ElevatorConstants.V);
+
     pidController.setTolerance(ELEVATOR_POSITION_TOLERANCE);
     commands = new ElevatorCommands(this);
   }
 
   @Override
   public void periodic() {
-    // Calculate the next state and update the current state
-    periodicSetpoint = profile.calculate(
-        ElevatorConstants.T,
-        periodicSetpoint,
-        goalSetpoint);
 
-    // Only run if homed
+    // Only do PID if homed
     if (isHomed) {
+      // Calculate the next state and update the current state
+      periodicSetpoint = profile.calculate(
+          ElevatorConstants.T,
+          periodicSetpoint,
+          goalSetpoint);
+
       double pidOutput = pidController.calculate(
-          getHeightInches(),
+          getHeight(),
           periodicSetpoint.position);
+
       double ff = feedforward.calculate(
           periodicSetpoint.position,
           periodicSetpoint.velocity);
 
       primaryMotor.set(pidOutput + ff);
+    }
+    else {
+      primaryMotor.set(-ElevatorConstants.HOME_SPEED);
+
+      if (bottomLimitSwitch.isPressed()) {
+          setHomed();
+      }
     }
 
     // update SmartDashboard
@@ -144,13 +156,8 @@ public class ElevatorSubsystem extends IronSubsystem {
     publish("Follower Encoder", followerMotor.getEncoder().getPosition());
   }
 
-  public void setGoal(ElevatorConstants.Level goal) {
-    this.goalSetpoint = new TrapezoidProfile.State(goal.positionInches, 0d);
-  }
-
-  public void setMotor(double set) {
-    primaryMotor.set(set);
-    pidController.setSetpoint(set);
+  public void setGoal(double pos) {
+    this.goalSetpoint = new TrapezoidProfile.State(pos, 0d);
   }
 
   public void reset() {
@@ -158,24 +165,37 @@ public class ElevatorSubsystem extends IronSubsystem {
     pidController.reset();
   }
 
+  public void zeroGoal() {
+    goalSetpoint = new TrapezoidProfile.State(0, 0d);
+    periodicSetpoint = new TrapezoidProfile.State(0, 0d);
+  }
+
   public SparkLimitSwitch getBottomLimitSwitch() {
     return bottomLimitSwitch;
   }
 
-  public void reportHomed() {
+  public void setHomed() {
     isHomed = true;
     encoder.setPosition(0); // reset
+    zeroGoal();
+    reset();
+  }
+
+  public void setNotHomed() {
+    isHomed = false;
+    zeroGoal();
+    reset();
   }
 
   public boolean isHomed() {
     return isHomed;
   }
 
-  public double getHeightInches() {
+  public double getHeight() {
     return encoder.getPosition() * INCHES_PER_ROTATION;
   }
 
-  public boolean isAtPosition(ElevatorConstants.Level level) {
+  public boolean isAtPosition() {
     return pidController.atSetpoint();
   }
 

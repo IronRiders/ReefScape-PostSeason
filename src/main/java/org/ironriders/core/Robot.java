@@ -52,6 +52,11 @@ public class Robot extends TimedRobot {
   }
 
   @Override
+  public void simulationInit() {
+    generalInit();
+  }
+
+  @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
   }
@@ -64,7 +69,7 @@ public class Robot extends TimedRobot {
       autonomousCommand.cancel();
       autonomousCommand = null;
     }
-
+    System.out.println("Starting Robot...");
     robotContainer.robotCommands.startup().schedule();
   }
 }

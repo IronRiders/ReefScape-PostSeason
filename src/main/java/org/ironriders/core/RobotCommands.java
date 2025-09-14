@@ -9,6 +9,8 @@ import org.ironriders.intake.IntakeCommands;
 import org.ironriders.intake.IntakeConstants.IntakeState;
 import org.ironriders.targeting.TargetingCommands;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -46,7 +48,14 @@ public class RobotCommands {
     this.EWCTLCommands = EWCTLCommands;
     this.climbCommands = climbCommands;
     this.controller = controller;
-    // TODO: Named commands, implement along w/ on-the-fly autos
+    // TODO: More named commands, implement good autos
+
+    NamedCommands.registerCommand("WE L2", EWCTLCommands.setEW(EWState.L2));
+    NamedCommands.registerCommand("WE L3", EWCTLCommands.setEW(EWState.L3));
+    NamedCommands.registerCommand("WE L4", EWCTLCommands.setEW(EWState.L4));
+
+    NamedCommands.registerCommand("Intake Eject", eject());
+    NamedCommands.registerCommand("Intake", intake());
   }
 
   /**
@@ -82,6 +91,10 @@ public class RobotCommands {
 
   public Command intake() {
     return Commands.parallel(EWCTLCommands.setEW(EWState.INTAKING), intakeCommands.set(IntakeState.GRAB));
+  }
+
+  public Command eject() {
+    return intakeCommands.set(IntakeState.EJECT);
   }
 
   public Command stopIntake() {

@@ -19,8 +19,6 @@
 *.tar.gz
 *.rar
 
-*/sim*.json
-
 ctre_sim/*
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
@@ -31,3 +29,6 @@ build/
 .vscode/
 .idea/ # please do not use IntelliJ!
 build
+simgui-ds.json
+simgui-window.json
+simgui.json

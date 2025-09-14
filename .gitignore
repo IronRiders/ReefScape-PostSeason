@@ -19,9 +19,7 @@
 *.tar.gz
 *.rar
 
-simgui-ds.json
-simgui-windown.json
-simgui.json
+*/sim*.json
 
 ctre_sim/*
 

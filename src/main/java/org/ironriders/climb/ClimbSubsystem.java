@@ -91,6 +91,7 @@ public class ClimbSubsystem extends IronSubsystem {
     publish("Goal Position", goalSetpoint.position);
 
     publish("Current Position", getCurrentAngle());
+    publish("at Goal?", atGoal);
   }
 
   public void reset() {
@@ -100,20 +101,25 @@ public class ClimbSubsystem extends IronSubsystem {
     periodicSetpoint = stopped;
 
     motor.set(0);
+    logMessage("reseting");
   }
 
   public void home() {
     if (currentTarget != Targets.MIN) { // The climber is not all the way down, reseting it's encoder would cause it to
                                         // go boom.
+      logMessage("aborting home, climber state is not MIN!");
       return;
     }
-
+    logMessage("rehoming!");
     motor.getEncoder().setPosition(0);
     reset();
   }
 
   protected void setGoal(ClimbConstants.Targets target) {
     goalSetpoint = new TrapezoidProfile.State(target.pos, 0);
+    currentTarget = target;
+
+    logMessage("goes to " + currentTarget.toString());
   }
 
   public double getCurrentAngle() {

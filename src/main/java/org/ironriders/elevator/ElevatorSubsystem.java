@@ -104,6 +104,7 @@ public class ElevatorSubsystem extends IronSubsystem {
         ElevatorConstants.V);
 
     pidController.setTolerance(ELEVATOR_POSITION_TOLERANCE);
+    reset();
     commands = new ElevatorCommands(this);
   }
 
@@ -129,6 +130,7 @@ public class ElevatorSubsystem extends IronSubsystem {
       primaryMotor.set(pidOutput + ff);
     }
     else {
+      logMessage("trying to home!"); //this will spam alot, debuging only
       primaryMotor.set(-ElevatorConstants.HOME_SPEED);
 
       if (bottomLimitSwitch.isPressed()) {
@@ -144,6 +146,10 @@ public class ElevatorSubsystem extends IronSubsystem {
     publish("Homed", isHomed);
     publish("Goal State", currentTarget.toString());
     publish("Goal Position", goalSetpoint.position);
+    if (isHomed)
+      publish("At Goal?", pidController.atSetpoint());
+    else
+      publish("At Goal?", "N/A; Not Homed!");
 
     publish(
         "Forward Limit Switch",
@@ -156,16 +162,19 @@ public class ElevatorSubsystem extends IronSubsystem {
     publish("Follower Encoder", followerMotor.getEncoder().getPosition());
   }
 
-  public void setGoal(double pos) {
-    this.goalSetpoint = new TrapezoidProfile.State(pos, 0d);
+  public void setGoal(ElevatorLevel level) {
+    logMessage("goes to " + level.toString());
+    this.goalSetpoint = new TrapezoidProfile.State(level.pos, 0d);
   }
 
   public void reset() {
+    logMessage("reseting");
     primaryMotor.set(0);
     pidController.reset();
   }
 
   public void zeroGoal() {
+    logMessage("set zero goal");
     goalSetpoint = new TrapezoidProfile.State(0, 0d);
     periodicSetpoint = new TrapezoidProfile.State(0, 0d);
   }
@@ -175,6 +184,7 @@ public class ElevatorSubsystem extends IronSubsystem {
   }
 
   public void setHomed() {
+    logMessage("setting homed");
     isHomed = true;
     encoder.setPosition(0); // reset
     zeroGoal();
@@ -182,6 +192,7 @@ public class ElevatorSubsystem extends IronSubsystem {
   }
 
   public void setNotHomed() {
+    logMessage("setting non-homed");
     isHomed = false;
     zeroGoal();
     reset();

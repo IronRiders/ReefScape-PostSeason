@@ -6,6 +6,7 @@ import org.ironriders.lib.IronSubsystem;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.pathplanner.lib.path.RotationTarget;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -24,7 +25,9 @@ public class WristSubsystem extends IronSubsystem {
 
     private TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State(); // Acts as a final setpoint
     private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State(); // Acts as a temporary setpoint for
-                                                                            // calculating the next speed value
+    // calculating the next speed value
+
+    public WristRotation targetRotation;
 
     private TrapezoidProfile.State stopped;
 
@@ -32,19 +35,18 @@ public class WristSubsystem extends IronSubsystem {
 
     private final SparkMaxConfig motorConfig = new SparkMaxConfig();
 
-
     public WristSubsystem() {
         motorConfig
-        .smartCurrentLimit(10) // Can go to 40
-        .idleMode(IdleMode.kBrake);
+                .smartCurrentLimit(10) // Can go to 40
+                .idleMode(IdleMode.kBrake);
 
         motorConfig.softLimit
-            .forwardSoftLimit(WristRotation.L4.pos)
-            .forwardSoftLimitEnabled(true);
+                .forwardSoftLimit(WristRotation.L4.pos)
+                .forwardSoftLimitEnabled(true);
 
         motorConfig.softLimit
-            .reverseSoftLimit(WristRotation.STOW.pos)
-            .reverseSoftLimitEnabled(true);
+                .reverseSoftLimit(WristRotation.STOW.pos)
+                .reverseSoftLimitEnabled(true);
 
         primaryMotor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         secondaryMotor.configure(motorConfig.follow(WristConstants.PRIMARY_WRIST_MOTOR).inverted(true),
@@ -72,11 +74,20 @@ public class WristSubsystem extends IronSubsystem {
         atGoal = pid.atSetpoint();
     }
 
+    public void updateDash() {
+        publish("Current target", targetRotation.toString());
+        publish("Current goal pos", goalSetpoint.position);
+        publish("Current angle", getCurrentAngle());
+        publish("At goal?", atGoal);
+    }
+
     public double getCurrentAngle() {
         return primaryMotor.getEncoder().getPosition() * 360;
     }
 
     public void reset() {
+        logMessage("reseting");
+
         pid.reset();
 
         stopped = new TrapezoidProfile.State(getCurrentAngle(), 0);
@@ -89,6 +100,7 @@ public class WristSubsystem extends IronSubsystem {
 
     protected void setGoal(WristRotation rotation) {
         goalSetpoint = new TrapezoidProfile.State(rotation.pos, 0);
+        targetRotation = rotation;
     }
 
     public WristCommands getCommands() {

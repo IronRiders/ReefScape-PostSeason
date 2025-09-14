@@ -77,12 +77,11 @@ public class IntakeSubsystem extends IronSubsystem {
   }
 
   public void set(IntakeState state) {
-    publish("Updated Intake State", state.toString());
+    publish("Intake State", state.toString());
+    logMessage("goes to " + state.toString());
     leftIntake.set(state.getSpeed() * outputDifferential(state, (LEFT_SPEED_MUL * state.offset)));
     rightIntake.set(state.getSpeed() * outputDifferential(state, (RIGHT_SPEED_MUL * state.offset)));
     rollerIntake.set(state.getSpeed() * outputDifferential(state, (ROLLER_SPEED_MUL * state.offset)));
-
-    publish("Set State", state.name());
   }
 
   public double outputDifferential(IntakeState state, double controlSpeedMultipler) {

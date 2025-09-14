@@ -14,6 +14,9 @@ public class WristConstants {
 
     public static final double TOLERANCE = 0.05;
 
+    public static final double MAX_ACC = 10;
+    public static final double MAX_VEL = 20;
+
     public static final double SPROCKET_RATIO = 1;
     public static final double GEAR_RATIO = SPROCKET_RATIO / 33.75;
     public static final double ENCODER_SCALE = GEAR_RATIO;

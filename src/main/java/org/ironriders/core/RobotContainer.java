@@ -235,7 +235,10 @@ public class RobotContainer {
                 .whileTrue(climbCommands.set(ClimbConstants.Targets.CLIMBED));
         secondaryController
                 .button(15) // TODO set correct value
-                .whileTrue(climbCommands.set(ClimbConstants.Targets.EXTENDED));
+                .whileTrue(climbCommands.set(ClimbConstants.Targets.MIN));
+        secondaryController
+                .button(16) // TODO set correct value
+                .whileTrue(climbCommands.set(ClimbConstants.Targets.MAX));
     }
 
     /**

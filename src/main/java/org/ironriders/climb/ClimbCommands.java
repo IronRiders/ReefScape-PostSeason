@@ -9,11 +9,17 @@ public class ClimbCommands {
   public ClimbCommands(ClimbSubsystem climb) {
     this.climb = climb;
 
-    climb.publish("Climb Max", set(ClimbConstants.Targets.CLIMBED));
-    climb.publish("Climb Down", set(ClimbConstants.Targets.EXTENDED));
+    climb.publish("Climb", set(ClimbConstants.Targets.CLIMBED));
+    climb.publish("Climb MAX", set(ClimbConstants.Targets.MAX));
+    climb.publish("Climb MIN", set(ClimbConstants.Targets.MIN)); 
+    climb.publish("Rehome", home());
   }
 
   public Command set(ClimbConstants.Targets target) {
-    return climb.runOnce(() -> climb.set(target));
+    return climb.runOnce(() -> climb.setGoal(target));
+  }
+
+  public Command home() {
+    return climb.runOnce(() -> home());
   }
 }

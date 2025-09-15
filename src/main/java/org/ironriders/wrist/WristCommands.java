@@ -15,15 +15,15 @@ public class WristCommands {
 
   public Command set(WristRotation rotation) {
     return new Command() {
-        public void execute() {
-          wristSubsystem.setGoal(rotation);
-        }
-  
-        public boolean isFinished() {
-          return wristSubsystem.atGoal;
-        }
-      };
-    }
+      public void execute() {
+        wristSubsystem.setGoal(rotation);
+      }
+
+      public boolean isFinished() {
+        return wristSubsystem.atGoal;
+      }
+    };
+  }
 
   public Command reset() {
     return wristSubsystem.runOnce(wristSubsystem::reset);

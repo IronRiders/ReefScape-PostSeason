@@ -29,7 +29,7 @@ public class ElevatorWristCTL extends IronSubsystem {
         DOWN(0),
         L2(7.5), // TODO - These need to be tuned
         L3(21),
-        L4(53); 
+        L4(53);
 
         public double pos;
 

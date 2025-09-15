@@ -28,6 +28,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
+enum Config {
+    PRIMARY_DRIVER,
+    PRIMARY_DRIVER_WITH_BOOST,
+    SECONDARY_DRIVER_WITH_BOOST;
+}
+
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -83,17 +89,14 @@ public class RobotContainer {
     private void configureBindings() {
         DriverStation.silenceJoystickConnectionWarning(true);
 
-        enum Config {
-            PRIMARY_DRIVER,
-            PRIMARY_DRIVER_WITH_BOOST,
-            SECONDARY_DRIVER_WITH_BOOST;
-        }
-
-        Config buttonConfiguration = Config.PRIMARY_DRIVER; /*
-                                                             * 0 is the primary driver focused, 1 is bumper boosts with
-                                                             * primary focus, 2 is secondary driver elevator with boosts
-                                                             * bumpers
-                                                             */
+        /*
+         * 0 is the primary driver focused, 1 is bumper
+         * boosts with
+         * primary focus, 2 is secondary driver elevator
+         * with boosts
+         * bumpers
+         */
+        Config buttonConfiguration = Config.PRIMARY_DRIVER;
 
         // DRIVE CONTROLS
         driveSubsystem.setDefaultCommand(
@@ -125,7 +128,8 @@ public class RobotContainer {
 
                 // Go to intaking, then grab until told to stop
                 primaryController.rightTrigger(.4)
-                        .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING))
+                        .onTrue(elevatorWristCommands
+                                .setElevatorWrist(ElevatorWristState.INTAKING))
                         .onTrue(intakeCommands.set(IntakeState.GRAB))
                         .onFalse(intakeCommands.set(IntakeState.STOP));
 
@@ -136,7 +140,8 @@ public class RobotContainer {
 
                 // Elevator Down
                 primaryController.rightBumper()
-                        .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING));
+                        .onTrue(elevatorWristCommands
+                                .setElevatorWrist(ElevatorWristState.INTAKING));
 
                 // Eject coral
                 primaryController.leftBumper()
@@ -221,10 +226,12 @@ public class RobotContainer {
                         .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.L4));
                 secondaryController
                         .button(9) // TODO but actual button #
-                        .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING));
+                        .onTrue(elevatorWristCommands
+                                .setElevatorWrist(ElevatorWristState.INTAKING));
                 secondaryController
                         .button(10) // TODO but actual button #
-                        .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.STOW));
+                        .onTrue(elevatorWristCommands
+                                .setElevatorWrist(ElevatorWristState.STOW));
                 break;
             default:
                 throw new Error("Invalid buttonmap type!");

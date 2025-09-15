@@ -74,7 +74,7 @@ public class WristSubsystem extends IronSubsystem {
         atGoal = pid.atSetpoint();
     }
 
-    public void updateDash() {
+    public void updateDashboard() {
         publish("Current target", targetRotation.toString());
         publish("Current goal pos", goalSetpoint.position);
         publish("Current angle", getCurrentAngle());

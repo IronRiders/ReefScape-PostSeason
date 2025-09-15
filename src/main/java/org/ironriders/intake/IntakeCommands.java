@@ -16,6 +16,7 @@ public class IntakeCommands {
     this.intake = intake;
 
     intake.publish("Intake Grab", set(IntakeState.GRAB));
+    intake.publish("Intake Score", set(IntakeState.SCORE));
     intake.publish("Intake Eject", set(IntakeState.EJECT));
     intake.publish("Intake Stop", set(IntakeState.STOP));
   }

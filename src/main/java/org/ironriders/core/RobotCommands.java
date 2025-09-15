@@ -50,9 +50,9 @@ public class RobotCommands {
     this.controller = controller;
     // TODO: More named commands, implement good autos
 
-    NamedCommands.registerCommand("WE L2", EWCTLCommands.setEW(EWState.L2));
-    NamedCommands.registerCommand("WE L3", EWCTLCommands.setEW(EWState.L3));
-    NamedCommands.registerCommand("WE L4", EWCTLCommands.setEW(EWState.L4));
+    NamedCommands.registerCommand("EW L2", EWCTLCommands.setEW(EWState.L2));
+    NamedCommands.registerCommand("EW L3", EWCTLCommands.setEW(EWState.L3));
+    NamedCommands.registerCommand("EW L4", EWCTLCommands.setEW(EWState.L4));
 
     NamedCommands.registerCommand("Intake Eject", eject());
     NamedCommands.registerCommand("Intake", intake());

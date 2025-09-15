@@ -40,26 +40,16 @@ public class IntakeConstants {
   public static final double MAX_VEL = .1;
 
   public enum IntakeState {
-    GRAB(.25, 1),
-    SCORE(.30, 1),
-    EJECT(-.25, 0),
-    STOP(0.00, 0),
-    HOLD(.01, 1);
+    GRAB(.25),
+    SCORE(.30),
+    EJECT(-.25),
+    STOP(0.00),
+    HOLD(.01);
 
     public final double speed;
-    public final double offset;
 
-    IntakeState(double speed, double offset) {
+    IntakeState(double speed) {
       this.speed = speed;
-      this.offset = offset;
-    }
-
-    public double getSpeed() {
-      return speed;
-    }
-
-    public double getBool() {
-      return offset;
     }
   }
 }

@@ -18,11 +18,11 @@ public class ElevatorWirstCTL extends IronSubsystem {
     private final ElevatorCommands elevatorCommands = elevatorSubsystem.getCommands();
 
     public ElevatorWirstCTL() {
-        publish("Set to STOW", setEW(EWState.STOW));
-        publish("Set to INTAKING", setEW(EWState.INTAKING));
-        publish("Set to L2", setEW(EWState.L2));
-        publish("Set to L3", setEW(EWState.L3));
-        publish("Set to L4", setEW(EWState.L4));
+        publish("Set to STOW", setElevatorWrist(ElevatorWristState.STOW));
+        publish("Set to INTAKING", setElevatorWrist(ElevatorWristState.INTAKING));
+        publish("Set to L2", setElevatorWrist(ElevatorWristState.L2));
+        publish("Set to L3", setElevatorWrist(ElevatorWristState.L3));
+        publish("Set to L4", setElevatorWrist(ElevatorWristState.L4));
     }
 
     public enum ElevatorLevel { // Position in inches
@@ -51,7 +51,7 @@ public class ElevatorWirstCTL extends IronSubsystem {
         }
     }
 
-    public enum EWState {
+    public enum ElevatorWristState {
         STOW(ElevatorLevel.DOWN, WristRotation.STOW),
         INTAKING(ElevatorLevel.DOWN, WristRotation.INTAKING),
         L2(ElevatorLevel.L2, WristRotation.L2L3),
@@ -61,7 +61,7 @@ public class ElevatorWirstCTL extends IronSubsystem {
         public ElevatorLevel eLevel;
         public WristRotation wRot;
 
-        EWState(ElevatorLevel eLevel, WristRotation wRot) {
+        ElevatorWristState(ElevatorLevel eLevel, WristRotation wRot) {
             this.eLevel = eLevel;
             this.wRot = wRot;
         }
@@ -71,7 +71,7 @@ public class ElevatorWirstCTL extends IronSubsystem {
      * This command sets both a elevator position and a wrist possition.
      */
 
-    public Command setEW(EWState state) {
+    public Command setElevatorWrist(ElevatorWristState state) {
         return Commands.parallel(wristCommands.set(state.wRot), elevatorCommands.set(state.eLevel),
                 logMessage("goes to " + state.toString()));
     }
@@ -83,7 +83,7 @@ public class ElevatorWirstCTL extends IronSubsystem {
      */
 
     public Command reset() {
-        return Commands.parallel(wristCommands.stowAndReset(), elevatorCommands.downRehomeReset(), logMessage("reseting"));
+        return Commands.parallel(wristCommands.stowReset(), elevatorCommands.downRehomeReset(), logMessage("reseting"));
     }
 
 }

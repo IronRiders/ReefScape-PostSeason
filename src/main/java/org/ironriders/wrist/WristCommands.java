@@ -29,7 +29,7 @@ public class WristCommands {
     return wristSubsystem.runOnce(wristSubsystem::reset);
   }
 
-  public Command stowAndReset() {
+  public Command stowReset() {
     return Commands.sequence(set(WristRotation.STOW), reset());
   }
 }

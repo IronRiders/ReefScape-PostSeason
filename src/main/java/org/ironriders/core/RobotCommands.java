@@ -3,7 +3,7 @@ package org.ironriders.core;
 import java.util.function.DoubleSupplier;
 
 import org.ironriders.climb.ClimbCommands;
-import org.ironriders.core.ElevatorWirstCTL.EWState;
+import org.ironriders.core.ElevatorWirstCTL.ElevatorWristState;
 import org.ironriders.drive.DriveCommands;
 import org.ironriders.intake.IntakeCommands;
 import org.ironriders.intake.IntakeConstants.IntakeState;
@@ -31,7 +31,7 @@ public class RobotCommands {
   private final TargetingCommands targetingCommands;
   private final IntakeCommands intakeCommands;
   private final ClimbCommands climbCommands;
-  private final ElevatorWirstCTL EWCTLCommands;
+  private final ElevatorWirstCTL elevatorWristCommands;
 
   private final GenericHID controller;
 
@@ -39,20 +39,20 @@ public class RobotCommands {
       DriveCommands driveCommands,
       TargetingCommands targetingCommands,
       IntakeCommands intakeCommands,
-      ElevatorWirstCTL EWCTLCommands,
+      ElevatorWirstCTL elevatorWristCommands,
       ClimbCommands climbCommands,
       GenericHID controller) {
     this.driveCommands = driveCommands;
     this.targetingCommands = targetingCommands;
     this.intakeCommands = intakeCommands;
-    this.EWCTLCommands = EWCTLCommands;
+    this.elevatorWristCommands = elevatorWristCommands;
     this.climbCommands = climbCommands;
     this.controller = controller;
     // TODO: More named commands, implement good autos
 
-    NamedCommands.registerCommand("EW L2", EWCTLCommands.setEW(EWState.L2));
-    NamedCommands.registerCommand("EW L3", EWCTLCommands.setEW(EWState.L3));
-    NamedCommands.registerCommand("EW L4", EWCTLCommands.setEW(EWState.L4));
+    NamedCommands.registerCommand("ElevatorWrist L2", elevatorWristCommands.setElevatorWrist(ElevatorWristState.L2));
+    NamedCommands.registerCommand("ElevatorWrist L3", elevatorWristCommands.setElevatorWrist(ElevatorWristState.L3));
+    NamedCommands.registerCommand("ElevatorWrist L4", elevatorWristCommands.setElevatorWrist(ElevatorWristState.L4));
 
     NamedCommands.registerCommand("Intake Eject", eject());
     NamedCommands.registerCommand("Intake", intake());
@@ -64,7 +64,7 @@ public class RobotCommands {
   public Command startup() {
     intakeCommands.setOnSuccess(() -> rumble());
 
-    return EWCTLCommands.reset(); // moves everything to zero
+    return elevatorWristCommands.reset(); // moves everything to zero
   }
 
   /**
@@ -90,7 +90,7 @@ public class RobotCommands {
   }
 
   public Command intake() {
-    return Commands.parallel(EWCTLCommands.setEW(EWState.INTAKING), intakeCommands.set(IntakeState.GRAB));
+    return Commands.parallel(elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING), intakeCommands.set(IntakeState.GRAB));
   }
 
   public Command eject() {
@@ -98,7 +98,7 @@ public class RobotCommands {
   }
 
   public Command stopIntake() {
-    return Commands.parallel(EWCTLCommands.setEW(EWState.STOW), intakeCommands.set(IntakeState.STOP));
+    return Commands.parallel(elevatorWristCommands.setElevatorWrist(ElevatorWristState.STOW), intakeCommands.set(IntakeState.STOP));
   }
 
 

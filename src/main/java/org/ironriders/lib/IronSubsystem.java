@@ -1,5 +1,8 @@
 package org.ironriders.lib;
 
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.util.sendable.Sendable;
@@ -18,8 +21,20 @@ public abstract class IronSubsystem extends SubsystemBase {
   private final String dashboardPrefix = "Subsystems/" + diagnosticName + "/";
   private final String messagePrefix = diagnosticName + ": ";
 
+  private final long startupTime;
+
+  public IronSubsystem() {
+    startupTime = System.nanoTime();
+  }
+
+  private String addThreadTime() {
+    return "["
+        + Objects.toString(TimeUnit.MILLISECONDS.convert(System.nanoTime() - startupTime, TimeUnit.NANOSECONDS), null)
+        + "] ";
+  }
+
   public Command logMessage(String msg) {
-    return Commands.print(messagePrefix + msg);
+    return Commands.print(addThreadTime() + messagePrefix + msg);
   }
 
   public double getDiagnostic(String name, double defaultValue) {
@@ -46,10 +61,10 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   public void reportError(String message) {
-    DriverStation.reportError(messagePrefix + message, false);
+    DriverStation.reportError(addThreadTime() + messagePrefix + message, false);
   }
 
   public void reportWarning(String message) {
-    DriverStation.reportWarning(messagePrefix + message, false);
+    DriverStation.reportWarning(addThreadTime() + messagePrefix + message, false);
   }
 }

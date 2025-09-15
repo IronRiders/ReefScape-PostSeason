@@ -6,6 +6,9 @@ import org.ironriders.lib.IronSubsystem;
 import org.ironriders.wrist.WristCommands;
 import org.ironriders.wrist.WristSubsystem;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -17,12 +20,18 @@ public class ElevatorWristCTL extends IronSubsystem {
     private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
     private final ElevatorCommands elevatorCommands = elevatorSubsystem.getCommands();
 
+    private final String diagnosticName = this.getClass().getSimpleName().replaceAll("Subsystem$", "");
+    private final String dashboardPrefix = "Subsystems/" + diagnosticName + "/";
+
     public ElevatorWristCTL() {
         publish("Set to STOW", setElevatorWrist(ElevatorWristState.STOW));
         publish("Set to INTAKING", setElevatorWrist(ElevatorWristState.INTAKING));
         publish("Set to L2", setElevatorWrist(ElevatorWristState.L2));
         publish("Set to L3", setElevatorWrist(ElevatorWristState.L3));
         publish("Set to L4", setElevatorWrist(ElevatorWristState.L4));
+
+        SmartDashboard.putData(dashboardPrefix + "Reset", reset());
+        NamedCommands.registerCommand("Elevator Wrist Reset", (Command) reset());
     }
 
     public enum ElevatorLevel { // Position in inches

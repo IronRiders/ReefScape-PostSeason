@@ -7,8 +7,9 @@ import static org.ironriders.elevator.ElevatorConstants.INCHES_PER_ROTATION;
 import static org.ironriders.elevator.ElevatorConstants.PRIMARY_MOTOR_ID;
 
 import org.ironriders.core.ElevatorWristCTL;
-import org.ironriders.core.ElevatorWristCTL.*;
-
+import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
+import org.ironriders.core.ElevatorWristCTL.WristRotation;
+import org.ironriders.lib.IronSubsystem;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -20,12 +21,10 @@ import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import org.ironriders.lib.IronSubsystem;
-import org.ironriders.wrist.*;
-
 
 /**
  * This subsystem controls the big ol' elevator that moves the
@@ -138,13 +137,12 @@ public class ElevatorSubsystem extends IronSubsystem {
           periodicSetpoint.velocity);
 
       primaryMotor.set(pidOutput + ff);
-    }
-    else {
-      logMessage("trying to home!"); //this will spam alot, debuging only
+    } else {
+      logMessage("trying to home!"); // this will spam alot, debuging only
       primaryMotor.set(-ElevatorConstants.HOME_SPEED);
 
       if (bottomLimitSwitch.isPressed()) {
-          setHomed();
+        setHomed();
       }
     }
 

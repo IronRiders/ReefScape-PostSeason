@@ -115,7 +115,7 @@ public class ElevatorSubsystem extends IronSubsystem {
 
   @Override
   public void periodic() {
-    if (getHeight() > ElevatorLevel.L3.pos &  > elevatorWristCTL.getWristRotation() < WristRotation.L2L3.pos) {
+    if (getHeight() > ElevatorLevel.L3.pos & elevatorWristCTL.getWristRotation() < WristRotation.L2L3.pos) {
       logMessage("ELEVATOR STOPPED DUE TO BAD WRIST POSITION, WAITING");
       primaryMotor.set(0);
       return;

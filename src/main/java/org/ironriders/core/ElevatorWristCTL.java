@@ -77,7 +77,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
 
     public double getWristRotation() {
-        return wristSubsystem.getCurrentAngle()
+        return wristSubsystem.getCurrentAngle();
     }
 
     public double getElevatorHight() {

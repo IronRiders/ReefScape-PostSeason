@@ -7,7 +7,7 @@ package org.ironriders.core;
 import org.ironriders.climb.ClimbCommands;
 import org.ironriders.climb.ClimbConstants;
 import org.ironriders.climb.ClimbSubsystem;
-import org.ironriders.core.ElevatorWirstCTL.ElevatorWristState;
+import org.ironriders.core.ElevatorWristCTL.ElevatorWristState;
 import org.ironriders.drive.DriveCommands;
 import org.ironriders.drive.DriveConstants;
 import org.ironriders.drive.DriveSubsystem;
@@ -46,7 +46,7 @@ public class RobotContainer {
     public final TargetingSubsystem targetingSubsystem = new TargetingSubsystem();
     public final TargetingCommands targetingCommands = targetingSubsystem.getCommands();
 
-    public final ElevatorWirstCTL elevatorWristCommands = new ElevatorWirstCTL();
+    public final ElevatorWristCTL elevatorWristCommands = new ElevatorWristCTL();
 
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
     public final IntakeCommands intakeCommands = intakeSubsystem.getCommands();

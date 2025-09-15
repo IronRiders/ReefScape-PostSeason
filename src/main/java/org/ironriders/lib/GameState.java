@@ -3,7 +3,7 @@ package org.ironriders.lib;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.ironriders.core.ElevatorWirstCTL.ElevatorLevel;
+import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
 import org.ironriders.lib.field.FieldPose;
 
 import edu.wpi.first.math.geometry.Pose2d;

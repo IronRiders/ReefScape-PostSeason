@@ -10,14 +10,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 // This class contains all the state for the moving the elevator and wrist together. You should not call the wrist or elevator commands independently
-public class ElevatorWirstCTL extends IronSubsystem {
+public class ElevatorWristCTL extends IronSubsystem {
     private final WristSubsystem wristSubsystem = new WristSubsystem();
     private final WristCommands wristCommands = wristSubsystem.getCommands();
 
     private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
     private final ElevatorCommands elevatorCommands = elevatorSubsystem.getCommands();
 
-    public ElevatorWirstCTL() {
+    public ElevatorWristCTL() {
         publish("Set to STOW", setElevatorWrist(ElevatorWristState.STOW));
         publish("Set to INTAKING", setElevatorWrist(ElevatorWristState.INTAKING));
         publish("Set to L2", setElevatorWrist(ElevatorWristState.L2));
@@ -27,9 +27,9 @@ public class ElevatorWirstCTL extends IronSubsystem {
 
     public enum ElevatorLevel { // Position in inches
         DOWN(0),
-        L2(7.5), // todo
-        L3(21), // todo
-        L4(53); // todo
+        L2(7.5), // TODO - These need to be tuned
+        L3(21),
+        L4(53); 
 
         public double pos;
 

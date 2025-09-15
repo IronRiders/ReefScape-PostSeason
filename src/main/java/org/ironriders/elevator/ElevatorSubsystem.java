@@ -6,7 +6,7 @@ import static org.ironriders.elevator.ElevatorConstants.FOLLOW_MOTOR_ID;
 import static org.ironriders.elevator.ElevatorConstants.INCHES_PER_ROTATION;
 import static org.ironriders.elevator.ElevatorConstants.PRIMARY_MOTOR_ID;
 
-import org.ironriders.core.ElevatorWirstCTL.ElevatorLevel;
+import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;

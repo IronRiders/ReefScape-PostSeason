@@ -1,6 +1,6 @@
 package org.ironriders.elevator;
 
-import org.ironriders.core.ElevatorWirstCTL.ElevatorLevel;
+import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;

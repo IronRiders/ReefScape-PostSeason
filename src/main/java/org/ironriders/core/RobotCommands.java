@@ -3,7 +3,7 @@ package org.ironriders.core;
 import java.util.function.DoubleSupplier;
 
 import org.ironriders.climb.ClimbCommands;
-import org.ironriders.core.ElevatorWirstCTL.ElevatorWristState;
+import org.ironriders.core.ElevatorWristCTL.ElevatorWristState;
 import org.ironriders.drive.DriveCommands;
 import org.ironriders.intake.IntakeCommands;
 import org.ironriders.intake.IntakeConstants.IntakeState;
@@ -31,7 +31,7 @@ public class RobotCommands {
   private final TargetingCommands targetingCommands;
   private final IntakeCommands intakeCommands;
   private final ClimbCommands climbCommands;
-  private final ElevatorWirstCTL elevatorWristCommands;
+  private final ElevatorWristCTL elevatorWristCommands;
 
   private final GenericHID controller;
 
@@ -39,7 +39,7 @@ public class RobotCommands {
       DriveCommands driveCommands,
       TargetingCommands targetingCommands,
       IntakeCommands intakeCommands,
-      ElevatorWirstCTL elevatorWristCommands,
+      ElevatorWristCTL elevatorWristCommands,
       ClimbCommands climbCommands,
       GenericHID controller) {
     this.driveCommands = driveCommands;

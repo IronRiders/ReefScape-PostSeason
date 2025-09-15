@@ -1,6 +1,6 @@
 package org.ironriders.wrist;
 
-import org.ironriders.core.ElevatorWirstCTL.WristRotation;
+import org.ironriders.core.ElevatorWristCTL.WristRotation;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;

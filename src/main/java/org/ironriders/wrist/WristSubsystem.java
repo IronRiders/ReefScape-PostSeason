@@ -1,6 +1,6 @@
 package org.ironriders.wrist;
 
-import org.ironriders.core.ElevatorWirstCTL.WristRotation;
+import org.ironriders.core.ElevatorWristCTL.WristRotation;
 import org.ironriders.lib.IronSubsystem;
 
 import com.revrobotics.spark.SparkBase.PersistMode;

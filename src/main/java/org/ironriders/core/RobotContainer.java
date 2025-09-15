@@ -60,6 +60,8 @@ public class RobotContainer {
     public final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
     public final ClimbCommands climbCommands = climbSubsystem.getCommands();
 
+    public final Double triggerThreshold = 0.4;
+
     private final SendableChooser<Command> autoChooser;
 
     private final CommandXboxController primaryController = new CommandXboxController(
@@ -74,6 +76,7 @@ public class RobotContainer {
             elevatorWristCommands,
             climbCommands,
             primaryController.getHID());
+
 
     /**
      * The container for the robot. Contains subsystems, IO devices, and commands.
@@ -127,14 +130,14 @@ public class RobotContainer {
                 }
 
                 // Go to intaking, then grab until told to stop
-                primaryController.rightTrigger(.4)
+                primaryController.rightTrigger(triggerThreshold)
                         .onTrue(elevatorWristCommands
                                 .setElevatorWrist(ElevatorWristState.INTAKING))
                         .onTrue(intakeCommands.set(IntakeState.GRAB))
                         .onFalse(intakeCommands.set(IntakeState.STOP));
 
                 // Score coral
-                primaryController.leftTrigger(.4)
+                primaryController.leftTrigger(triggerThreshold)
                         .onTrue(intakeCommands.set(IntakeState.SCORE))
                         .onFalse(intakeCommands.set(IntakeState.STOP));
 
@@ -165,11 +168,11 @@ public class RobotContainer {
                 }
 
                 // Intake and then go down
-                primaryController.rightTrigger(.4)
+                primaryController.rightTrigger(triggerThreshold)
                         .onTrue(robotCommands.intake())
                         .onFalse(robotCommands.stopIntake());
 
-                primaryController.leftTrigger(.4)
+                primaryController.leftTrigger(triggerThreshold)
                         .onTrue(intakeCommands.set(IntakeState.SCORE))
                         .onFalse(intakeCommands.set(IntakeState.STOP));
 
@@ -197,11 +200,11 @@ public class RobotContainer {
                     primaryController.pov(angle).onTrue(driveCommands.jog(-angle));
                 }
 
-                primaryController.rightTrigger(.4)
+                primaryController.rightTrigger(triggerThreshold)
                         .onTrue(robotCommands.intake())
                         .onFalse(robotCommands.stopIntake());
 
-                primaryController.leftTrigger(.4)
+                primaryController.leftTrigger(triggerThreshold)
                         .onTrue(intakeCommands.set(IntakeState.SCORE))
                         .onFalse(intakeCommands.set(IntakeState.STOP));
 

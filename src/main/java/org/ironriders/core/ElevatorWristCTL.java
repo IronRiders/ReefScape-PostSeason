@@ -100,7 +100,7 @@ public class ElevatorWristCTL extends IronSubsystem {
      */
 
     public Command reset() {
-        return Commands.parallel(wristCommands.stowReset(), elevatorCommands.downRehomeReset(), logMessage("reseting"));
+        return Commands.parallel(wristCommands.stowReset(), elevatorCommands.home(), logMessage("reseting"));
     }
 
 }

@@ -31,7 +31,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
  * manipulator vertically.
  */
 public class ElevatorSubsystem extends IronSubsystem {
-  private final ElevatorWristCTL elevatorWristCTL = new ElevatorWristCTL();
+  //private final ElevatorWristCTL elevatorWristCTL = new ElevatorWristCTL();
 
   private final ElevatorCommands commands;
 
@@ -114,11 +114,11 @@ public class ElevatorSubsystem extends IronSubsystem {
 
   @Override
   public void periodic() {
-    if (getHeight() > ElevatorLevel.L3.pos & elevatorWristCTL.getWristRotation() < WristRotation.L2L3.pos) {
-      logMessage("ELEVATOR STOPPED DUE TO BAD WRIST POSITION, WAITING");
-      primaryMotor.set(0);
-      return;
-    }
+    //if (getHeight() > ElevatorLevel.L3.pos & elevatorWristCTL.getWristRotation() < WristRotation.L2L3.pos) {
+    //  logMessage("ELEVATOR STOPPED DUE TO BAD WRIST POSITION, WAITING");
+    //  primaryMotor.set(0);
+    //  return;
+    //}
 
     // Only do PID if homed
     if (isHomed) {
@@ -128,6 +128,9 @@ public class ElevatorSubsystem extends IronSubsystem {
           periodicSetpoint,
           goalSetpoint);
 
+
+          double a = getHeight();
+
       double pidOutput = pidController.calculate(
           getHeight(),
           periodicSetpoint.position);
@@ -136,12 +139,14 @@ public class ElevatorSubsystem extends IronSubsystem {
           periodicSetpoint.position,
           periodicSetpoint.velocity);
 
-      primaryMotor.set(pidOutput + ff);
+
+          primaryMotor.set(pidOutput);
     } else {
       logMessage("trying to home!"); // this will spam alot, debuging only
       primaryMotor.set(-ElevatorConstants.HOME_SPEED);
 
       if (bottomLimitSwitch.isPressed()) {
+
         setHomed();
       }
     }
@@ -183,7 +188,7 @@ public class ElevatorSubsystem extends IronSubsystem {
   public void zeroGoal() {
     logMessage("set zero goal");
     goalSetpoint = new TrapezoidProfile.State(0, 0d);
-    periodicSetpoint = new TrapezoidProfile.State(0, 0d);
+    //periodicSetpoint = new TrapezoidProfile.State(0, 0d);
   }
 
   public SparkLimitSwitch getBottomLimitSwitch() {

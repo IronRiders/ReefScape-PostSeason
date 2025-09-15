@@ -40,22 +40,7 @@ public class ElevatorCommands {
    * @return a Command that finishes when the bottom limit switch is pressed.
    */
   public Command home() {
-    // we use defer here so that the elevatorSubsystem.isHomed() occurs at runtime
-    return elevatorSubsystem.defer(() -> {
-      if (elevatorSubsystem.isHomed()) {
-        return set(ElevatorLevel.DOWN);
-      }
-
-      return new Command() {
-        public void execute() {
-          elevatorSubsystem.setNotHomed();
-        }
-
-        public boolean isFinished() {
-          return elevatorSubsystem.getBottomLimitSwitch().isPressed();
-        }
-      };
-    });
+    return Commands.runOnce(() -> elevatorSubsystem.setNotHomed());
   }
 
   public Command downRehomeReset() {

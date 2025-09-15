@@ -16,7 +16,7 @@ public class ElevatorConstants {
   public static final double MAX_ACC = 60;
   public static final double ELEVATOR_POSITION_TOLERANCE = 0.15;
 
-  public static final double HOME_SPEED = 0.2;
+  public static final double HOME_SPEED = 0.1;
 
   public static final double S = 0;
   public static final double G = 0.0765;

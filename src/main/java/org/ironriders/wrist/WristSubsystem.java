@@ -26,7 +26,7 @@ public class WristSubsystem extends IronSubsystem {
     private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State(); // Acts as a temporary setpoint for
     // calculating the next speed value
 
-    public WristRotation targetRotation;
+    public WristRotation targetRotation = WristRotation.STOW;
 
     private TrapezoidProfile.State stopped;
 
@@ -71,6 +71,8 @@ public class WristSubsystem extends IronSubsystem {
         primaryMotor.set(speed);
 
         atGoal = pid.atSetpoint();
+
+        updateDashboard();
     }
 
     public void updateDashboard() {

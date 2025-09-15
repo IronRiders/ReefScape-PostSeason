@@ -68,7 +68,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
 
     /*
-     * This command sets both a elevator position and a wrist possition.
+     * This command sets both a elevator position and a wrist position.
      */
 
     public Command setElevatorWrist(ElevatorWristState state) {

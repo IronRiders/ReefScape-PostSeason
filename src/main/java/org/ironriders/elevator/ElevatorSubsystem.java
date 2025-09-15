@@ -167,7 +167,7 @@ public class ElevatorSubsystem extends IronSubsystem {
   }
 
   public void reset() {
-    logMessage("reseting");
+    logMessage("resetting");
     primaryMotor.set(0);
     pidController.reset();
   }

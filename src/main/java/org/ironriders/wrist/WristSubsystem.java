@@ -86,7 +86,7 @@ public class WristSubsystem extends IronSubsystem {
     }
 
     public void reset() {
-        logMessage("reseting");
+        logMessage("resetting");
 
         pid.reset();
 

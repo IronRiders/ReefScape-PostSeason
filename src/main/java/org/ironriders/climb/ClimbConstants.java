@@ -5,9 +5,6 @@ public class ClimbConstants {
   public static final int CLIMBER_MOTOR_ID = 17;
   public static final int CURRENT_LIMIT = 40;
 
-  //public static double ROTATION_MAXUP = -150;
-  //public static double ROTATION_MAXDOWN = 40;
-
   public static final double MAX_ACC = 60;
   public static final double MAX_VEL = 60;
 

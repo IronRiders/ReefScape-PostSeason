@@ -79,7 +79,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     /*
      * This command, in parallel, moves the wrist all the way in and does a PID
      * reset, as well as moving the elevator all the way down, rehoming it for good
-     * measure, and then reseting it's PID.
+     * measure, and then resetting it's PID.
      */
 
     public Command reset() {

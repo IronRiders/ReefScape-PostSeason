@@ -83,10 +83,10 @@ public class ClimbSubsystem extends IronSubsystem {
 
     atGoal = pid.atSetpoint();
 
-    updateDash();
+    updateDashboard();
   }
 
-  private void updateDash() {
+  private void updateDashboard() {
     publish("Goal State", currentTarget.toString());
     publish("Goal Position", goalSetpoint.position);
 

@@ -138,11 +138,10 @@ public class ElevatorSubsystem extends IronSubsystem {
       }
     }
 
-    // update SmartDashboard
-    UpdateDash();
+    UpdateDashboard();
   }
 
-  private void UpdateDash() {
+  private void UpdateDashboard() {
     publish("Homed", isHomed);
     publish("Goal State", currentTarget.toString());
     publish("Goal Position", goalSetpoint.position);

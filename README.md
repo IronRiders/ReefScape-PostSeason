@@ -2,7 +2,7 @@
 ![8x2 Banner](https://github.com/user-attachments/assets/ca7bddfc-8815-40c6-bc6c-3a8b020dff7a)
 
 ## Our Design
-<img width="333" alt="Screenshot 2025-02-20 at 10 26 24 AM" src="https://github.com/user-attachments/assets/25f614d0-6132-49de-bf14-9df33aab691e" />
+<img width="333" alt="Robot Design" src=https://media.discordapp.net/attachments/890080988447801414/1417308951887745104/image.png?ex=68ca0352&is=68c8b1d2&hm=28ca9c3c6f5bdc87a9a7bccadc18675652b1062ef4a8dbeeb04ceb972e1ecb91&=&format=webp&quality=lossless" />
 
 ## Game Overview
 >In REEFSCAPE presented by Haas, two competing alliances are invited to score coral, harvest algae, and

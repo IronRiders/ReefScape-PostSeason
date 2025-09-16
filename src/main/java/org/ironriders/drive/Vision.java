@@ -54,7 +54,7 @@ public class Vision {
     swerveDrive.addVisionMeasurement(
         limelightMeasurement.pose,
         limelightMeasurement.timestampSeconds);
-    this.hasPose=true;
+    this.hasPose = true;
 
   }
 

@@ -20,8 +20,6 @@ import swervelib.SwerveDrive;
  */
 public class Vision {
 
-  private static final double AMBIGUITY_TOLERANCE = 0.4; // percentage
-  private static final double DISTANCE_TOLERANCE = 2.5; // meters
   private SwerveDrive swerveDrive = null;
   private Pigeon2 pigeon = new Pigeon2(9);
   public boolean hasPose = false;
@@ -33,7 +31,8 @@ public class Vision {
   public void updatePose() {
     // First, tell Limelight your robot's current orientation
     double robotYaw = pigeon.getYaw().getValueAsDouble();
-    LimelightHelpers.SetRobotOrientation("", robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
+    // Apparently these zeros are ignored?
+    LimelightHelpers.SetRobotOrientation(DriveConstants.LIMELIGHT_NAME, robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
 
     // Get the pose estimate
     Optional<Alliance> ally = DriverStation.getAlliance();
@@ -55,6 +54,7 @@ public class Vision {
     swerveDrive.addVisionMeasurement(
         limelightMeasurement.pose,
         limelightMeasurement.timestampSeconds);
+    this.hasPose=true;
 
   }
 

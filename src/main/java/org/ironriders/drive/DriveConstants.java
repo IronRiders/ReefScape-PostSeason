@@ -49,7 +49,7 @@ public class DriveConstants {
     public static final double JOG_DISTANCE_INCHES = 0.5;
     public static final double JOG_SPEED = .25;
 
-    public static final String LIMELIGHT_NAME = "";
+    public static final String LIMELIGHT_NAME = ""; // Blank = default name
     // Higher number = less trust
     public static final double VISION_ANGLE_TRUST = 9999999;
     public static final double VISION_X_TRUST = .5;

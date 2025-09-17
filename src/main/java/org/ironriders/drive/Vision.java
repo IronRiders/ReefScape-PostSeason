@@ -27,13 +27,15 @@ public class Vision {
   public Vision(SwerveDrive drive) {
     this.swerveDrive = drive;
   }
-
+  /**
+   * Call on each perodic to update the swerve drive with any available vision data
+   */
   public void updatePose() {
     // First, tell Limelight your robot's current orientation
     double robotYaw = pigeon.getYaw().getValueAsDouble();
     // Apparently these zeros are ignored?
     LimelightHelpers.SetRobotOrientation(DriveConstants.LIMELIGHT_NAME, robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
-
+    boolean rejectUpdate = false;
     // Get the pose estimate
     Optional<Alliance> ally = DriverStation.getAlliance();
     LimelightHelpers.PoseEstimate limelightMeasurement = new LimelightHelpers.PoseEstimate();
@@ -45,17 +47,23 @@ public class Vision {
         limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue(DriveConstants.LIMELIGHT_NAME);
       }
     } else {
-      return;
+      rejectUpdate = true;
     }
-
-    // Add it to your pose estimator
-    swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(DriveConstants.VISION_X_TRUST,
-        DriveConstants.VISION_Y_TRUST, DriveConstants.VISION_ANGLE_TRUST));
-    swerveDrive.addVisionMeasurement(
-        limelightMeasurement.pose,
-        limelightMeasurement.timestampSeconds);
-    this.hasPose = true;
-
+    if (Math.abs(pigeon.getAngularVelocityZWorld().getValueAsDouble()) > 360) {
+      rejectUpdate = true;
+    }
+    if (limelightMeasurement.tagCount == 0) {
+      rejectUpdate = true;
+    }
+    if (!rejectUpdate) {
+      // Add it to your pose estimator
+      swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(DriveConstants.VISION_X_TRUST,
+          DriveConstants.VISION_Y_TRUST, DriveConstants.VISION_ANGLE_TRUST));
+      swerveDrive.addVisionMeasurement(
+          limelightMeasurement.pose,
+          limelightMeasurement.timestampSeconds);
+      this.hasPose = true;
+    }
   }
 
 }

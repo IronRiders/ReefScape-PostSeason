@@ -88,7 +88,7 @@ public class WristSubsystem extends IronSubsystem {
     }
 
     public double getCurrentAngle() {
-        return primaryMotor.getAbsoluteEncoder().getPosition()  * 360 + WristConstants.ENCODEROFFSET;
+        return (primaryMotor.getAbsoluteEncoder().getPosition() + WristConstants.ENCODER_OFFSET)  * 360  + WristConstants.ENCODER_STARTING_POSITION;
     }
 
     public boolean isAtPosition() {

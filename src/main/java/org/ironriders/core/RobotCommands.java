@@ -28,10 +28,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 public class RobotCommands {
 
   private final DriveCommands driveCommands;
+  @SuppressWarnings("unused")
   private final TargetingCommands targetingCommands;
   private final ElevatorCommands elevatorCommands;
   private final CoralWristCommands coralWristCommands;
   private final CoralIntakeCommands coralIntakeCommands;
+  @SuppressWarnings("unused")
   private final ClimbCommands climbCommands;
 
   private final GenericHID controller;

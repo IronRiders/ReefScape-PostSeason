@@ -27,8 +27,10 @@ public class Vision {
   public Vision(SwerveDrive drive) {
     this.swerveDrive = drive;
   }
+
   /**
-   * Call on each perodic to update the swerve drive with any available vision data
+   * Call on each perodic to update the swerve drive with any available vision
+   * data
    */
   public void updatePose() {
     // First, tell Limelight your robot's current orientation

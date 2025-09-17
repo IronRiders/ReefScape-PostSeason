@@ -51,7 +51,7 @@ public class ElevatorCommands {
     return elevatorSubsystem.defer(() -> {
       if (elevatorSubsystem.isHomed()) {
         elevatorSubsystem.publish("is homed in startup", true);
-        //elevatorSubsystem.isHomed = false; scary
+        // elevatorSubsystem.isHomed = false; scary
         return set(Level.Down);
       }
 

@@ -101,7 +101,7 @@ public class WristSubsystem extends IronSubsystem {
         pidControler.reset();
 
         //stopped = new TrapezoidProfile.State(getCurrentAngle(), 0);
-        stopped = new TrapezoidProfile.State(-90, 0);
+        stopped = new TrapezoidProfile.State(-90, 0); // for testing
 
 
         goalSetpoint = stopped;

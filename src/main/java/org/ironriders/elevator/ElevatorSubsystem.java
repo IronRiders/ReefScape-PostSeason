@@ -6,9 +6,7 @@ import static org.ironriders.elevator.ElevatorConstants.FOLLOW_MOTOR_ID;
 import static org.ironriders.elevator.ElevatorConstants.INCHES_PER_ROTATION;
 import static org.ironriders.elevator.ElevatorConstants.PRIMARY_MOTOR_ID;
 
-import org.ironriders.core.ElevatorWristCTL;
 import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
-import org.ironriders.core.ElevatorWristCTL.WristRotation;
 import org.ironriders.lib.IronSubsystem;
 
 import com.revrobotics.RelativeEncoder;
@@ -31,8 +29,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
  * manipulator vertically.
  */
 public class ElevatorSubsystem extends IronSubsystem {
-  // private final ElevatorWristCTL elevatorWristCTL = new ElevatorWristCTL();
-
   private final ElevatorCommands commands;
 
   private final SparkMax primaryMotor = new SparkMax(
@@ -138,7 +134,7 @@ public class ElevatorSubsystem extends IronSubsystem {
           periodicSetpoint.position,
           periodicSetpoint.velocity);
 
-      primaryMotor.set(pidOutput);
+      primaryMotor.set(pidOutput + ff);
     } else {
       logMessage("trying to home!"); // this will spam alot, debuging only
       primaryMotor.set(-ElevatorConstants.HOME_SPEED);

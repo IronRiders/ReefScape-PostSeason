@@ -62,7 +62,7 @@ public class RobotCommands {
    * Initialize all subsystems when first enabled.
    */
   public Command startup() {
-    intakeCommands.setOnSuccess(() -> rumble());
+    intakeCommands.setOnSuccess(() -> rumbleController());
 
     return elevatorWristCommands.reset(); // moves everything to zero
   }
@@ -102,7 +102,7 @@ public class RobotCommands {
   }
 
 
-  public Command rumble() {
+  public Command rumbleController() {
     return Commands.sequence(
         Commands.runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 1)),
         Commands.waitSeconds(0.3),

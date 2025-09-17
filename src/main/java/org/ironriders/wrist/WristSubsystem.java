@@ -1,13 +1,11 @@
 package org.ironriders.wrist;
 
 import org.ironriders.core.ElevatorWristCTL.WristRotation;
-import org.ironriders.elevator.ElevatorConstants;
 import org.ironriders.lib.IronSubsystem;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -78,7 +76,7 @@ public class WristSubsystem extends IronSubsystem {
         updateDashboard();
     }
 
-    public void updateDashboard() { 
+    public void updateDashboard() {
         publish("Current target", targetRotation.toString());
         publish("Current goal pos", goalSetpoint.position);
         publish("Current angle", getCurrentAngle());
@@ -88,9 +86,12 @@ public class WristSubsystem extends IronSubsystem {
     }
 
     public double getCurrentAngle() {
-        return (primaryMotor.getAbsoluteEncoder().getPosition() + WristConstants.ENCODER_OFFSET)  * 360  + WristConstants.ENCODER_STARTING_POSITION;
-        //Offset is added to encoder to get it to = 0 when it is fully stowed (against hardstop)
-        // Starting Position is the degree measurment for for the staring position (fully stowed) 
+        return (primaryMotor.getAbsoluteEncoder().getPosition() - WristConstants.ENCODER_OFFSET) * 360
+                + WristConstants.ENCODER_STARTING_POSITION;
+        // Offset is added to encoder to get it to = 0 when it is fully stowed (against
+        // hardstop)
+        // Starting Position is the degree measurment for for the staring position
+        // (fully stowed)
     }
 
     public boolean isAtPosition() {
@@ -102,9 +103,8 @@ public class WristSubsystem extends IronSubsystem {
 
         pidControler.reset();
 
-        //stopped = new TrapezoidProfile.State(getCurrentAngle(), 0);
+        // stopped = new TrapezoidProfile.State(getCurrentAngle(), 0);
         stopped = new TrapezoidProfile.State(-90, 0); // for testing
-
 
         goalSetpoint = stopped;
         periodicSetpoint = stopped;

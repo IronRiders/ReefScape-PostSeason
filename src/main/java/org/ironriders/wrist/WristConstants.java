@@ -20,4 +20,6 @@ public class WristConstants {
     public static final double SPROCKET_RATIO = 1;
     public static final double GEAR_RATIO = SPROCKET_RATIO / 33.75;
     public static final double ENCODER_SCALE = GEAR_RATIO;
+    public static final double ENCODEROFFSET = 45; //Starting position of fully stowed against hardstop 
+    // The Arm should be inside the elevator at the start
 }

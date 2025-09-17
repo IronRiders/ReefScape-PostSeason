@@ -73,7 +73,7 @@ public class WristSubsystem extends IronSubsystem {
         atGoal = pid.atSetpoint();
     }
 
-    public void updateDashboard() {
+    public void updateDashboard() { 
         publish("Current target", targetRotation.toString());
         publish("Current goal pos", goalSetpoint.position);
         publish("Current angle", getCurrentAngle());
@@ -81,7 +81,7 @@ public class WristSubsystem extends IronSubsystem {
     }
 
     public double getCurrentAngle() {
-        return primaryMotor.getEncoder().getPosition() * 360;
+        return primaryMotor.getEncoder().getPosition() * 360 + WristConstants.ENCODEROFFSET;
     }
 
     public void reset() {

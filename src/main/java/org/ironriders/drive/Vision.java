@@ -35,7 +35,7 @@ public class Vision {
   public void updatePose() {
     // First, tell Limelight your robot's current orientation
     double robotYaw = pigeon.getYaw().getValueAsDouble();
-    // Apparently these zeros are ignored?
+    // Apparently these zeros are ignored? 
     LimelightHelpers.SetRobotOrientation(DriveConstants.LIMELIGHT_NAME, robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
     boolean rejectUpdate = false;
     // Get the pose estimate

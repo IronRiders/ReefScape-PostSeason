@@ -20,7 +20,7 @@ public class WristCommands {
       }
 
       public boolean isFinished() {
-        return wristSubsystem.atGoal;
+        return wristSubsystem.isAtPosition();
       }
     };
   }

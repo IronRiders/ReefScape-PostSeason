@@ -1,6 +1,7 @@
 package org.ironriders.core;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Function;
 
 import org.ironriders.climb.ClimbCommands;
 import org.ironriders.core.ElevatorWristCTL.ElevatorWristState;

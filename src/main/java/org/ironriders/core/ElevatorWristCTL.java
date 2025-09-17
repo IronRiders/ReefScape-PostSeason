@@ -48,10 +48,14 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
 
     public enum WristRotation { // Position in degrees (theoretically)
-        STOW(30), // TODO - These potentialy need an offset.
-        INTAKING(-89),
-        L2L3(40),
-        L4(-7);
+        //STOW(30), // TODO - These potentialy need an offset.
+        //INTAKING(-89),
+        //L2L3(40),
+        //L4(-7);
+        STOW(-90),
+        INTAKING(-90),
+        L2L3(-90),
+        L4(-90);
 
         public double pos;
 
@@ -100,7 +104,7 @@ public class ElevatorWristCTL extends IronSubsystem {
      */
 
     public Command reset() {
-        return Commands.parallel(wristCommands.stowReset(), elevatorCommands.downRehomeReset(), logMessage("reseting"));
+        return Commands.parallel(wristCommands.stowReset(), elevatorCommands.home(), logMessage("reseting"));
     }
 
 }

@@ -6,9 +6,7 @@ import static org.ironriders.elevator.ElevatorConstants.FOLLOW_MOTOR_ID;
 import static org.ironriders.elevator.ElevatorConstants.INCHES_PER_ROTATION;
 import static org.ironriders.elevator.ElevatorConstants.PRIMARY_MOTOR_ID;
 
-import org.ironriders.core.ElevatorWristCTL;
 import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
-import org.ironriders.core.ElevatorWristCTL.WristRotation;
 import org.ironriders.lib.IronSubsystem;
 
 import com.revrobotics.RelativeEncoder;
@@ -31,8 +29,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
  * manipulator vertically.
  */
 public class ElevatorSubsystem extends IronSubsystem {
-  //private final ElevatorWristCTL elevatorWristCTL = new ElevatorWristCTL();
-
   private final ElevatorCommands commands;
 
   private final SparkMax primaryMotor = new SparkMax(
@@ -114,22 +110,21 @@ public class ElevatorSubsystem extends IronSubsystem {
 
   @Override
   public void periodic() {
-    //if (getHeight() > ElevatorLevel.L3.pos & elevatorWristCTL.getWristRotation() < WristRotation.L2L3.pos) {
-    //  logMessage("ELEVATOR STOPPED DUE TO BAD WRIST POSITION, WAITING");
-    //  primaryMotor.set(0);
-    //  return;
-    //}
+    // if (getHeight() > ElevatorLevel.L3.pos & elevatorWristCTL.getWristRotation()
+    // < WristRotation.L2L3.pos) {
+    // logMessage("ELEVATOR STOPPED DUE TO BAD WRIST POSITION, WAITING");
+    // primaryMotor.set(0);
+    // return;
+    // }
+
+    // Calculate the next state and update the current state
+    periodicSetpoint = profile.calculate(
+        ElevatorConstants.T,
+        periodicSetpoint,
+        goalSetpoint);
 
     // Only do PID if homed
     if (isHomed) {
-      // Calculate the next state and update the current state
-      periodicSetpoint = profile.calculate(
-          ElevatorConstants.T,
-          periodicSetpoint,
-          goalSetpoint);
-
-
-          double a = getHeight();
 
       double pidOutput = pidController.calculate(
           getHeight(),
@@ -139,14 +134,12 @@ public class ElevatorSubsystem extends IronSubsystem {
           periodicSetpoint.position,
           periodicSetpoint.velocity);
 
-
-          primaryMotor.set(pidOutput);
+      primaryMotor.set(pidOutput + ff);
     } else {
       logMessage("trying to home!"); // this will spam alot, debuging only
       primaryMotor.set(-ElevatorConstants.HOME_SPEED);
 
       if (bottomLimitSwitch.isPressed()) {
-
         setHomed();
       }
     }
@@ -188,7 +181,7 @@ public class ElevatorSubsystem extends IronSubsystem {
   public void zeroGoal() {
     logMessage("set zero goal");
     goalSetpoint = new TrapezoidProfile.State(0, 0d);
-    //periodicSetpoint = new TrapezoidProfile.State(0, 0d);
+    periodicSetpoint = new TrapezoidProfile.State(0, 0d);
   }
 
   public SparkLimitSwitch getBottomLimitSwitch() {

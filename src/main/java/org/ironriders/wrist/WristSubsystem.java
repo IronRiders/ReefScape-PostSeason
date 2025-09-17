@@ -20,7 +20,7 @@ public class WristSubsystem extends IronSubsystem {
     final TrapezoidProfile movementProfile = new TrapezoidProfile(
             new Constraints(WristConstants.MAX_VEL, WristConstants.MAX_ACC));
     public boolean atGoal = false;
-    final PIDController pid = new PIDController(WristConstants.P, WristConstants.I, WristConstants.D);
+    private PIDController pidControler;
 
     private TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State(); // Acts as a final setpoint
     private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State(); // Acts as a temporary setpoint for
@@ -34,43 +34,47 @@ public class WristSubsystem extends IronSubsystem {
 
     private final SparkMaxConfig motorConfig = new SparkMaxConfig();
 
+    private double setTarget = 0; // for debuging
+
     public WristSubsystem() {
         motorConfig
-                .smartCurrentLimit(10) // Can go to 40
-                .idleMode(IdleMode.kBrake);
+                .smartCurrentLimit(40) // Can go to 40
+                .idleMode(IdleMode.kBrake)
+                .inverted(true);
 
-        motorConfig.softLimit
-                .forwardSoftLimit(WristRotation.L4.pos)
-                .forwardSoftLimitEnabled(true);
+        // motorConfig.softLimit
+        // .forwardSoftLimit(WristRotation.L4.pos)
+        // .forwardSoftLimitEnabled(true);
 
-        motorConfig.softLimit
-                .reverseSoftLimit(WristRotation.STOW.pos)
-                .reverseSoftLimitEnabled(true);
+        // motorConfig.softLimit
+        // .reverseSoftLimit(WristRotation.STOW.pos)
+        // .reverseSoftLimitEnabled(true);
 
         primaryMotor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        secondaryMotor.configure(motorConfig.follow(WristConstants.PRIMARY_WRIST_MOTOR).inverted(true),
+        secondaryMotor.configure(motorConfig.follow(WristConstants.PRIMARY_WRIST_MOTOR).inverted(false),
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
 
-        pid.setTolerance(WristConstants.TOLERANCE);
+        pidControler = new PIDController(
+                WristConstants.P,
+                WristConstants.I,
+                WristConstants.D);
+        pidControler.setTolerance(WristConstants.TOLERANCE);
 
         reset();
     }
 
     @Override
     public void periodic() {
-        var currentDegrees = getCurrentAngle();
-
         // Apply profile and PID to determine output level
         periodicSetpoint = movementProfile.calculate(
                 WristConstants.T,
                 periodicSetpoint,
                 goalSetpoint);
 
-        var speed = pid.calculate(currentDegrees, periodicSetpoint.position);
+        var speed = pidControler.calculate(getCurrentAngle(), periodicSetpoint.position);
+        publish("PID output", speed);
         primaryMotor.set(speed);
-
-        atGoal = pid.atSetpoint();
 
         updateDashboard();
     }
@@ -79,19 +83,34 @@ public class WristSubsystem extends IronSubsystem {
         publish("Current target", targetRotation.toString());
         publish("Current goal pos", goalSetpoint.position);
         publish("Current angle", getCurrentAngle());
-        publish("At goal?", atGoal);
+        publish("Current angle raw", primaryMotor.getAbsoluteEncoder().getPosition());
+        publish("Primary Motor current", primaryMotor.getOutputCurrent());
+        publish("Primary secondary current", secondaryMotor.getOutputCurrent());
+        publish("Rotation targ", setTarget);
+
+
+        publish("At goal?", isAtPosition());
     }
 
     public double getCurrentAngle() {
-        return primaryMotor.getEncoder().getPosition() * 360;
+        return (primaryMotor.getAbsoluteEncoder().getPosition() - WristConstants.ENCODER_OFFSET) * 360
+                - WristConstants.CAD_POSITION_OFFSET;
+        // ENCODER_OFFSET is added to encoder to get it to = 0 when it is fully stowed (against
+        // hardstop)
+        // CAD_POSITION_OFFSET is adjustment for odd alignment in the CAD
+    }
+
+    public boolean isAtPosition() {
+        return pidControler.atSetpoint();
     }
 
     public void reset() {
         logMessage("resetting");
 
-        pid.reset();
+        pidControler.reset();
 
         stopped = new TrapezoidProfile.State(getCurrentAngle(), 0);
+        // stopped = new TrapezoidProfile.State(-90, 0); // for testing
 
         goalSetpoint = stopped;
         periodicSetpoint = stopped;
@@ -99,8 +118,9 @@ public class WristSubsystem extends IronSubsystem {
         primaryMotor.set(0);
     }
 
-    protected void setGoal(WristRotation rotation) {
+    public void setGoal(WristRotation rotation) {
         goalSetpoint = new TrapezoidProfile.State(rotation.pos, 0);
+        setTarget = goalSetpoint.position;
         targetRotation = rotation;
     }
 

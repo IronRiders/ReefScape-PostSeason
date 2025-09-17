@@ -48,10 +48,18 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
 
     public enum WristRotation { // Position in degrees (theoretically)
-        STOW(30), // TODO - These potentialy need an offset.
-        INTAKING(-89),
-        L2L3(40),
-        L4(-7);
+        //STOW(30), // <- Tested values with old system
+        //INTAKING(-89),
+        //L2L3(40),
+        //L4(-7);
+        STOW(-90), // <- testing values
+        INTAKING(-90),
+        L2L3(-90),
+        L4(-90);
+        //STOW(30), // <- CAD values
+        //INTAKING(260),
+        //L2L3(40),
+        //L4(350);
 
         public double pos;
 

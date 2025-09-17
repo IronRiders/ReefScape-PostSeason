@@ -31,30 +31,35 @@ public class Vision {
   /**
    * Call on each perodic to update the swerve drive with any available vision
    * data
+   * 
+   * @returns true on success false on failure
    */
-  public void updatePose() {
+  public boolean updatePose() {
     // First, tell Limelight your robot's current orientation
     double robotYaw = pigeon.getYaw().getValueAsDouble();
-    // Apparently these zeros are ignored? 
+    // Apparently these zeros are ignored?
     LimelightHelpers.SetRobotOrientation(DriveConstants.LIMELIGHT_NAME, robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
     boolean rejectUpdate = false;
-    // Get the pose estimate
-    Optional<Alliance> ally = DriverStation.getAlliance();
+    // Set the right coordinate system and get the vision measurement
+    Optional<Alliance> alliance = DriverStation.getAlliance();
     LimelightHelpers.PoseEstimate limelightMeasurement = new LimelightHelpers.PoseEstimate();
-    if (ally.isPresent()) {
-      if (ally.get() == Alliance.Red) {
+    if (alliance.isPresent()) {
+      if (alliance.get() == Alliance.Red) {
         limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiRed(DriveConstants.LIMELIGHT_NAME);
       }
-      if (ally.get() == Alliance.Blue) {
+      if (alliance.get() == Alliance.Blue) {
         limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue(DriveConstants.LIMELIGHT_NAME);
       }
     } else {
+      // Game hasn't started yet
       rejectUpdate = true;
     }
     if (Math.abs(pigeon.getAngularVelocityZWorld().getValueAsDouble()) > 360) {
+      // Rotating too fast for a valid measurement
       rejectUpdate = true;
     }
     if (limelightMeasurement.tagCount == 0) {
+      // Theres nothing to update off of
       rejectUpdate = true;
     }
     if (!rejectUpdate) {
@@ -65,6 +70,9 @@ public class Vision {
           limelightMeasurement.pose,
           limelightMeasurement.timestampSeconds);
       this.hasPose = true;
+      return true;
+    } else {
+      return false;
     }
   }
 

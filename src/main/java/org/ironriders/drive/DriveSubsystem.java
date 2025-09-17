@@ -84,7 +84,7 @@ public class DriveSubsystem extends IronSubsystem {
 
   @Override
   public void periodic() {
-    vision.updatePose();
+    publish("vision updated ok",vision.updatePose());
     publish("vision has pose", vision.hasPose);
     publish("inversion status", invertStatus);
   }

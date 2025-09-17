@@ -20,7 +20,7 @@ public class WristConstants {
     public static final double SPROCKET_RATIO = 1;
     public static final double GEAR_RATIO = SPROCKET_RATIO / 33.75;
     public static final double ENCODER_SCALE = GEAR_RATIO;
-    public static final double ENCODER_STARTING_POSITION = 45; // Adjustment for odd alignment in the CAD
+    public static final double CAD_POSITION_OFFSET = 45; // Adjustment for odd alignment in the CAD
     public static final double ENCODER_OFFSET = 0.935; // Rotations for the absolute encoder to get to zero when in FULLY stowed
     // The Arm should be inside the elevator at the start
 }

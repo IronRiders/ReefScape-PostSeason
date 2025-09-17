@@ -73,7 +73,7 @@ public class RobotCommands {
    * Initialize all subsystems when first enabled.
    */
   public Command startup() {
-    intakeCommands.setOnSuccess(() -> rumble());
+    intakeCommands.setOnSuccess(() -> rumbleController());
 
     return elevatorWristCommands.reset(); // moves everything to zero
   }
@@ -158,7 +158,7 @@ public class RobotCommands {
    * method to {@link edu.wpi.first.wpilibj.GenericHID.RumbleType#kBothRumble kBothRumble}. This makes all motors on a controller rumble.
    * @return A command that does what is described above for 0.3 seconds, then returns rumble to 0.
    */
-  public Command rumble() {
+  public Command rumbleController() {
     return Commands.sequence(
         Commands.runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 1)),
         Commands.waitSeconds(0.3),

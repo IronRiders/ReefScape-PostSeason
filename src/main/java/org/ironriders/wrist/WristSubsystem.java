@@ -87,11 +87,10 @@ public class WristSubsystem extends IronSubsystem {
 
     public double getCurrentAngle() {
         return (primaryMotor.getAbsoluteEncoder().getPosition() - WristConstants.ENCODER_OFFSET) * 360
-                + WristConstants.ENCODER_STARTING_POSITION;
+                - WristConstants.ENCODER_STARTING_POSITION;
         // Offset is added to encoder to get it to = 0 when it is fully stowed (against
         // hardstop)
-        // Starting Position is the degree measurment for for the staring position
-        // (fully stowed)
+        // Starting Position is adjustment for odd alignment in the CAD
     }
 
     public boolean isAtPosition() {

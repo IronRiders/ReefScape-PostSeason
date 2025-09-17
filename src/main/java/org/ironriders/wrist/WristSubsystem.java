@@ -34,9 +34,11 @@ public class WristSubsystem extends IronSubsystem {
 
     private final SparkMaxConfig motorConfig = new SparkMaxConfig();
 
+    private double setTarget = 0; // for debuging
+
     public WristSubsystem() {
         motorConfig
-                .smartCurrentLimit(10) // Can go to 40
+                .smartCurrentLimit(40) // Can go to 40
                 .idleMode(IdleMode.kBrake)
                 .inverted(true);
 
@@ -71,6 +73,7 @@ public class WristSubsystem extends IronSubsystem {
                 goalSetpoint);
 
         var speed = pidControler.calculate(getCurrentAngle(), periodicSetpoint.position);
+        publish("PID output", speed);
         primaryMotor.set(speed);
 
         updateDashboard();
@@ -81,6 +84,10 @@ public class WristSubsystem extends IronSubsystem {
         publish("Current goal pos", goalSetpoint.position);
         publish("Current angle", getCurrentAngle());
         publish("Current angle raw", primaryMotor.getAbsoluteEncoder().getPosition());
+        publish("Primary Motor current", primaryMotor.getOutputCurrent());
+        publish("Primary secondary current", secondaryMotor.getOutputCurrent());
+        publish("Rotation targ", setTarget);
+
 
         publish("At goal?", isAtPosition());
     }
@@ -102,8 +109,8 @@ public class WristSubsystem extends IronSubsystem {
 
         pidControler.reset();
 
-        // stopped = new TrapezoidProfile.State(getCurrentAngle(), 0);
-        stopped = new TrapezoidProfile.State(-90, 0); // for testing
+        stopped = new TrapezoidProfile.State(getCurrentAngle(), 0);
+        // stopped = new TrapezoidProfile.State(-90, 0); // for testing
 
         goalSetpoint = stopped;
         periodicSetpoint = stopped;
@@ -111,9 +118,9 @@ public class WristSubsystem extends IronSubsystem {
         primaryMotor.set(0);
     }
 
-    protected void setGoal(WristRotation rotation) {
+    public void setGoal(WristRotation rotation) {
         goalSetpoint = new TrapezoidProfile.State(rotation.pos, 0);
-        publish("Is rotation bad? please look", goalSetpoint.position);
+        setTarget = goalSetpoint.position;
         targetRotation = rotation;
     }
 

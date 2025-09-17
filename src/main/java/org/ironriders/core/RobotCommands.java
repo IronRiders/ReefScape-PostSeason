@@ -18,14 +18,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 /**
  * These commands require more complex logic and are not directly tied to a
- * subsystem.
- * They generally interface w/ multiple subsystems via their commands and are
- * higher-level.
+ * subsystem. They generally interface w/ multiple subsystems via their commands
+ * and are higher-level.
  *
  * These commands are those which the driver controls call.
  */
 
-@SuppressWarnings("unused")
+@SuppressWarnings("unused") // This was annoying and nothing was wrong
 public class RobotCommands {
 
   private final DriveCommands driveCommands;
@@ -36,6 +35,17 @@ public class RobotCommands {
 
   private final GenericHID controller;
 
+  /**
+   * Creates final variables for all command classes.
+   *
+   * @param driveCommands        DriveCommands instance
+   * @param targetingCommands    TargetingCommands instance
+   * @param elevatorCommands     ElevatorCommands instance
+   * @param coralWristCommands   CoralWristCommands instance
+   * @param coralIntakeCommands  CoralIntakeCommands instance
+   * @param climbCommands        ClimbCommands instance
+   * @param controller           GenericHID controller (joystick/gamepad) instance
+   */
   public RobotCommands(
       DriveCommands driveCommands,
       TargetingCommands targetingCommands,
@@ -86,23 +96,68 @@ public class RobotCommands {
         true);
   }
 
+  /**
+   * Small translation that is robot-centered rather than field-centered.
+   * For example, moving a little 30 degrees will move 30 degrees relative
+   * to the front of the robot, rather than relative to the field. 
+   * @param robotRelativeAngleDegrees The angle to move, in degrees relative to where the robot is facing
+   * @return                          Returns command object that calls the {@link DriveCommands#jog(double)} method
+   */
   public Command jog(double robotRelativeAngleDegrees) {
     return driveCommands.jog(robotRelativeAngleDegrees);
   }
 
+  /**
+   * <p>
+   * Command to make the robot intake. Runs two commands in parallel:
+   * <ul>
+   * <li> Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState) elevator wrist state} to {@link ElevatorWristState#INTAKING "intaking"}.</li>
+   * <li> Sets the {@link IntakeCommands#set(IntakeState) intake state} to {@link IntakeState#GRAB "grab"}.</li>
+   * </ul>
+   * <br> 
+   * 
+   * </p>
+   * 
+   * @return returns the command described above
+   */
   public Command intake() {
-    return Commands.parallel(elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING), intakeCommands.set(IntakeState.GRAB));
+    return Commands.parallel(
+      elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING),
+      intakeCommands.set(IntakeState.GRAB)
+      );
   }
 
+  /**
+   * Command to make the robot eject. Simply sets the {@link IntakeCommands#set(IntakeState) intake state} to {@link IntakeState#EJECT "eject"}.
+   * 
+   * @return returns the command described above
+   */
   public Command eject() {
     return intakeCommands.set(IntakeState.EJECT);
   }
-
+  
+  /**
+   * Command to stop the intake and stow the elevator wrist.
+   * Does the following in parallel:
+   * <ul>
+   * <li> Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState) elevator wrist state} to {@link ElevatorWristState#STOW "stow"}.</li>
+   * <li> Sets the {@link IntakeCommands#set(IntakeState) intake state} to {@link IntakeState#STOP "stop"}.</li>
+   * </ul>
+   * 
+   * 
+   * @return returns the command described above
+   */
   public Command stopIntake() {
     return Commands.parallel(elevatorWristCommands.setElevatorWrist(ElevatorWristState.STOW), intakeCommands.set(IntakeState.STOP));
   }
 
-
+  /**
+   * Sets the rumble on the controller for 0.3 seconds.
+   * 
+   * Does this by setting the {@link edu.wpi.first.wpilibj.GenericHID#setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType, double) GenericHID setRumble()}
+   * method to {@link edu.wpi.first.wpilibj.GenericHID.RumbleType#kBothRumble kBothRumble}. This makes all motors on a controller rumble.
+   * @return A command that does what is described above for 0.3 seconds, then returns rumble to 0.
+   */
   public Command rumble() {
     return Commands.sequence(
         Commands.runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 1)),

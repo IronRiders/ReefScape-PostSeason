@@ -34,6 +34,8 @@ public class IntakeSubsystem extends IronSubsystem {
   private final TalonFX rightIntake = new TalonFX(INTAKE_MOTOR_RIGHT);
   private final TalonFX leftIntake = new TalonFX(INTAKE_MOTOR_LEFT);
   private final TalonFX rollerIntake = new TalonFX(INTAKE_MOTOR_TOP);
+  @SuppressWarnings("unused")
+  // Unused until the beam break is installed
   private final DigitalInput beamBreak = new DigitalInput(
       INTAKE_BEAMBREAK);
 

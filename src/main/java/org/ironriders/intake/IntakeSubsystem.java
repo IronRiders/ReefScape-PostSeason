@@ -94,8 +94,7 @@ public class IntakeSubsystem extends IronSubsystem {
   }
 
   public boolean hasGamePiece() {
-    return false; // TODO: NO BEAM BREAK
-    // return beamBreak.get();
+    return beamBreak.get();
   }
 
   public IntakeCommands getCommands() {

@@ -29,7 +29,7 @@ public class Vision {
   }
 
   /**
-   * Call on each perodic to update the swerve drive with any available vision
+   * Call on each perodic tick to update the swerve drive with any available vision
    * data
    * 
    * @returns true on success false on failure

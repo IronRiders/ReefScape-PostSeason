@@ -129,10 +129,9 @@ public class ElevatorSubsystem extends IronSubsystem {
       double pidOutput = pidController.calculate(
           getHeight(),
           periodicSetpoint.position);
-
-      double ff = feedforward.calculate(
-          periodicSetpoint.position,
-          periodicSetpoint.velocity);
+          // It's now recommended you remove the position one. Not sure why but it was causing a warning
+      double ff = feedforward.calculate( 
+          periodicSetpoint.position);
 
       primaryMotor.set(pidOutput + ff);
     } else {

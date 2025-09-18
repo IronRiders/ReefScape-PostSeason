@@ -135,12 +135,14 @@ public class ElevatorSubsystem extends IronSubsystem {
           
       primaryMotor.set(pidOutput + ff);
     } else {
-      logMessage("trying to home!"); // this will spam alot, debuging only
-      primaryMotor.set(-ElevatorConstants.HOME_SPEED);
-
       if (bottomLimitSwitch.isPressed()) {
         setHomed();
+        UpdateDashboard();
+        return;
       }
+
+      logMessage("trying to home!"); // this will spam alot, debuging only
+      primaryMotor.set(-ElevatorConstants.HOME_SPEED);
     }
 
     UpdateDashboard();
@@ -149,6 +151,7 @@ public class ElevatorSubsystem extends IronSubsystem {
   private void UpdateDashboard() {
     publish("Homed", isHomed);
     publish("Goal State", currentTarget.toString());
+    
     publish("Goal Position", goalSetpoint.position);
     if (isHomed)
       publish("At Goal?", pidController.atSetpoint());

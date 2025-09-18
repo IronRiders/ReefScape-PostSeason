@@ -8,10 +8,10 @@ public class ClimbConstants {
   public static final double MAX_ACC = 60;
   public static final double MAX_VEL = 60;
 
-  public static double P = 1.0;
-  public static double I = 0;
-  public static double D = 0;
-  public static double T = 0.02;
+  public static double P = 1.0;  // proportion
+  public static double I = 0;    // integral
+  public static double D = 0;    // derivative
+  public static double T = 0.02; // time to next step
 
   public static double TOLERANCE = 0.005;
 

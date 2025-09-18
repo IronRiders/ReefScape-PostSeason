@@ -21,7 +21,7 @@ public class WristSubsystem extends IronSubsystem {
             new Constraints(WristConstants.MAX_VEL, WristConstants.MAX_ACC));
     public boolean atGoal = false;
     private PIDController pidControler;
-
+    
     private TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State(); // Acts as a final setpoint
     private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State(); // Acts as a temporary setpoint for
     // calculating the next speed value

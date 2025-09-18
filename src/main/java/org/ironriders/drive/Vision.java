@@ -51,7 +51,7 @@ public class Vision {
         limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue(DriveConstants.LIMELIGHT_NAME);
       }
     } else {
-      // Game hasn't started yet
+      // FMS not connected
       rejectUpdate = true;
     }
     if (Math.abs(pigeon.getAngularVelocityZWorld().getValueAsDouble()) > 360) {
@@ -59,7 +59,7 @@ public class Vision {
       rejectUpdate = true;
     }
     if (limelightMeasurement.tagCount == 0) {
-      // Theres nothing to update off of
+      // There's nothing to update off of
       rejectUpdate = true;
     }
     if (!rejectUpdate) {

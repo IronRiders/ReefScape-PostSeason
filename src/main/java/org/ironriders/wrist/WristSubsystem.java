@@ -30,6 +30,8 @@ public class WristSubsystem extends IronSubsystem {
 
     private TrapezoidProfile.State stopped;
 
+    private double debugStore = 0;
+
     private final WristCommands commands = new WristCommands(this);
 
     private final SparkMaxConfig motorConfig = new SparkMaxConfig();
@@ -78,6 +80,7 @@ public class WristSubsystem extends IronSubsystem {
 
     public void updateDashboard(double speed) {
         publish("Current target", targetRotation.toString());
+        publish("Debug rot", debugStore);
         // Not a great way to do this but it's temporary
         publish("Current PID ouput", speed);
         publish("Current goal pos", goalSetpoint.position);
@@ -115,6 +118,7 @@ public class WristSubsystem extends IronSubsystem {
 
     protected void setGoal(WristRotation rotation) {
         goalSetpoint = new TrapezoidProfile.State(rotation.pos, 0);
+        debugStore = rotation.pos;
         publish("Is rotation bad? please look", goalSetpoint.position);
         targetRotation = rotation;
     }

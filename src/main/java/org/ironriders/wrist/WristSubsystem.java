@@ -39,8 +39,7 @@ public class WristSubsystem extends IronSubsystem {
     public WristSubsystem() {
         motorConfig
                 .smartCurrentLimit(10) // Can go to 40
-                .idleMode(IdleMode.kBrake)
-                .inverted(true);
+                .idleMode(IdleMode.kBrake);
 
         // motorConfig.softLimit
         // .forwardSoftLimit(WristRotation.L4.pos)
@@ -51,7 +50,7 @@ public class WristSubsystem extends IronSubsystem {
         // .reverseSoftLimitEnabled(true);
 
         primaryMotor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        secondaryMotor.configure(motorConfig.follow(WristConstants.PRIMARY_WRIST_MOTOR).inverted(false),
+        secondaryMotor.configure(motorConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
 
@@ -74,6 +73,7 @@ public class WristSubsystem extends IronSubsystem {
 
         double speed = pidControler.calculate(getCurrentAngle(), periodicSetpoint.position);
         primaryMotor.set(speed);
+        secondaryMotor.set(-speed);
 
         updateDashboard(speed);
     }
@@ -114,6 +114,7 @@ public class WristSubsystem extends IronSubsystem {
         periodicSetpoint = stopped;
 
         primaryMotor.set(0);
+        secondaryMotor.set(0);
     }
 
     protected void setGoal(WristRotation rotation) {

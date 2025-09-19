@@ -19,18 +19,16 @@ public class WristSubsystem extends IronSubsystem {
     final SparkMax secondaryMotor = new SparkMax(WristConstants.SECONDARY_WRIST_MOTOR, MotorType.kBrushless);
     final TrapezoidProfile movementProfile = new TrapezoidProfile(
             new Constraints(WristConstants.MAX_VEL, WristConstants.MAX_ACC));
-    public boolean atGoal = false;
+
     private PIDController pidControler;
-    
+
     private TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State(); // Acts as a final setpoint
     private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State(); // Acts as a temporary setpoint for
-    // calculating the next speed value
+                                                                                    // calculating the next speed value
 
     public WristRotation targetRotation = WristRotation.STOW;
 
     private TrapezoidProfile.State stopped;
-
-    private double debugStore = 0;
 
     private final WristCommands commands = new WristCommands(this);
 
@@ -41,15 +39,10 @@ public class WristSubsystem extends IronSubsystem {
                 .smartCurrentLimit(10) // Can go to 40
                 .idleMode(IdleMode.kBrake);
 
-        // motorConfig.softLimit
-        // .forwardSoftLimit(WristRotation.L4.pos)
-        // .forwardSoftLimitEnabled(true);
+        primaryMotor.configure(motorConfig, 
+                ResetMode.kResetSafeParameters, 
+                PersistMode.kPersistParameters);
 
-        // motorConfig.softLimit
-        // .reverseSoftLimit(WristRotation.STOW.pos)
-        // .reverseSoftLimitEnabled(true);
-
-        primaryMotor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         secondaryMotor.configure(motorConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
@@ -72,29 +65,25 @@ public class WristSubsystem extends IronSubsystem {
                 goalSetpoint);
 
         double speed = pidControler.calculate(getCurrentAngle(), periodicSetpoint.position);
-        primaryMotor.set(speed);
-        secondaryMotor.set(-speed);
+        setMotors(speed);
 
-        updateDashboard(speed);
+        publish("Current PID ouput", speed);
+        updateDashboard();
     }
 
-    public void updateDashboard(double speed) {
+    public void updateDashboard() {
         publish("Current target", targetRotation.toString());
-        publish("Debug rot", debugStore);
-        // Not a great way to do this but it's temporary
-        publish("Current PID ouput", speed);
         publish("Current goal pos", goalSetpoint.position);
         publish("Current angle", getCurrentAngle());
         publish("Current angle raw", primaryMotor.getAbsoluteEncoder().getPosition());
-
         publish("At goal?", isAtPosition());
     }
 
     public double getCurrentAngle() {
         return (primaryMotor.getAbsoluteEncoder().getPosition() - WristConstants.ENCODER_OFFSET) * 360
                 - WristConstants.CAD_POSITION_OFFSET;
-        // ENCODER_OFFSET is added to encoder to get it to = 0 when it is fully stowed (against
-        // hardstop)
+        // ENCODER_OFFSET is added to encoder to get it to = 0 when it is fully stowed
+        // (against hardstop)
         // CAD_POSITION_OFFSET is adjustment for odd alignment in the CAD
     }
 
@@ -107,20 +96,21 @@ public class WristSubsystem extends IronSubsystem {
 
         pidControler.reset();
 
-        // stopped = new TrapezoidProfile.State(getCurrentAngle(), 0);
-        stopped = new TrapezoidProfile.State(-90, 0); // for testing
+        stopped = new TrapezoidProfile.State(0, 0);
 
         goalSetpoint = stopped;
         periodicSetpoint = stopped;
 
-        primaryMotor.set(0);
-        secondaryMotor.set(0);
+        setMotors(0);
+    }
+
+    private void setMotors(double speed) {
+        primaryMotor.set(speed);
+        secondaryMotor.set(-speed);
     }
 
     protected void setGoal(WristRotation rotation) {
         goalSetpoint = new TrapezoidProfile.State(rotation.pos, 0);
-        debugStore = rotation.pos;
-        publish("Is rotation bad? please look", goalSetpoint.position);
         targetRotation = rotation;
     }
 

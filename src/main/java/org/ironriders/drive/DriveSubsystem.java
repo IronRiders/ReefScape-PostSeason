@@ -11,10 +11,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.io.IOException;
+import java.sql.Time;
 import java.util.Optional;
 import org.ironriders.lib.GameState;
 import org.ironriders.lib.IronSubsystem;
 import org.ironriders.lib.RobotUtils;
+import org.ironriders.lib.Elastic.Notification;
 
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
@@ -80,6 +82,15 @@ public class DriveSubsystem extends IronSubsystem {
 
     GameState.setField(swerveDrive.field);
     GameState.setRobotPose(() -> Optional.of(swerveDrive.getPose()));
+    Notification test_Notification = new Notification();
+    test_Notification.setTitle("Test");
+    this.notifyError(test_Notification);
+    Notification test_Notification_2 = new Notification();
+    test_Notification_2.setTitle("Test");
+    this.notifyWarning(test_Notification_2);
+    Notification test_Notification_3 = new Notification();
+    test_Notification_3.setTitle("Test");
+    this.notify(test_Notification_3);
   }
 
   @Override

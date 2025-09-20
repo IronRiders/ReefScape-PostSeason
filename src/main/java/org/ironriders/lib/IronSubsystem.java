@@ -40,7 +40,7 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   /**
-   * Send a generic elastic notification with no edits
+   * Send a generic elastic notification with no edits.
    * 
    * @param notif The elastic notification to send.
    */
@@ -49,53 +49,56 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   /**
-   * Send a elstaic notification with level WARNING
+   * Send a elstaic notification with level WARNING.
    * This will also apend your title to "warning in (your subsystem): and set that
-   * as the title"
+   * as the title".
    * You should be careful to put as little information in the title as possible
-   * so it doesn't overflow
-   * 
+   * so it doesn't overflow.
+   * This notification will last 10 seconds
    * @param notif The elastic notification to send.
    */
-  public void putWarning(Notification notif) {
+  public void notifyWarning(Notification notif) {
     notif.setLevel(NotificationLevel.WARNING);
     String title = notif.getTitle();
     title = "Warning in " + messagePrefix + ":" + title;
     notif.setTitle(title);
+    notif.setDisplayTimeSeconds(10);
     putNotifcation(notif);
   }
 
   /**
-   * Send a elstaic notification with level info
+   * Send a elstaic notification with level info.
    * This will also apend your title to "Message from (your subsystem): and set
-   * that as the title"
+   * that as the title".
    * You should be careful to put as little information in the title as possible
-   * so it doesn't overflow
-   * 
+   * so it doesn't overflow.
+   * This notification will last 5 seconds
    * @param notif The elastic notification to send.
    */
-  public void putInfo(Notification notif) {
+  public void notify(Notification notif) {
     notif.setLevel(NotificationLevel.INFO);
     String title = notif.getTitle();
     title = "Message from " + messagePrefix + ":" + title;
     notif.setTitle(title);
+    notif.setDisplayTimeSeconds(5);
     putNotifcation(notif);
   }
 
   /**
-   * Send a elstaic notification with level ERROR
+   * Send a elstaic notification with level ERROR.
    * This will also apend your title to "ERROR in (your subsystem): and set that
-   * as the title"
+   * as the title".
    * You should be careful to put as little information in the title as possible
-   * so it doesn't overflow
-   * 
+   * so it doesn't overflow.
+   * This notification will last 30 seconds
    * @param notif The elastic notification to send.
    */
-  public void putError(Notification notif) {
+  public void notifyError(Notification notif) {
     notif.setLevel(NotificationLevel.ERROR);
     String title = notif.getTitle();
     title = "ERROR in " + messagePrefix + ":" + title;
     notif.setTitle(title);
+    notif.setDisplayTimeSeconds(30);
     putNotifcation(notif);
   }
 

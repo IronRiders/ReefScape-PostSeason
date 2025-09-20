@@ -31,15 +31,72 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   private String addThreadTime() {
-    String str = Objects.toString(TimeUnit.MILLISECONDS.convert(System.nanoTime() - startupTime, TimeUnit.NANOSECONDS) / 1000d, null);
+    String str = Objects
+        .toString(TimeUnit.MILLISECONDS.convert(System.nanoTime() - startupTime, TimeUnit.NANOSECONDS) / 1000d, null);
 
     return "["
         + str
         + "] ";
   }
 
+  /**
+   * Send a generic elastic notification with no edits
+   * 
+   * @param notif The elastic notification to send.
+   */
   public void putNotifcation(Notification notif) {
     Elastic.sendNotification(notif);
+  }
+
+  /**
+   * Send a elstaic notification with level WARNING
+   * This will also apend your title to "warning in (your subsystem): and set that
+   * as the title"
+   * You should be careful to put as little information in the title as possible
+   * so it doesn't overflow
+   * 
+   * @param notif The elastic notification to send.
+   */
+  public void putWarning(Notification notif) {
+    notif.setLevel(NotificationLevel.WARNING);
+    String title = notif.getTitle();
+    title = "Warning in " + messagePrefix + ":" + title;
+    notif.setTitle(title);
+    putNotifcation(notif);
+  }
+
+  /**
+   * Send a elstaic notification with level info
+   * This will also apend your title to "Message from (your subsystem): and set
+   * that as the title"
+   * You should be careful to put as little information in the title as possible
+   * so it doesn't overflow
+   * 
+   * @param notif The elastic notification to send.
+   */
+  public void putInfo(Notification notif) {
+    notif.setLevel(NotificationLevel.INFO);
+    String title = notif.getTitle();
+    title = "Message from " + messagePrefix + ":" + title;
+    notif.setTitle(title);
+    putNotifcation(notif);
+  }
+
+  /**
+   * Send a elstaic notification with level ERROR
+   * This will also apend your title to "ERROR in (your subsystem): and set that
+   * as the title"
+   * You should be careful to put as little information in the title as possible
+   * so it doesn't overflow
+   * 
+   * @param notif The elastic notification to send.
+   */
+  public void putError(Notification notif) {
+    notif.setLevel(NotificationLevel.ERROR);
+    String title = notif.getTitle();
+    title = "ERROR in " + messagePrefix + ":" + title;
+    notif.setTitle(title);
+    putNotifcation(notif);
   }
 
   public void putTitleTextNotifcation(String title, String text) {
@@ -76,11 +133,13 @@ public abstract class IronSubsystem extends SubsystemBase {
 
   public void reportError(String message) {
     DriverStation.reportError(addThreadTime() + messagePrefix + message, false);
-    Elastic.sendNotification(new Notification().withLevel(NotificationLevel.ERROR).withTitle("ERROR").withDescription(message));
+    Elastic.sendNotification(
+        new Notification().withLevel(NotificationLevel.ERROR).withTitle("ERROR").withDescription(message));
   }
 
   public void reportWarning(String message) {
     DriverStation.reportWarning(addThreadTime() + messagePrefix + message, false);
-    Elastic.sendNotification(new Notification().withLevel(NotificationLevel.WARNING).withTitle("WARNING").withDescription(message));
+    Elastic.sendNotification(
+        new Notification().withLevel(NotificationLevel.WARNING).withTitle("WARNING").withDescription(message));
   }
 }

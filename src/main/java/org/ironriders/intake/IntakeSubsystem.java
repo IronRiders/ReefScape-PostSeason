@@ -16,8 +16,6 @@ import static org.ironriders.intake.IntakeConstants.LEFT_SPEED_MUL;
 import static org.ironriders.intake.IntakeConstants.RIGHT_SPEED_MUL;
 import static org.ironriders.intake.IntakeConstants.ROLLER_SPEED_MUL;
 
-import java.util.concurrent.TimeUnit;
-
 import org.ironriders.intake.IntakeConstants.IntakeState;
 import org.ironriders.lib.IronSubsystem;
 

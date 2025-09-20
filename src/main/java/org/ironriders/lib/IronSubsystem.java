@@ -32,7 +32,7 @@ public abstract class IronSubsystem extends SubsystemBase {
 
   private String addThreadTime() {
     String str = Objects
-        .toString(TimeUnit.MILLISECONDS.convert(System.nanoTime() - startupTime, TimeUnit.NANOSECONDS) / 1000d, null);
+        .toString(TimeUnit.MILLISECONDS.convert(System.nanoTime() - startupTime, TimeUnit.NANOSECONDS) / 1000d, 0);
 
     return "["
         + str

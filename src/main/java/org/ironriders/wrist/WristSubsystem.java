@@ -36,7 +36,7 @@ public class WristSubsystem extends IronSubsystem {
 
     public WristSubsystem() {
         motorConfig
-                .smartCurrentLimit(10) // Can go to 40
+                .smartCurrentLimit(30) // Can go to 40
                 .idleMode(IdleMode.kBrake);
 
         primaryMotor.configure(motorConfig,
@@ -95,7 +95,7 @@ public class WristSubsystem extends IronSubsystem {
 
         pidControler.reset();
 
-        stopped = new TrapezoidProfile.State(0, 0);
+        stopped = new TrapezoidProfile.State(getCurrentAngle(), 0);
 
         goalSetpoint = stopped;
         periodicSetpoint = stopped;

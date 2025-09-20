@@ -77,7 +77,7 @@ public class WristSubsystem extends IronSubsystem {
         publish("Current angle", getCurrentAngle());
         publish("Current angle raw", primaryMotor.getAbsoluteEncoder().getPosition());
         publish("At goal?", isAtPosition());
-        publish("PID", pidControler);
+        publish("Wrist PID", pidControler);
     }
 
     public double getCurrentAngle() {

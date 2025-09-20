@@ -8,6 +8,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -26,9 +27,9 @@ public class Robot extends TimedRobot {
   /**
    * Runs when the robot starts.
    * <ol>
-   * <li> Innitializes Robot Container</li>
-   * <li> Starts web server at port 5800</li>
-   * <li> Starts automatic capture on camera server</li>
+   * <li>Innitializes Robot Container</li>
+   * <li>Starts web server at port 5800</li>
+   * <li>Starts automatic capture on camera server</li>
    * </ol>
    */
   public Robot() {
@@ -38,17 +39,24 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * Runs periodically, <em>only</em> calls {@link CommandScheduler#getInstance()} with the .run() method.
+   * Runs periodically, <em>only</em> calls {@link CommandScheduler#getInstance()}
+   * with the .run() method.
    */
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    SmartDashboard.putData("Command Schedule", CommandScheduler.getInstance());
   }
+
+  @Override
+  public void teleopPeriodic() {
+  } // Make it stop yelling at me
 
   /**
    * If you start in autonomous mode, this is the first method that runs.
    * Calls {@link Robot#generalInit()} for startup functions, has some basic
-   * autonomous logic that calls {@link RobotContainer#schedule()} on {@link RobotContainer#getAutonomousCommand()}.
+   * autonomous logic that calls {@link RobotContainer#schedule()} on
+   * {@link RobotContainer#getAutonomousCommand()}.
    */
   @Override
   public void autonomousInit() {
@@ -79,7 +87,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopExit() {
-      generalInit();
+    generalInit();
   }
 
   @Override
@@ -88,8 +96,10 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * Initialization that applies to autonomous and teleop. Containes startup methods
-   * for various parts of the robot, not part of WPILib. Created because we were tired
+   * Initialization that applies to autonomous and teleop. Containes startup
+   * methods
+   * for various parts of the robot, not part of WPILib. Created because we were
+   * tired
    * of trying to keep all the startup functions updated for both startup methods.
    */
   private void generalInit() {

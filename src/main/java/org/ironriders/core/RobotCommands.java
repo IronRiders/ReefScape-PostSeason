@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
  * These commands are those which the driver controls call.
  */
 
-@SuppressWarnings("unused") // This was annoying and nothing was wrong
+@SuppressWarnings("unused") // Targeting and climb are unused by high-level commands
 public class RobotCommands {
 
   private final DriveCommands driveCommands;

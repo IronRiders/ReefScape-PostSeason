@@ -170,7 +170,6 @@ public class ElevatorSubsystem extends IronSubsystem {
   }
 
   public void setGoal(ElevatorLevel level) {
-    logMessage("goes to " + level.toString());
     this.goalSetpoint = new TrapezoidProfile.State(level.pos, 0d);
   }
 

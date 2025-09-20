@@ -30,6 +30,6 @@ public class WristCommands {
   }
 
   public Command stowReset() {
-    return Commands.sequence(set(WristRotation.STOW), reset());
+    return Commands.sequence(reset(), set(WristRotation.HOLD));
   }
 }

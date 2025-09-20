@@ -34,7 +34,7 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   public Command logMessage(String msg) {
-    return Commands.print(addThreadTime() + messagePrefix + msg);
+    return Commands.runOnce(() -> System.out.println(addThreadTime() + messagePrefix + msg));
   }
 
   public double getDiagnostic(String name, double defaultValue) {

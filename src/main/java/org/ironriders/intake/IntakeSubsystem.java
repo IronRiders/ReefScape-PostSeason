@@ -34,8 +34,7 @@ public class IntakeSubsystem extends IronSubsystem {
   private final TalonFX rightIntake = new TalonFX(INTAKE_MOTOR_RIGHT);
   private final TalonFX leftIntake = new TalonFX(INTAKE_MOTOR_LEFT);
   private final TalonFX rollerIntake = new TalonFX(INTAKE_MOTOR_TOP);
-  @SuppressWarnings("unused")
-  // Unused until the beam break is installed
+
   private final DigitalInput beamBreak = new DigitalInput(
       INTAKE_BEAMBREAK);
 
@@ -75,7 +74,7 @@ public class IntakeSubsystem extends IronSubsystem {
     publish(
         "Right Velocity",
         rightIntake.getVelocity().getValue().in(Units.DegreesPerSecond));
-    publish("Limit Switch Triggered", hasGamePiece());
+    publish("Beam Break Triggered", hasGamePiece());
   }
 
   public void set(IntakeState state) {
@@ -94,7 +93,7 @@ public class IntakeSubsystem extends IronSubsystem {
   }
 
   public boolean hasGamePiece() {
-    return beamBreak.get();
+    return !beamBreak.get();
   }
 
   public IntakeCommands getCommands() {

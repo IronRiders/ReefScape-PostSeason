@@ -26,7 +26,7 @@ public class WristSubsystem extends IronSubsystem {
     private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State(); // Acts as a temporary setpoint for
                                                                                     // calculating the next speed value
 
-    public WristRotation targetRotation = WristRotation.STOW;
+    public WristRotation targetRotation = WristRotation.HOLD;
 
     private TrapezoidProfile.State stopped;
 
@@ -39,8 +39,8 @@ public class WristSubsystem extends IronSubsystem {
                 .smartCurrentLimit(10) // Can go to 40
                 .idleMode(IdleMode.kBrake);
 
-        primaryMotor.configure(motorConfig, 
-                ResetMode.kResetSafeParameters, 
+        primaryMotor.configure(motorConfig,
+                ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
 
         secondaryMotor.configure(motorConfig,
@@ -52,7 +52,6 @@ public class WristSubsystem extends IronSubsystem {
                 WristConstants.I,
                 WristConstants.D);
         pidControler.setTolerance(WristConstants.TOLERANCE);
-
         reset();
     }
 
@@ -81,7 +80,7 @@ public class WristSubsystem extends IronSubsystem {
 
     public double getCurrentAngle() {
         return (primaryMotor.getAbsoluteEncoder().getPosition() - WristConstants.ENCODER_OFFSET) * 360
-                - WristConstants.CAD_POSITION_OFFSET;
+                + WristConstants.CAD_POSITION_OFFSET;
         // ENCODER_OFFSET is added to encoder to get it to = 0 when it is fully stowed
         // (against hardstop)
         // CAD_POSITION_OFFSET is adjustment for odd alignment in the CAD

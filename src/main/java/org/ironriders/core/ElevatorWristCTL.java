@@ -48,10 +48,10 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
 
     public enum WristRotation { // Position in degrees
-        STOW(-30), // <- CAD values (need to be negitive)
-        INTAKING(-260),
-        L2L3(-40),
-        L4(-350);
+        HOLD(25), // <- CAD values (need to be negitive)
+        INTAKING(-85),
+        L2L3(40),
+        L4(10); // changed
 
         public double pos;
 
@@ -61,7 +61,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
 
     public enum ElevatorWristState {
-        STOW(ElevatorLevel.DOWN, WristRotation.STOW),
+        STOW(ElevatorLevel.DOWN, WristRotation.HOLD),
         INTAKING(ElevatorLevel.DOWN, WristRotation.INTAKING),
         L2(ElevatorLevel.L2, WristRotation.L2L3),
         L3(ElevatorLevel.L3, WristRotation.L2L3),
@@ -100,7 +100,7 @@ public class ElevatorWristCTL extends IronSubsystem {
      */
 
     public Command reset() {
-        return Commands.parallel(wristCommands.stowReset(), elevatorCommands.home(), logMessage("reseting"));
+        return Commands.sequence(wristCommands.stowReset(), elevatorCommands.home(), logMessage("reseting"));
     }
 
 }

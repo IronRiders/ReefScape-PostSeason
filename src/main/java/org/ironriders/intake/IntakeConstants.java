@@ -26,13 +26,13 @@ public class IntakeConstants {
                                                             // Current
   public static final int INTAKE_SUPPLY_CURRENT_LOWER_LIMIT = 30; // Supply Current if SupplyCurrentLowerTime is
                                                                         // >0 and applys after
-  public static final int INTAKE_SUPPLY_CURRENT_LOWER_TIME = 1; // In Second. This determines how long Supply
+  public static final int INTAKE_SUPPLY_CURRENT_LOWER_TIME = 1; // In Seconds. This determines how long Supply
                                                                       // Current is applied and then limit is lowered to
                                                                       // SupplyCurrentLowerLimit
 
-  public static final int INTAKE_BEAMBREAK = 1; // TODO does not exist
+  public static final int INTAKE_BEAMBREAK = 0;
 
-  public static final double DISCHARGE_TIMEOUT = 7.5; // these are both in SECONDS
+  public static final double DISCHARGE_TIMEOUT = 2; // these are both in SECONDS
   public static final double INTAKE_IMPATIENCE = 0.0; // how much time to wait for the limit switch before stopping the
                                                       // motor anyway
 

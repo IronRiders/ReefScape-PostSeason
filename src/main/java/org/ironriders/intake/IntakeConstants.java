@@ -33,11 +33,8 @@ public class IntakeConstants {
   public static final int INTAKE_BEAMBREAK = 0;
 
   public static final double DISCHARGE_TIMEOUT = 2; // these are both in SECONDS
-  public static final double INTAKE_IMPATIENCE = 0.0; // how much time to wait for the limit switch before stopping the
-                                                      // motor anyway
-
-  public static final double MAX_ACC = .1;
-  public static final double MAX_VEL = .1;
+  public static final double INTAKE_WAIT_TIME = 1; // After getting a coral, how long do we keep intaking to get it to a good position
+  public static final double INTAKE_GIVE_UP_TIME = 5; // How long to wait for coral before giving up and stopping
 
   public enum IntakeState {
     GRAB(.25),

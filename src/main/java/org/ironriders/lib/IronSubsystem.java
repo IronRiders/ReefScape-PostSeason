@@ -3,6 +3,9 @@ package org.ironriders.lib;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import org.ironriders.lib.Elastic.Notification;
+import org.ironriders.lib.Elastic.NotificationLevel;
+
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.util.sendable.Sendable;
@@ -28,12 +31,23 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   private String addThreadTime() {
+    String str = Objects.toString(TimeUnit.MILLISECONDS.convert(System.nanoTime() - startupTime, TimeUnit.NANOSECONDS) / 1000d, null);
+
     return "["
-        + Objects.toString(TimeUnit.MILLISECONDS.convert(System.nanoTime() - startupTime, TimeUnit.NANOSECONDS), null)
+        + str
         + "] ";
   }
 
+  public void putNotifcation(Notification notif) {
+    Elastic.sendNotification(notif);
+  }
+
+  public void putTitleTextNotifcation(String title, String text) {
+    Elastic.sendNotification(new Notification().withTitle(title).withDescription(text));
+  }
+
   public Command logMessage(String msg) {
+    putTitleTextNotifcation(addThreadTime() + messagePrefix, msg);
     return Commands.runOnce(() -> System.out.println(addThreadTime() + messagePrefix + msg));
   }
 
@@ -62,9 +76,11 @@ public abstract class IronSubsystem extends SubsystemBase {
 
   public void reportError(String message) {
     DriverStation.reportError(addThreadTime() + messagePrefix + message, false);
+    Elastic.sendNotification(new Notification().withLevel(NotificationLevel.ERROR).withTitle("ERROR").withDescription(message));
   }
 
   public void reportWarning(String message) {
     DriverStation.reportWarning(addThreadTime() + messagePrefix + message, false);
+    Elastic.sendNotification(new Notification().withLevel(NotificationLevel.WARNING).withTitle("WARNING").withDescription(message));
   }
 }

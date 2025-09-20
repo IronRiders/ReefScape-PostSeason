@@ -141,7 +141,7 @@ public class ElevatorSubsystem extends IronSubsystem {
         return;
       }
 
-      logMessage("trying to home!"); // this will spam alot, debuging only
+      //logMessage("trying to home!"); // this will spam alot, debuging only
       primaryMotor.set(-ElevatorConstants.HOME_SPEED);
     }
 

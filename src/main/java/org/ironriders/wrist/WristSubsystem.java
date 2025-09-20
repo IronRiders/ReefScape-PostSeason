@@ -13,6 +13,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class WristSubsystem extends IronSubsystem {
     final SparkMax primaryMotor = new SparkMax(WristConstants.PRIMARY_WRIST_MOTOR, MotorType.kBrushless);
@@ -76,6 +77,7 @@ public class WristSubsystem extends IronSubsystem {
         publish("Current angle", getCurrentAngle());
         publish("Current angle raw", primaryMotor.getAbsoluteEncoder().getPosition());
         publish("At goal?", isAtPosition());
+        publish("PID", pidControler);
     }
 
     public double getCurrentAngle() {

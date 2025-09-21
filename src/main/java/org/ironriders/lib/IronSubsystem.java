@@ -30,7 +30,7 @@ public abstract class IronSubsystem extends SubsystemBase {
     startupTime = System.nanoTime();
   }
 
-  private String addThreadTime() {
+  private String getThreadTime() {
     String str = Objects
         .toString(TimeUnit.MILLISECONDS.convert(System.nanoTime() - startupTime, TimeUnit.NANOSECONDS) / 1000d, "Error, could not get VM time!");
 
@@ -107,8 +107,8 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   public Command logMessage(String msg) {
-    putTitleTextNotifcation(addThreadTime() + messagePrefix, msg);
-    return Commands.runOnce(() -> System.out.println(addThreadTime() + messagePrefix + msg));
+    putTitleTextNotifcation(getThreadTime() + messagePrefix, msg);
+    return Commands.runOnce(() -> System.out.println(getThreadTime() + messagePrefix + msg));
   }
 
   public double getDiagnostic(String name, double defaultValue) {
@@ -135,13 +135,13 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   public void reportError(String message) {
-    DriverStation.reportError(addThreadTime() + messagePrefix + message, false);
+    DriverStation.reportError(getThreadTime() + messagePrefix + message, false);
     Elastic.sendNotification(
         new Notification().withLevel(NotificationLevel.ERROR).withTitle("ERROR").withDescription(message));
   }
 
   public void reportWarning(String message) {
-    DriverStation.reportWarning(addThreadTime() + messagePrefix + message, false);
+    DriverStation.reportWarning(getThreadTime() + messagePrefix + message, false);
     Elastic.sendNotification(
         new Notification().withLevel(NotificationLevel.WARNING).withTitle("WARNING").withDescription(message));
   }

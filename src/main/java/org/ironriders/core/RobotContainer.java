@@ -120,7 +120,7 @@ public class RobotContainer {
         // Changing this before the match will change the control layout for the driver
         // this may be useful if different drivers prefer different configurations.
         // See following document for configurations: https://docs.google.com/document/d/1xFyZLRxw_a8ykvMorcS_41jLqNv0-CR9rZUkbbDNRMI/edit?copiedFromTrash&tab=t.0 
-        Config buttonConfiguration = Config.PRIMARY_DRIVER;
+        Config buttonConfiguration = Config.PRIMARY_DRIVER_WITH_BOOST;
 
         // DRIVE CONTROLS
         driveSubsystem.setDefaultCommand(robotCommands.driveTeleop(

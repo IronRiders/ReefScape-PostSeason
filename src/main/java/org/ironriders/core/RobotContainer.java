@@ -26,6 +26,13 @@ import org.ironriders.lib.RobotUtils;
 import org.ironriders.targeting.TargetingCommands;
 import org.ironriders.targeting.TargetingSubsystem;
 
+
+/**
+ * Different button configurations for the driver controls
+ * PRIMARY_DRIVER: same as Driver Centered Control Layout in the doc
+ * PRIMARY_DRIVER_WITH_BOOST: same as `William Boost buttons + primary focus` in the doc
+ * SECONDARY_DRIVER_WITH_BOOST: same as `Secondary driver elevator controls` in the doc
+ */
 enum Config {
     PRIMARY_DRIVER,
     PRIMARY_DRIVER_WITH_BOOST,
@@ -76,6 +83,10 @@ public class RobotContainer {
     /**
      * The container for the robot. Contains subsystems, IO devices, and
      * commands.
+     * 
+     * builds the autos using {@link com.pathplanner.lib.auto.AutoBuilder#buildAutoChooser() buildAutoChooser()}
+     * posts the auto selection to {@link SmartDashboard#putData(String, SendableChooser) SmartDashboard}
+     * 
      */
     public RobotContainer() {
         // Configure the trigger bindings
@@ -84,6 +95,15 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Select", autoChooser);
     }
+
+    /**
+     * Th
+     * {@link CommandGenericHID#button(int)} method (such as
+     * {@link CommandXboxController#button(int)},
+     * {@link CommandJoystick#button(int)}, or one of the
+     * {@link edu.wpi.first.wpilibj2.command.button.Trigger#Trigger(java.util.function.BooleanSupplier)}
+     * constructors.
+     */
 
     private void configureBindings() {
         DriverStation.silenceJoystickConnectionWarning(true);
@@ -95,31 +115,37 @@ public class RobotContainer {
          * with boosts
          * bumpers
          */
+
+        // This configures what control scheme the controller will use.
+        // Changing this before the match will change the control layout for the driver
+        // this may be useful if different drivers prefer different configurations.
+        // See following document for configurations: https://docs.google.com/document/d/1xFyZLRxw_a8ykvMorcS_41jLqNv0-CR9rZUkbbDNRMI/edit?copiedFromTrash&tab=t.0 
         Config buttonConfiguration = Config.PRIMARY_DRIVER;
 
         // DRIVE CONTROLS
         driveSubsystem.setDefaultCommand(robotCommands.driveTeleop(
             ()
-                -> RobotUtils.controlCurve(-primaryController.getLeftY()
-                        * driveSubsystem.controlSpeedMultipler
+                -> RobotUtils.controlCurve(-primaryController.getLeftY() // This sets the robot's x translation (as seen in driveTeleop) to the left joystick's y value
+                        * driveSubsystem.controlSpeedMultipler // This is just a multiplier in case we need to lower the speed, currently not used
+                        * driveSubsystem.getinversionStatus(), // just in case it invers
+                    DriveConstants.TRANSLATION_CONTROL_EXPONENT, //TODO: figure out what this is
+                    DriveConstants.TRANSLATION_CONTROL_DEADBAND), // the deadband for the controller, not being used right now
+            ()
+                -> RobotUtils.controlCurve(-primaryController.getLeftX() // this sets the robot's y translation (as seen in driveTeleop) to the left joystick's x value
+                        * driveSubsystem.controlSpeedMultipler // for all these, see getLeftY
                         * driveSubsystem.getinversionStatus(),
                     DriveConstants.TRANSLATION_CONTROL_EXPONENT,
                     DriveConstants.TRANSLATION_CONTROL_DEADBAND),
             ()
-                -> RobotUtils.controlCurve(-primaryController.getLeftX()
-                        * driveSubsystem.controlSpeedMultipler
-                        * driveSubsystem.getinversionStatus(),
-                    DriveConstants.TRANSLATION_CONTROL_EXPONENT,
-                    DriveConstants.TRANSLATION_CONTROL_DEADBAND),
-            ()
-                -> RobotUtils.controlCurve(-primaryController.getRightX()
+                -> RobotUtils.controlCurve(-primaryController.getRightX() // this rotates the robot based on the right joysticks x value (y value is unused)
                         * driveSubsystem.controlSpeedMultipler
                         * driveSubsystem.getinversionStatus(),
                     DriveConstants.ROTATION_CONTROL_EXPONENT,
                     DriveConstants.ROTATION_CONTROL_DEADBAND)));
-
-        switch (buttonConfiguration) {
-            case PRIMARY_DRIVER:
+        
+        switch (buttonConfiguration) { // configures buttons based on selected config. see the buttonConfiguration to know the currently active configuration
+            // currently, this is the 'normal' configuration, when in doubt use this one.
+            case PRIMARY_DRIVER: // use this for any driver except for william
                 for (var angle = 0; angle < 360; angle += 45) {
                     primaryController.pov(angle).onTrue(
                         driveCommands.jog(-angle));
@@ -148,11 +174,11 @@ public class RobotContainer {
                     .onFalse(intakeCommands.set(IntakeState.STOP));
 
                 primaryController
-                    .button(1) // works for L2 as well
+                    .button(1) // works for L2 as well (see https://europe1.discourse-cdn.com/unity/original/3X/5/8/58e7b2a50ec35ea142ae9c4d27c9df2d372cd1f3.jpeg)
                     .onTrue(elevatorWristCommands.setElevatorWrist(
                         ElevatorWristState.L2));
                 primaryController
-                    .button(2) // works for L1 as well
+                    .button(2) // works for L1 as well (see the above link for button configuration information)
                     .onTrue(elevatorWristCommands.setElevatorWrist(
                         ElevatorWristState.L2));
 
@@ -211,7 +237,7 @@ public class RobotContainer {
                 }
 
                 primaryController.rightTrigger(triggerThreshold)
-                    .onTrue(robotCommands.intake())
+                    .onTrue(robotCommands.intake()) // onTrue and onFalse are better for scheduler reasons than just whileTrue, ask a junior to learn more
                     .onFalse(robotCommands.stopIntake());
 
                 primaryController.leftTrigger(triggerThreshold)
@@ -226,27 +252,27 @@ public class RobotContainer {
                     .onFalse(driveCommands.setDriveTrainSpeed(1));
 
                 secondaryController
-                    .button(5) // TODO but actual button #
+                    .button(5) // TODO put actual button #
                     .onTrue(elevatorWristCommands.setElevatorWrist(
                         ElevatorWristState.L2));
                 secondaryController
-                    .button(6) // TODO but actual button #
+                    .button(6) // TODO put actual button #
                     .onTrue(elevatorWristCommands.setElevatorWrist(
                         ElevatorWristState.L2));
                 secondaryController
-                    .button(7) // TODO but actual button #
+                    .button(7) // TODO put actual button #
                     .onTrue(elevatorWristCommands.setElevatorWrist(
                         ElevatorWristState.L3));
                 secondaryController
-                    .button(8) // TODO but actual button #
+                    .button(8) // TODO put actual button #
                     .onTrue(elevatorWristCommands.setElevatorWrist(
                         ElevatorWristState.L4));
                 secondaryController
-                    .button(9) // TODO but actual button #
+                    .button(9) // TODO put actual button #
                     .onTrue(elevatorWristCommands.setElevatorWrist(
                         ElevatorWristState.INTAKING));
                 secondaryController
-                    .button(10) // TODO but actual button #
+                    .button(10) // TODO put actual button #
                     .onTrue(elevatorWristCommands.setElevatorWrist(
                         ElevatorWristState.STOW));
                 break;
@@ -255,13 +281,13 @@ public class RobotContainer {
         }
 
         secondaryController
-            .button(14) // TODO set correct value
+            .button(14) // TODO decide on buttons for these commands
             .whileTrue(climbCommands.set(ClimbConstants.Targets.CLIMBED));
         secondaryController
-            .button(15) // TODO set correct value
+            .button(15) // TODO decide on buttons for these commands
             .whileTrue(climbCommands.set(ClimbConstants.Targets.MIN));
         secondaryController
-            .button(16) // TODO set correct value
+            .button(16) // TODO decide on buttons for these commands
             .whileTrue(climbCommands.set(ClimbConstants.Targets.MAX));
     }
 

@@ -25,8 +25,8 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 /**
  * The DriveSubsystem encompasses everything that the Swerve Drive needs to
  * function. It keeps track of the robot's position and angle, and uses the
- * controller
- * input to figure out how the individual modules need to turn and be angled.
+ * controller input to figure out how the individual modules need to turn and
+ * be angled.
  */
 public class DriveSubsystem extends IronSubsystem {
 

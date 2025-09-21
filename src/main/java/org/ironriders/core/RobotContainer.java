@@ -95,7 +95,7 @@ public class RobotContainer {
          * with boosts
          * bumpers
          */
-        Config buttonConfiguration = Config.PRIMARY_DRIVER;
+        Config buttonConfiguration = Config.PRIMARY_DRIVER_WITH_BOOST;
 
         // DRIVE CONTROLS
         driveSubsystem.setDefaultCommand(robotCommands.driveTeleop(

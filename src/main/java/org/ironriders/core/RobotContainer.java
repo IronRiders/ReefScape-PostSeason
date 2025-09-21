@@ -128,7 +128,7 @@ public class RobotContainer {
                 -> RobotUtils.controlCurve(-primaryController.getLeftY() // This sets the robot's x translation (as seen in driveTeleop) to the left joystick's y value
                         * driveSubsystem.controlSpeedMultipler // This is just a multiplier in case we need to lower the speed, currently not used
                         * driveSubsystem.getinversionStatus(), // just in case it invers
-                    DriveConstants.TRANSLATION_CONTROL_EXPONENT, //TODO: figure out what this is
+                    DriveConstants.TRANSLATION_CONTROL_EXPONENT,
                     DriveConstants.TRANSLATION_CONTROL_DEADBAND), // the deadband for the controller, not being used right now
             ()
                 -> RobotUtils.controlCurve(-primaryController.getLeftX() // this sets the robot's y translation (as seen in driveTeleop) to the left joystick's x value
@@ -144,8 +144,8 @@ public class RobotContainer {
                     DriveConstants.ROTATION_CONTROL_DEADBAND)));
         
         switch (buttonConfiguration) { // configures buttons based on selected config. see the buttonConfiguration to know the currently active configuration
-            // currently, this is the 'normal' configuration, when in doubt use this one.
-            case PRIMARY_DRIVER: // use this for any driver except for william
+            // currently, 'PRIMARY_DRIVER_WITH_BOOST' is the 'normal' configuration, when in doubt use this one.
+            case PRIMARY_DRIVER:
                 for (var angle = 0; angle < 360; angle += 45) {
                     primaryController.pov(angle).onTrue(
                         driveCommands.jog(-angle));

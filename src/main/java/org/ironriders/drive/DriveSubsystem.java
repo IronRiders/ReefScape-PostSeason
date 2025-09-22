@@ -81,15 +81,6 @@ public class DriveSubsystem extends IronSubsystem {
 
     GameState.setField(swerveDrive.field);
     GameState.setRobotPose(() -> Optional.of(swerveDrive.getPose()));
-    Notification test_Notification = new Notification();
-    test_Notification.setTitle("Test");
-    this.notifyError(test_Notification);
-    Notification test_Notification_2 = new Notification();
-    test_Notification_2.setTitle("Test");
-    this.notifyWarning(test_Notification_2);
-    Notification test_Notification_3 = new Notification();
-    test_Notification_3.setTitle("Test");
-    this.notify(test_Notification_3);
   }
 
   @Override

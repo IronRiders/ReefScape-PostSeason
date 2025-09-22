@@ -82,9 +82,11 @@ public class WristSubsystem extends IronSubsystem {
     public double getCurrentAngle() {
         return (primaryMotor.getAbsoluteEncoder().getPosition() - WristConstants.ENCODER_OFFSET) * 360
                 + WristConstants.CAD_POSITION_OFFSET;
-        // ENCODER_OFFSET is added to encoder to get it to = 0 when it is fully stowed
-        // (against hardstop)
-        // CAD_POSITION_OFFSET is adjustment for odd alignment in the CAD
+        /*
+         * ENCODER_OFFSET is added to encoder to get it to = 0 when it is fully stowed
+         * (against hardstop)
+         * CAD_POSITION_OFFSET is adjustment for odd alignment in the CAD
+         */
     }
 
     public boolean isAtPosition() {

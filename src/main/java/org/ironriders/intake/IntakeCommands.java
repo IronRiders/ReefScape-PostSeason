@@ -29,9 +29,8 @@ public class IntakeCommands {
     switch (state) {
       case GRAB:
         return command
-            .until(() -> intake.hasGamePiece())
+            .until(() -> intake.hasHighCurrent())
             .withTimeout(IntakeConstants.INTAKE_GIVE_UP_TIME)
-            .andThen(Commands.waitSeconds(IntakeConstants.INTAKE_WAIT_TIME))
             .finallyDo(() -> intake.set(IntakeState.STOP));
 
       case EJECT:

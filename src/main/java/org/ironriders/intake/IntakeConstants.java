@@ -20,8 +20,8 @@ public class IntakeConstants {
   public static final double ROLLER_SPEED_MUL = 1;
 
   // TODO Tune These
-  public static final int INTAKE_STATOR_CURRENT = 30; // Stator Current ∝ Torque and Acceleration
-  public static final int INTAKE_SUPPLY_CURRENT = 40; // Supply Current ∝ Speed + (a little Torque). If Supply
+  public static final int INTAKE_STATOR_CURRENT = 30; // Stator Current Torque and Acceleration
+  public static final int INTAKE_SUPPLY_CURRENT = 40; // Supply Current Speed + (a little Torque). If Supply
                                                             // Current Lower Time is <= 0 then this will be the Supply
                                                             // Current
   public static final int INTAKE_SUPPLY_CURRENT_LOWER_LIMIT = 30; // Supply Current if SupplyCurrentLowerTime is
@@ -33,15 +33,14 @@ public class IntakeConstants {
   public static final int INTAKE_BEAMBREAK = 0;
 
   public static final double DISCHARGE_TIMEOUT = 2; // these are both in SECONDS
-  public static final double INTAKE_WAIT_TIME = 1; // After getting a coral, how long do we keep intaking to get it to a good position
+  public static final double INTAKE_WAIT_TIME = 0.05; // After getting a coral, how long do we keep intaking to get it to a good position
   public static final double INTAKE_GIVE_UP_TIME = 5; // How long to wait for coral before giving up and stopping
 
   public enum IntakeState {
     GRAB(.25),
     SCORE(.30),
-    EJECT(-.25),
-    STOP(0.00),
-    HOLD(.01);
+    EJECT(-.10),
+    STOP(0.00);
 
     public final double speed;
 

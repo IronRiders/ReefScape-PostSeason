@@ -239,7 +239,7 @@ public class RobotContainer {
                 }
 
                 primaryController.rightTrigger(triggerThreshold)
-                    .onTrue(robotCommands.intake()) // onTrue and onFalse are better for scheduler reasons than just whileTrue, ask a junior to learn more
+                    .onTrue(robotCommands.intake())
                     .onFalse(robotCommands.stopIntake());
 
                 primaryController.leftTrigger(triggerThreshold)
@@ -276,7 +276,7 @@ public class RobotContainer {
                 secondaryController
                     .button(10) // TODO put actual button #
                     .onTrue(elevatorWristCommands.setElevatorWrist(
-                        ElevatorWristState.STOW));
+                        ElevatorWristState.HOLD));
                 break;
             default:
                 throw new Error("Invalid buttonmap type!");

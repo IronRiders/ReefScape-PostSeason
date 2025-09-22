@@ -24,7 +24,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     private final String dashboardPrefix = "Subsystems/" + diagnosticName + "/";
 
     public ElevatorWristCTL() {
-        publish("Set to STOW", setElevatorWrist(ElevatorWristState.STOW));
+        publish("Set to STOW", setElevatorWrist(ElevatorWristState.HOLD));
         publish("Set to INTAKING", setElevatorWrist(ElevatorWristState.INTAKING));
         publish("Set to L2", setElevatorWrist(ElevatorWristState.L2));
         publish("Set to L3", setElevatorWrist(ElevatorWristState.L3));
@@ -61,7 +61,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
 
     public enum ElevatorWristState {
-        STOW(ElevatorLevel.DOWN, WristRotation.HOLD),
+        HOLD(ElevatorLevel.DOWN, WristRotation.HOLD),
         INTAKING(ElevatorLevel.DOWN, WristRotation.INTAKING),
         L2(ElevatorLevel.L2, WristRotation.L2L3),
         L3(ElevatorLevel.L3, WristRotation.L2L3),

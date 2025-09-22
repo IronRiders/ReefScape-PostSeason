@@ -11,16 +11,9 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Prepare to Score Coral L4"
-                }
-              }
-            ]
+            "name": "Prepare Score L4"
           }
         }
       ]

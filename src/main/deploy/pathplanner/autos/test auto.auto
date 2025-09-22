@@ -5,15 +5,28 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "test path"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "test path"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Prepare Score L4"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Prepare Score L4"
+            "name": "Score"
           }
         }
       ]

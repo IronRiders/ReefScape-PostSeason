@@ -2,10 +2,9 @@ package org.ironriders.intake;
 
 import static org.ironriders.intake.IntakeConstants.DISCHARGE_TIMEOUT;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-
 import org.ironriders.intake.IntakeConstants.IntakeState;
+
+import edu.wpi.first.wpilibj2.command.Command;
 
 public class IntakeCommands {
 
@@ -29,7 +28,7 @@ public class IntakeCommands {
     switch (state) {
       case GRAB:
         return command
-            .until(() -> intake.hasHighCurrent())
+            .until(() -> intake.hasHighCurrent()).until(null)
             .withTimeout(IntakeConstants.INTAKE_GIVE_UP_TIME)
             .finallyDo(() -> intake.set(IntakeState.STOP));
 

@@ -34,7 +34,6 @@ public class IntakeConstants {
 
   public static final double DISCHARGE_TIMEOUT = 2; // these are both in SECONDS
   //public static final double INTAKE_WAIT_TIME = 0.05; // After getting a coral, how long do we keep intaking to get it to a good position
-  public static final double INTAKE_WAIT_TIME = Double.MAX_VALUE;
   public static final double INTAKE_GIVE_UP_TIME = 5; // How long to wait for coral before giving up and stopping
 
   public enum IntakeState {

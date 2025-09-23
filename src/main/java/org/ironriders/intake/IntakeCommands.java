@@ -28,8 +28,7 @@ public class IntakeCommands {
     switch (state) {
       case GRAB:
         return command
-            .until(() -> intake.hasHighCurrent()).until(null)
-            .withTimeout(IntakeConstants.INTAKE_GIVE_UP_TIME)
+            .until(() -> intake.hasHighCurrent())
             .finallyDo(() -> intake.set(IntakeState.STOP));
 
       case EJECT:

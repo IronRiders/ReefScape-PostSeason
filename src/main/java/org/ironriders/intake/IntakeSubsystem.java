@@ -37,7 +37,6 @@ public class IntakeSubsystem extends IronSubsystem {
 
   private double average = 0;
 
-  @SuppressWarnings("unused")
   private final DigitalInput beamBreak = new DigitalInput(
       INTAKE_BEAMBREAK);
 
@@ -99,9 +98,7 @@ public class IntakeSubsystem extends IronSubsystem {
   }
 
   public boolean hasHighCurrent() {
-    return average > 7;
-
-    // return !beamBreak.get();
+    return average > 12 && !beamBreak.get();
   }
 
   public IntakeCommands getCommands() {

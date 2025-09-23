@@ -6,7 +6,7 @@ public class WristConstants {
     public static final Integer SECONDARY_WRIST_MOTOR = 13;
 
     // TODO: Need to tune
-    public static final double P = 0.01; // proportion
+    public static final double P = 0.025; // proportion
     public static final double I = 0.0;  // integral
     public static final double D = 0.0;  // derivative
     public static final double T = 0.02; // time to next step

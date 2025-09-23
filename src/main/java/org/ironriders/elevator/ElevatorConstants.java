@@ -7,49 +7,23 @@ public class ElevatorConstants {
 
   public static final int ELEVATOR_MOTOR_STALL_LIMIT = 30; // in amps
 
-  public static final double P = 0.35;
-  public static final double I = 0.05;
-  public static final double D = 0;
-  public static final double T = .02;
+  public static final double P = 0.35; // proportion
+  public static final double I = 0.05; // integral
+  public static final double D = 0;    // derivative
+  public static final double T = 0.02; // time to next step
 
   public static final double MAX_VEL = 50;
   public static final double MAX_ACC = 60;
   public static final double ELEVATOR_POSITION_TOLERANCE = 0.15;
 
+  public static final double HOME_SPEED = 0.05;
+
   public static final double S = 0;
-  public static final double G = .0765;
+  public static final double G = 0.0765;
   public static final double V = 0;
 
   public static final double GEAR_RATIO = 0.05;
   public static final double SPROCKET_DIAMETER = 1.7567;
   public static final int NUMBER_OF_STAGES = 2;
   public static final double INCHES_PER_ROTATION = GEAR_RATIO * SPROCKET_DIAMETER * Math.PI * NUMBER_OF_STAGES;
-
-  public static final double DOWN_HEIGHT = 0;
-  public static final double INTAKING = 0;
-  public static final double L1_HEIGHT = 4;
-  public static final double L2_HEIGHT = 7.5;// untested
-  public static final double L3_HEIGHT = 21; // tested (could be tested more)
-  public static final double L4_HEIGHT = 53;// tested
-  public static final double HighAlgae_HIEGHT = 33; // untested
-
-  /**
-   * This enum represents each specific/discrete position the elevator needs to go
-   * to.
-   */
-  public enum Level {
-    Down(DOWN_HEIGHT),
-    Intaking(INTAKING),
-    L1(L1_HEIGHT),
-    L2(L2_HEIGHT),
-    L3(L3_HEIGHT),
-    L4(L4_HEIGHT),
-    HighAlgae(HighAlgae_HIEGHT);
-
-    public double positionInches;
-
-    private Level(double positionInches) {
-      this.positionInches = positionInches;
-    }
-  }
 }

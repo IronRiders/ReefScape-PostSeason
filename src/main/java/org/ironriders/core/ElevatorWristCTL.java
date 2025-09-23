@@ -48,7 +48,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
 
     public enum WristRotation { // Position in degrees
-        HOLD(25), // CAD values
+        HOLD(0), // <- CAD values (need to be negitive)
         INTAKING(-85),
         L2L3(40),
         L4(10);
@@ -90,11 +90,11 @@ public class ElevatorWristCTL extends IronSubsystem {
 
     public Command setElevatorWrist(ElevatorWristState state) {
         logMessage("goes to " + state.toString());
-        return Commands.parallel(wristCommands.set(state.wRot), elevatorCommands.set(state.eLevel));
+        return Commands.sequence(elevatorCommands.set(state.eLevel),wristCommands.set(state.wRot));
     }
 
     /*
-     * This command, in parallel, moves the wrist all the way in and does a PID
+     * This command, in parallel, moves the wrist all the way in and does \a PID
      * reset, as well as moving the elevator all the way down, rehoming it for good
      * measure, and then resetting it's PID.
      */

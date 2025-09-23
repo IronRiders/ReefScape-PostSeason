@@ -6,6 +6,7 @@ import org.ironriders.climb.ClimbCommands;
 import org.ironriders.core.ElevatorWristCTL.ElevatorWristState;
 import org.ironriders.drive.DriveCommands;
 import org.ironriders.intake.IntakeCommands;
+import org.ironriders.intake.IntakeSubsystem;
 import org.ironriders.intake.IntakeConstants.IntakeState;
 import org.ironriders.targeting.TargetingCommands;
 
@@ -140,7 +141,13 @@ public class RobotCommands {
    * @return returns the command described above
    */
   public Command intake() {
+    if (intakeCommands.getIntake().hasHighCurrent()) {
+      return new Command() {
+        
+      };
+    }
     return Commands.parallel(
+
         elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING),
         intakeCommands.set(IntakeState.GRAB));
   }

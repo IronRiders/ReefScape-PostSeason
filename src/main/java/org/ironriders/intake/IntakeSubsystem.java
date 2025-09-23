@@ -35,6 +35,8 @@ public class IntakeSubsystem extends IronSubsystem {
   private final TalonFX leftIntake = new TalonFX(INTAKE_MOTOR_LEFT);
   private final TalonFX rollerIntake = new TalonFX(INTAKE_MOTOR_TOP);
 
+  private double average = 0;
+
   private final DigitalInput beamBreak = new DigitalInput(
       INTAKE_BEAMBREAK);
 
@@ -74,12 +76,15 @@ public class IntakeSubsystem extends IronSubsystem {
     publish(
         "Right Velocity",
         rightIntake.getVelocity().getValue().in(Units.DegreesPerSecond));
-    publish("Beam Break Triggered", hasGamePiece());
+    publish("Beam Break Triggered", hasHighCurrent());
+    average = (leftIntake.getTorqueCurrent().getValueAsDouble() + rightIntake.getTorqueCurrent().getValueAsDouble())
+        / 2f;
+    publish("Current average", average);
   }
 
   public void set(IntakeState state) {
     publish("Intake State", state.toString());
-    logMessage("goes to " + state.toString());
+    // logMessage("goes to " + state.toString());
     leftIntake.set(state.speed * outputDifferential(state, LEFT_SPEED_MUL));
     rightIntake.set(state.speed * outputDifferential(state, RIGHT_SPEED_MUL));
     rollerIntake.set(state.speed * outputDifferential(state, ROLLER_SPEED_MUL));
@@ -92,8 +97,8 @@ public class IntakeSubsystem extends IronSubsystem {
     return 1;
   }
 
-  public boolean hasGamePiece() {
-    return !beamBreak.get();
+  public boolean hasHighCurrent() {
+    return average > 12 && !beamBreak.get();
   }
 
   public IntakeCommands getCommands() {

@@ -36,8 +36,8 @@ public class ElevatorWristCTL extends IronSubsystem {
 
     public enum ElevatorLevel { // Position in inches
         DOWN(0),
-        L2(7.5),
-        L3(21),
+        L2(16.5),
+        L3(33),
         L4(53);
 
         public final double pos;

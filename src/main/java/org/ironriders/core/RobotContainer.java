@@ -135,7 +135,7 @@ public class RobotContainer {
                         DriveConstants.TRANSLATION_CONTROL_EXPONENT,
                         DriveConstants.TRANSLATION_CONTROL_DEADBAND), // the deadband for the controller, not being used
                                                                       // right now
-                () -> RobotUtils.controlCurve(-primaryController.getLeftX() // this sets the robot's y translation (as
+                () -> RobotUtils.controlCurve(primaryController.getLeftX() // this sets the robot's y translation (as
                                                                             // seen in driveTeleop) to the left
                                                                             // joystick's x value
                         * driveSubsystem.controlSpeedMultipler // for all these, see getLeftY

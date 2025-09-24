@@ -35,6 +35,7 @@ public class ClimbSubsystem extends IronSubsystem {
   private final PIDController pid = new PIDController(P, I, D);
 
   public boolean atGoal;
+  public boolean isHomed = false;
 
   // goalSetpoint is the final goal. periodicSetpoint is a sort-of inbetween
   // setpoint generated every periodic.
@@ -70,6 +71,11 @@ public class ClimbSubsystem extends IronSubsystem {
 
   @Override
   public void periodic() {
+    updateDashboard();
+
+    if (!isHomed) 
+      return;
+    
     var currentDegrees = getCurrentAngle();
 
     // Apply profile and PID to determine output level
@@ -83,7 +89,6 @@ public class ClimbSubsystem extends IronSubsystem {
 
     atGoal = pid.atSetpoint();
 
-    updateDashboard();
   }
 
   private void updateDashboard() {
@@ -91,6 +96,8 @@ public class ClimbSubsystem extends IronSubsystem {
     publish("Goal Position", goalSetpoint.position);
 
     publish("Current Position", getCurrentAngle());
+    publish("PID", pid);
+    publish("Is homed", isHomed);
     publish("at Goal?", atGoal);
   }
 
@@ -112,6 +119,7 @@ public class ClimbSubsystem extends IronSubsystem {
     }
     logMessage("rehoming!");
     motor.getEncoder().setPosition(0);
+    isHomed = true;
     reset();
   }
 

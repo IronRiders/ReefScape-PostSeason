@@ -20,6 +20,6 @@ public class ClimbCommands {
   }
 
   public Command home() {
-    return climb.runOnce(() -> home());
+    return climb.runOnce(() -> climb.home());
   }
 }

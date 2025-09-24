@@ -20,7 +20,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
     private final ElevatorCommands elevatorCommands = elevatorSubsystem.getCommands();
 
-    private final String diagnosticName = this.getClass().getSimpleName().replaceAll("Subsystem$", "");
+    private final String diagnosticName = this.getClass().getSimpleName();
     private final String dashboardPrefix = "Subsystems/" + diagnosticName + "/";
 
     public ElevatorWristCTL() {
@@ -36,11 +36,11 @@ public class ElevatorWristCTL extends IronSubsystem {
 
     public enum ElevatorLevel { // Position in inches
         DOWN(0),
-        L2(7.5), // TODO - These need to be tuned
+        L2(7.5),
         L3(21),
         L4(53);
 
-        public double pos;
+        public final double pos;
 
         ElevatorLevel(double pos) {
             this.pos = pos;
@@ -51,9 +51,9 @@ public class ElevatorWristCTL extends IronSubsystem {
         HOLD(0), // <- CAD values (need to be negitive)
         INTAKING(-85),
         L2L3(40),
-        L4(10); // changed
+        L4(10);
 
-        public double pos;
+        public final double pos;
 
         WristRotation(double pos) {
             this.pos = pos;
@@ -67,8 +67,8 @@ public class ElevatorWristCTL extends IronSubsystem {
         L3(ElevatorLevel.L3, WristRotation.L2L3),
         L4(ElevatorLevel.L4, WristRotation.L4);
 
-        public ElevatorLevel eLevel;
-        public WristRotation wRot;
+        public final ElevatorLevel eLevel;
+        public final WristRotation wRot;
 
         ElevatorWristState(ElevatorLevel eLevel, WristRotation wRot) {
             this.eLevel = eLevel;

@@ -173,7 +173,7 @@ public class RobotCommands {
    */
   public Command stopIntake() {
     return Commands.parallel(elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD),
-        intakeCommands.set(IntakeState.STOP));
+        intakeCommands.set(IntakeState.STOP).unless(() -> intakeCommands.getIntake().beamBreakTriggered()));
   }
 
   /**

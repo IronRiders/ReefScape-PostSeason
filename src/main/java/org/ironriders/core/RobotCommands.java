@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 public class RobotCommands {
 
   private final DriveCommands driveCommands;
+  @SuppressWarnings("unused")
   private final TargetingCommands targetingCommands;
   private final IntakeCommands intakeCommands;
   private final ClimbCommands climbCommands;

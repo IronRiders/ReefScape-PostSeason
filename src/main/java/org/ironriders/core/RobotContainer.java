@@ -233,12 +233,13 @@ public class RobotContainer {
                         .onTrue(elevatorWristCommands.setElevatorWrist(
                                 ElevatorWristState.L2));
 
-                primaryController.x()
-                        .onTrue(
-                                elevatorWristCommands.setElevatorWrist(
-                                        ElevatorWristState.L3));
-                primaryController.y().onTrue(
-                        elevatorWristCommands.setElevatorWrist(
+                primaryController
+                        .x()
+                        .onTrue(elevatorWristCommands.setElevatorWrist(
+                                ElevatorWristState.L3));
+                primaryController
+                        .y()
+                        .onTrue(elevatorWristCommands.setElevatorWrist(
                                 ElevatorWristState.L4));
                 break;
 

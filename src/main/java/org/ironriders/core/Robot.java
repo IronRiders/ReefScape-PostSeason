@@ -77,9 +77,6 @@ public class Robot extends TimedRobot {
     generalInit();
   }
 
-  /**
-   * Cancels all commands, for when you want to manually run commands.
-   */
   @Override
   public void simulationInit() {
     generalInit();

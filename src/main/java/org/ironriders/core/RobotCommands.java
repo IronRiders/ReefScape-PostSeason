@@ -130,9 +130,9 @@ public class RobotCommands {
    * Command to make the robot intake. Runs two commands in parallel:
    * <ul>
    * <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState)
-   * elevator wrist state} to {@link ElevatorWristState#INTAKING "intaking"}.</li>
+   * elevator wrist state} to {@link ElevatorWristState#INTAKING "INTAKING"}.</li>
    * <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to
-   * {@link IntakeState#GRAB "grab"}.</li>
+   * {@link IntakeState#GRAB "GRAB"}.</li>
    * </ul>
    * <br>
    * 

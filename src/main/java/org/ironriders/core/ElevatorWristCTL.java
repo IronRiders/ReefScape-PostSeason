@@ -84,6 +84,14 @@ public class ElevatorWristCTL extends IronSubsystem {
         return elevatorSubsystem.getHeight();
     }
 
+    public ElevatorSubsystem getElevatorSubsystem() {
+        return elevatorSubsystem;
+    }
+
+    public WristSubsystem getWristSubsystem() {
+        return wristSubsystem;
+    }
+
     /*
      * This command sets both a elevator position and a wrist position.
      */

@@ -9,6 +9,7 @@ import org.ironriders.intake.IntakeCommands;
 import org.ironriders.intake.IntakeSubsystem;
 import org.ironriders.intake.IntakeConstants.IntakeState;
 import org.ironriders.targeting.TargetingCommands;
+import org.ironriders.wrist.WristSubsystem;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -143,7 +144,7 @@ public class RobotCommands {
   public Command intake() {
     return Commands.parallel(
         elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING),
-        intakeCommands.set(IntakeState.GRAB));
+        intakeCommands.set(IntakeState.GRAB)).unless(() -> intakeCommands.getIntake().beamBreakTriggered());
   }
 
   /**

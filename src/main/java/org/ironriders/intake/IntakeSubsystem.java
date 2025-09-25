@@ -1,6 +1,6 @@
 package org.ironriders.intake;
 
-//import static org.ironriders.intake.IntakeConstants.INTAKE_BEAMBREAK; see below
+import static org.ironriders.intake.IntakeConstants.INTAKE_BEAMBREAK;
 import static org.ironriders.intake.IntakeConstants.INTAKE_MOTOR_LEFT;
 import static org.ironriders.intake.IntakeConstants.INTAKE_MOTOR_LEFT_INVERSION;
 import static org.ironriders.intake.IntakeConstants.INTAKE_MOTOR_RIGHT;
@@ -25,7 +25,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.Units;
-//import edu.wpi.first.wpilibj.DigitalInput; see below
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class IntakeSubsystem extends IronSubsystem {
 
@@ -37,8 +37,8 @@ public class IntakeSubsystem extends IronSubsystem {
 
   private double average = 0;
 
-  //private final DigitalInput beamBreak = new DigitalInput (Beambreak is currently unused)
-  //    INTAKE_BEAMBREAK);
+  private final DigitalInput beamBreak = new DigitalInput(
+    INTAKE_BEAMBREAK);
 
   public IntakeSubsystem() {
     TalonFXConfiguration mainConfig = new TalonFXConfiguration();
@@ -100,6 +100,10 @@ public class IntakeSubsystem extends IronSubsystem {
   public boolean hasHighCurrent() {
     return false;
     // return average > 12 && !beamBreak.get(); disabled because beam break made it hard to intake
+  }
+
+  public boolean beamBreakTriggered() {
+    return !beamBreak.get();
   }
 
   public IntakeCommands getCommands() {

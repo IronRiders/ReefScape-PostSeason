@@ -1,6 +1,7 @@
 package org.ironriders.climb;
 
 import static org.ironriders.climb.ClimbConstants.D;
+import static org.ironriders.climb.ClimbConstants.ENCODER_SCALE;
 import static org.ironriders.climb.ClimbConstants.I;
 import static org.ironriders.climb.ClimbConstants.MAX_ACC;
 import static org.ironriders.climb.ClimbConstants.MAX_VEL;
@@ -46,15 +47,8 @@ public class ClimbSubsystem extends IronSubsystem {
   private final ClimbCommands commands;
 
   public ClimbSubsystem() {
-    motorConfig.idleMode(IdleMode.kBrake);
+    motorConfig.idleMode(IdleMode.kCoast);
     motorConfig.smartCurrentLimit(ClimbConstants.CURRENT_LIMIT);
-
-    motorConfig.softLimit
-        .reverseSoftLimit(Targets.MIN.pos)
-        .reverseSoftLimitEnabled(true);
-    motorConfig.softLimit
-        .forwardSoftLimit(Targets.MAX.pos)
-        .forwardSoftLimitEnabled(true);
 
     motor.configure(
         motorConfig,
@@ -70,6 +64,8 @@ public class ClimbSubsystem extends IronSubsystem {
 
   @Override
   public void periodic() {
+    updateDashboard();
+    
     var currentDegrees = getCurrentAngle();
 
     // Apply profile and PID to determine output level
@@ -83,15 +79,19 @@ public class ClimbSubsystem extends IronSubsystem {
 
     atGoal = pid.atSetpoint();
 
-    updateDashboard();
+    publish("Pid out", speed);
+
   }
 
   private void updateDashboard() {
     publish("Goal State", currentTarget.toString());
     publish("Goal Position", goalSetpoint.position);
+    publish("Motor Current", motor.getOutputCurrent());
 
     publish("Current Position", getCurrentAngle());
+    publish("PID", pid);
     publish("at Goal?", atGoal);
+    publish("Motor raw angle", motor.getEncoder().getPosition());
   }
 
   public void reset() {
@@ -123,7 +123,7 @@ public class ClimbSubsystem extends IronSubsystem {
   }
 
   public double getCurrentAngle() {
-    return motor.getEncoder().getPosition() * 360;
+    return motor.getEncoder().getPosition() * 360 * ENCODER_SCALE;
   }
 
   public ClimbCommands getCommands() {

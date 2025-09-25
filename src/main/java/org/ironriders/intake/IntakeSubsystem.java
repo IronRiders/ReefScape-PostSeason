@@ -98,7 +98,8 @@ public class IntakeSubsystem extends IronSubsystem {
   }
 
   public boolean hasHighCurrent() {
-    return average > 12 && !beamBreak.get();
+    return false;
+    // return average > 12 && !beamBreak.get(); disabled because beam break made it hard to intake
   }
 
   public IntakeCommands getCommands() {

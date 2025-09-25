@@ -1,11 +1,7 @@
 package org.ironriders.wrist;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.ironriders.core.ElevatorWristCTL.WristRotation;
 import org.ironriders.lib.IronSubsystem;
-import org.ironriders.lib.data.MotorSetup;
-import org.ironriders.lib.data.PID;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -16,160 +12,112 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 
-/**
- * Functionality common to all wrists.
- *
- * We interpret wrist angles in degrees forward relative to the floor; down is
- * -90 and up is 90. Angle must increase as the motor moves forward.
- */
-public abstract class WristSubsystem extends IronSubsystem {
+public class WristSubsystem extends IronSubsystem {
+    final SparkMax primaryMotor = new SparkMax(WristConstants.PRIMARY_WRIST_MOTOR, MotorType.kBrushless);
+    final SparkMax secondaryMotor = new SparkMax(WristConstants.SECONDARY_WRIST_MOTOR, MotorType.kBrushless);
+    final TrapezoidProfile movementProfile = new TrapezoidProfile(
+            new Constraints(WristConstants.MAX_VEL, WristConstants.MAX_ACC));
 
-  private final double PERIOD = .02;
+    private PIDController pidControler;
 
-  protected final SparkMax motor;
-  protected List<SparkMax> additionalMotors = new ArrayList<>();
-  protected final PIDController pid;
-  protected final double gearRatio;
+    private TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State(); // Acts as a final setpoint
+    private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State(); // Acts as a temporary setpoint for
+                                                                                    // calculating the next speed value
 
-  protected final SparkMaxConfig motorConfig = new SparkMaxConfig();
-  protected List<SparkMaxConfig> additionalMotorConfigs = new ArrayList<>();
+    public WristRotation targetRotation = WristRotation.HOLD;
 
-  protected TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State(); // Acts as a final setpoint
-  private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State(); // Acts as a temporary setpoint for
-                                                                                  // calculating the next speed value
-  private final TrapezoidProfile movementProfile;
+    private TrapezoidProfile.State stopped;
 
-  abstract boolean isHomed();
+    private final WristCommands commands = new WristCommands(this);
 
-  protected abstract boolean isAtForwardLimit();
+    private final SparkMaxConfig motorConfig = new SparkMaxConfig();
 
-  protected abstract boolean isAtReverseLimit();
+    public WristSubsystem() {
+        motorConfig
+                .smartCurrentLimit(30) // Can go to 40
+                .idleMode(IdleMode.kBrake);
 
-  protected abstract Angle getCurrentAngle();
+        primaryMotor.configure(motorConfig,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters);
 
-  public abstract Command homeCmd(boolean force);
+        secondaryMotor.configure(motorConfig,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters);
 
-  protected WristSubsystem(
-      MotorSetup primaryMotor,
-      double gearRatio,
-      PID pid,
-      TrapezoidProfile.Constraints constraints,
-      int stallLimit,
-      MotorSetup... additionalMotorsSetups) {
-    motor = new SparkMax(primaryMotor.motorId, MotorType.kBrushless);
-    this.gearRatio = gearRatio;
-    this.pid = new PIDController(pid.p, pid.i, pid.d);
-    movementProfile = new TrapezoidProfile(constraints);
-
-    // Additional Motors
-    for (MotorSetup setup : additionalMotorsSetups) {
-      SparkMax additionalMotor = new SparkMax(
-          setup.getId(),
-          MotorType.kBrushless);
-      additionalMotors.add(additionalMotor);
-      SparkMaxConfig additonalMotorConfig = new SparkMaxConfig();
-      additonalMotorConfig
-          .smartCurrentLimit(stallLimit)
-          .idleMode(IdleMode.kBrake)
-          .follow(primaryMotor.motorId, setup.getInversionStatus());
-      additionalMotorConfigs.add(additonalMotorConfig);
+        pidControler = new PIDController(
+                WristConstants.P,
+                WristConstants.I,
+                WristConstants.D);
+        pidControler.setTolerance(WristConstants.TOLERANCE);
+        reset();
     }
 
-    motorConfig
-        .smartCurrentLimit(stallLimit)
-        .idleMode(IdleMode.kBrake)
-        .inverted(primaryMotor.InversionStatus);
+    @Override
+    public void periodic() {
+        // Apply profile and PID to determine output level
+        periodicSetpoint = movementProfile.calculate(
+                WristConstants.T,
+                periodicSetpoint,
+                goalSetpoint);
 
-    configureMotor();
-  }
+        double speed = pidControler.calculate(getCurrentAngle(), periodicSetpoint.position);
+        setMotors(speed);
 
-  protected void configureMotor() {
-    motor.configure(
-        motorConfig,
-        ResetMode.kResetSafeParameters,
-        PersistMode.kPersistParameters);
-    for (int i = 0; i < additionalMotors.size(); i++) {
-      additionalMotors
-          .get(i)
-          .configure(
-              additionalMotorConfigs.get(i),
-              ResetMode.kResetSafeParameters,
-              PersistMode.kPersistParameters);
+        publish("Current PID ouput", speed);
+        updateDashboard();
     }
-  }
 
-  @Override
-  public void periodic() {
-    setMotorLevel();
-
-    publish("not stupid Rotation", additionalMotors.get(0).getEncoder().getPosition());
-
-    publish("Rotation", getCurrentAngle().in(Units.Degrees));
-    publish("Output", motor.get());
-    publish("Goal", goalSetpoint.position);
-    publish("Current", motor.getOutputCurrent());
-    publish("ForwardLimit", isAtForwardLimit());
-    publish("ReverseLimit", isAtReverseLimit());
-  }
-
-  /**
-   * Update the periodic setpoint and set the motor level.
-   */
-  protected void setMotorLevel() {
-    var currentDegrees = getCurrentAngle().in(Units.Degrees);
-
-    // Apply profile and PID to determine output level
-    periodicSetpoint = movementProfile.calculate(
-        PERIOD,
-        periodicSetpoint,
-        goalSetpoint);
-    var speed = pid.calculate(currentDegrees, periodicSetpoint.position);
-    motor.set(speed);
-  }
-
-  public void setGoal(Angle angle) {
-    var degrees = angle.in(Units.Degrees);
-
-    goalSetpoint = new TrapezoidProfile.State(degrees, 0);
-
-    var currentAngle = getCurrentAngle();
-    if (currentAngle.equals(angle)) {
-      return;
+    public void updateDashboard() {
+        publish("Current target", targetRotation.toString());
+        publish("Current goal pos", goalSetpoint.position);
+        publish("Current angle", getCurrentAngle());
+        publish("Current angle raw", primaryMotor.getAbsoluteEncoder().getPosition());
+        publish("At goal?", isAtPosition());
+        publish("Wrist PID", pidControler);
     }
-  }
 
-  public void reset() {
-    var currentAngle = getCurrentAngle();
+    public double getCurrentAngle() {
+        return (primaryMotor.getAbsoluteEncoder().getPosition() - WristConstants.ENCODER_OFFSET) * 360
+                + WristConstants.CAD_POSITION_OFFSET;
+        /*
+         * ENCODER_OFFSET is added to encoder to get it to = 0 when it is fully stowed
+         * (against hardstop)
+         * CAD_POSITION_OFFSET is adjustment for odd alignment in the CAD
+         */
+    }
 
-    goalSetpoint = createSetpoint(currentAngle);
-    periodicSetpoint = createSetpoint(currentAngle);
+    public boolean isAtPosition() {
+        return pidControler.atSetpoint();
+    }
 
-    pid.reset();
-  }
+    public void reset() {
+        logMessage("resetting");
 
-  private TrapezoidProfile.State createSetpoint(Angle angle) {
-    return createSetpoint(angle, 0);
-  }
+        pidControler.reset();
 
-  private TrapezoidProfile.State createSetpoint(Angle angle, double velocity) {
-    return new TrapezoidProfile.State(angle.in(Units.Degrees), velocity);
-  }
+        stopped = new TrapezoidProfile.State(getCurrentAngle(), 0);
 
-  public boolean atPosition() {
-    return (Math.abs(getCurrentAngle().in(Units.Degrees) - goalSetpoint.position) < 2);
-  }
+        goalSetpoint = stopped;
+        periodicSetpoint = stopped;
 
-  public Command moveToCmd(Angle angle) {
-    return this.runOnce(() -> this.setGoal(angle)).andThen(
-        Commands.waitUntil(this::atPosition));
-  }
+        setMotors(0);
+    }
 
-  public Command homeCmd() {
-    return homeCmd(false);
-  }
+    private void setMotors(double speed) {
+        primaryMotor.set(speed);
+        secondaryMotor.set(-speed);
+    }
+
+    protected void setGoal(WristRotation rotation) {
+        goalSetpoint = new TrapezoidProfile.State(rotation.pos, 0);
+        targetRotation = rotation;
+    }
+
+    public WristCommands getCommands() {
+        return commands;
+    }
+
 }

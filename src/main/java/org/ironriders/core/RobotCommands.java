@@ -3,15 +3,14 @@ package org.ironriders.core;
 import java.util.function.DoubleSupplier;
 
 import org.ironriders.climb.ClimbCommands;
+import org.ironriders.core.ElevatorWristCTL.ElevatorWristState;
 import org.ironriders.drive.DriveCommands;
-import org.ironriders.elevator.ElevatorCommands;
-import org.ironriders.elevator.ElevatorConstants;
-import org.ironriders.intake.CoralIntakeCommands;
-import org.ironriders.intake.CoralIntakeConstants;
+import org.ironriders.intake.IntakeCommands;
+import org.ironriders.intake.IntakeSubsystem;
+import org.ironriders.intake.IntakeConstants.IntakeState;
 import org.ironriders.targeting.TargetingCommands;
-import org.ironriders.wrist.CoralWristCommands;
-import org.ironriders.wrist.CoralWristConstants;
-import org.ironriders.wrist.CoralWristConstants.WristState;
+
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,55 +18,71 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 /**
  * These commands require more complex logic and are not directly tied to a
- * subsystem.
- * They generally interface w/ multiple subsystems via their commands and are
- * higher-level.
+ * subsystem. They generally interface w/ multiple subsystems via their commands
+ * and are higher-level.
  *
  * These commands are those which the driver controls call.
  */
+
+@SuppressWarnings("unused") // Targeting and climb are unused by high-level commands
 public class RobotCommands {
 
   private final DriveCommands driveCommands;
   @SuppressWarnings("unused")
   private final TargetingCommands targetingCommands;
-  private final ElevatorCommands elevatorCommands;
-  private final CoralWristCommands coralWristCommands;
-  private final CoralIntakeCommands coralIntakeCommands;
-  @SuppressWarnings("unused")
+  private final IntakeCommands intakeCommands;
   private final ClimbCommands climbCommands;
+  private final ElevatorWristCTL elevatorWristCommands;
 
   private final GenericHID controller;
 
+  /**
+   * Creates final variables for all command classes.
+   *
+   * @param driveCommands       DriveCommands instance
+   * @param targetingCommands   TargetingCommands instance
+   * @param elevatorCommands    ElevatorCommands instance
+   * @param coralWristCommands  CoralWristCommands instance
+   * @param coralIntakeCommands CoralIntakeCommands instance
+   * @param climbCommands       ClimbCommands instance
+   * @param controller          GenericHID controller (joystick/gamepad) instance
+   */
   public RobotCommands(
       DriveCommands driveCommands,
       TargetingCommands targetingCommands,
-      ElevatorCommands elevatorCommands,
-      CoralWristCommands coralWristCommands,
-      CoralIntakeCommands coralIntakeCommands,
+      IntakeCommands intakeCommands,
+      ElevatorWristCTL elevatorWristCommands,
       ClimbCommands climbCommands,
       GenericHID controller) {
     this.driveCommands = driveCommands;
     this.targetingCommands = targetingCommands;
-    this.elevatorCommands = elevatorCommands;
-    this.coralWristCommands = coralWristCommands;
-    this.coralIntakeCommands = coralIntakeCommands;
+    this.intakeCommands = intakeCommands;
+    this.elevatorWristCommands = elevatorWristCommands;
     this.climbCommands = climbCommands;
     this.controller = controller;
-    // TODO: Named commands, implement along w/ on-the-fly autos
+    // TODO: More named commands, implement good autos
+
+    NamedCommands.registerCommand("ElevatorWrist L2", elevatorWristCommands.setElevatorWrist(ElevatorWristState.L2));
+    NamedCommands.registerCommand("ElevatorWrist L3", elevatorWristCommands.setElevatorWrist(ElevatorWristState.L3));
+    NamedCommands.registerCommand("ElevatorWrist L4", elevatorWristCommands.setElevatorWrist(ElevatorWristState.L4));
+
+    NamedCommands.registerCommand("Prepare Score L4", prepareScoreLevel(ElevatorWristState.L4));
+    NamedCommands.registerCommand("Prepare Score L3", prepareScoreLevel(ElevatorWristState.L3));
+    NamedCommands.registerCommand("Prepare Score L2", prepareScoreLevel(ElevatorWristState.L2));
+
+    NamedCommands.registerCommand("Intake Eject", eject());
+    NamedCommands.registerCommand("Intake", intake());
+    NamedCommands.registerCommand("Score", scoreAndDown());
+
   }
 
   /**
    * Initialize all subsystems when first enabled.
-   *
-   * This primarily involves homing. We need to home sequentially coral -> algae
-   * -> elevator due to physical
-   * limitations.
    */
   public Command startup() {
-    coralIntakeCommands.setOnSuccess(() -> rumble());
-    return Commands.sequence(
-        coralWristCommands.set(WristState.STOWED),
-        elevatorCommands.home());
+    intakeCommands.setOnSuccess(() -> rumbleController());
+
+    return elevatorWristCommands.reset(); // moves everything to zero
   }
 
   /**
@@ -88,71 +103,102 @@ public class RobotCommands {
         true);
   }
 
+  public Command prepareScoreLevel(ElevatorWristState level) {
+    return Commands.sequence(elevatorWristCommands.setElevatorWrist(level));
+  }
+
+  private Command scoreAndDown() {
+    return Commands.sequence(intakeCommands.set(IntakeState.SCORE),
+        elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD));
+  }
+
+  /**
+   * Small translation that is robot-centered rather than field-centered.
+   * For example, moving a little 30 degrees will move 30 degrees relative
+   * to the front of the robot, rather than relative to the field.
+   * 
+   * @param robotRelativeAngleDegrees The angle to move, in degrees relative to
+   *                                  where the robot is facing
+   * @return Returns command object that calls the
+   *         {@link DriveCommands#jog(double)} method
+   */
   public Command jog(double robotRelativeAngleDegrees) {
     return driveCommands.jog(robotRelativeAngleDegrees);
   }
 
-  public Command rumble() {
+  /**
+   * <p>
+   * Command to make the robot intake. Runs two commands in parallel:
+   * <ul>
+   * <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState)
+   * elevator wrist state} to {@link ElevatorWristState#INTAKING "intaking"}.</li>
+   * <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to
+   * {@link IntakeState#GRAB "grab"}.</li>
+   * </ul>
+   * <br>
+   * 
+   * </p>
+   * 
+   * @return returns the command described above
+   */
+  public Command intake() {
+    if (intakeCommands.getIntake().hasHighCurrent()) {
+      return new Command() {
+        
+      };
+    }
+    return Commands.parallel(
+
+        elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING),
+        intakeCommands.set(IntakeState.GRAB));
+  }
+
+  /**
+   * Command to make the robot eject. Simply sets the
+   * {@link IntakeCommands#set(IntakeState) intake state} to
+   * {@link IntakeState#EJECT "eject"}.
+   * 
+   * @return returns the command described above
+   */
+  public Command eject() {
+    return intakeCommands.set(IntakeState.EJECT);
+  }
+
+  /**
+   * Command to stop the intake and stow the elevator wrist.
+   * Does the following in parallel:
+   * <ul>
+   * <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState)
+   * elevator wrist state} to {@link ElevatorWristState#HOLD "stow"}.</li>
+   * <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to
+   * {@link IntakeState#STOP "stop"}.</li>
+   * </ul>
+   * 
+   * 
+   * @return returns the command described above
+   */
+  public Command stopIntake() {
+    return Commands.parallel(elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD),
+        intakeCommands.set(IntakeState.STOP));
+  }
+
+  /**
+   * Sets the rumble on the controller for 0.3 seconds.
+   * 
+   * Does this by setting the
+   * {@link edu.wpi.first.wpilibj.GenericHID#setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType, double)
+   * GenericHID setRumble()}
+   * method to {@link edu.wpi.first.wpilibj.GenericHID.RumbleType#kBothRumble
+   * kBothRumble}. This makes all motors on a controller rumble.
+   * 
+   * @return A command that does what is described above for 0.3 seconds, then
+   *         returns rumble to 0.
+   */
+  public Command rumbleController() {
     return Commands.sequence(
         Commands.runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 1)),
         Commands.waitSeconds(0.3),
         Commands.runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 0)))
         .handleInterrupt(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 0));
-  }
-
-  public Command moveElevatorAndWrist(ElevatorConstants.Level level) {
-    if (level.equals(ElevatorConstants.Level.Intaking)) {
-      return Commands.sequence(
-          elevatorCommands.set(level),
-          coralWristCommands.set(
-              switch (level) {
-                case L1, L2, L3 -> CoralWristConstants.WristState.L2toL3;
-                case L4 -> CoralWristConstants.WristState.L4;
-                case Intaking -> CoralWristConstants.WristState.Intaking;
-                case Down -> CoralWristConstants.WristState.STOWED;
-                case HighAlgae -> CoralWristConstants.WristState.STOWED;
-                default -> {
-                  throw new IllegalArgumentException(
-                      "Cannot score coral to level: " + level);
-                }
-              }));
-    } else {
-      return Commands.sequence(
-          coralWristCommands.set(CoralWristConstants.WristState.STOWED),
-          elevatorCommands.set(level),
-          coralWristCommands.set(
-              switch (level) {
-                case L1, L2, L3 -> CoralWristConstants.WristState.L2toL3;
-                case L4 -> CoralWristConstants.WristState.L4;
-                case Intaking -> CoralWristConstants.WristState.Intaking;
-                case Down -> CoralWristConstants.WristState.STOWED;
-                case HighAlgae -> CoralWristConstants.WristState.STOWED;
-                default -> {
-                  throw new IllegalArgumentException(
-                      "Cannot score coral to level: " + level);
-                }
-              }));
-    }
-  };
-
-  public Command scoreCoral() {
-    return Commands.sequence(
-        coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.EJECT),
-        Commands.parallel(
-            coralWristCommands.set(CoralWristConstants.WristState.STOWED),
-            elevatorCommands.set(ElevatorConstants.Level.Down)));
-  }
-
-  public Command prepareToGrabCoral() {
-    return Commands.parallel(
-        coralWristCommands.set(CoralWristConstants.WristState.Intaking),
-        elevatorCommands.set(ElevatorConstants.Level.Intaking));
-  }
-
-  public Command grabCoral() {
-    return Commands.sequence(
-        coralIntakeCommands.set(CoralIntakeConstants.CoralIntakeState.GRAB),
-        coralWristCommands.set(CoralWristConstants.WristState.STOWED),
-        elevatorCommands.set(ElevatorConstants.Level.Down));
   }
 }

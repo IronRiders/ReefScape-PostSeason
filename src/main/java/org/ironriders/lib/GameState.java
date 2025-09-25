@@ -3,7 +3,7 @@ package org.ironriders.lib;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.ironriders.elevator.ElevatorConstants;
+import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
 import org.ironriders.lib.field.FieldPose;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 /**
  * Current robot state required by multiple subsystems.
+ * TODO: this is practicly unused now
  */
 public class GameState {
 
@@ -20,10 +21,8 @@ public class GameState {
   private static Supplier<Optional<Pose2d>> robotPose = () -> Optional.empty();
   private static Supplier<Optional<FieldPose>> targetRobotPose = () -> Optional.empty();
 
-  // these represent our current elevator targets for their respective game
-  // pieces.
-  private static ElevatorConstants.Level coralTarget = ElevatorConstants.Level.L1;
-  private static ElevatorConstants.Level algaeTarget = ElevatorConstants.Level.L2;
+  // this represents our current elevator target
+  private static ElevatorLevel target = ElevatorLevel.DOWN;
 
   private GameState() {
   }
@@ -53,20 +52,12 @@ public class GameState {
     GameState.targetRobotPose = robotPose;
   }
 
-  public static ElevatorConstants.Level getCoralTarget() {
-    return coralTarget;
+  public static ElevatorLevel getTarget() {
+    return target;
   }
 
-  public static void setCoralTarget(ElevatorConstants.Level coralTarget) {
-    GameState.coralTarget = coralTarget;
-  }
-
-  public static ElevatorConstants.Level getAlgaeTarget() {
-    return algaeTarget;
-  }
-
-  public static void setAlgaeTarget(ElevatorConstants.Level algaeTarget) {
-    GameState.algaeTarget = algaeTarget;
+  public static void setTarget(ElevatorLevel target) {
+    GameState.target = target;
   }
 
   public static boolean getInvertControl() {

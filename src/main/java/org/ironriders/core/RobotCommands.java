@@ -141,13 +141,7 @@ public class RobotCommands {
    * @return returns the command described above
    */
   public Command intake() {
-    if (intakeCommands.getIntake().hasHighCurrent()) {
-      return new Command() {
-        
-      };
-    }
     return Commands.parallel(
-
         elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING),
         intakeCommands.set(IntakeState.GRAB));
   }

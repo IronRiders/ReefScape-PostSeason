@@ -225,11 +225,11 @@ public class RobotContainer {
                         .onFalse(driveCommands.setDriveTrainSpeed(1));
 
                 primaryController
-                        .a() // works for L2 as well // I think this stows the elevator
+                        .a()
                         .onTrue(elevatorWristCommands.setElevatorWrist(
                                 ElevatorWristState.HOLD));
                 primaryController
-                        .b() // works for L1 as well
+                        .b()
                         .onTrue(elevatorWristCommands.setElevatorWrist(
                                 ElevatorWristState.L2));
 

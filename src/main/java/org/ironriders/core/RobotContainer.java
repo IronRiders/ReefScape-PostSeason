@@ -67,7 +67,7 @@ public class RobotContainer {
     public final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
     public final ClimbCommands climbCommands = climbSubsystem.getCommands();
 
-    public final Double triggerThreshold = 0.4;
+    public final Double triggerThreshold = 0.75;
 
     private final SendableChooser<Command> autoChooser;
 
@@ -225,7 +225,7 @@ public class RobotContainer {
                         .onFalse(driveCommands.setDriveTrainSpeed(1));
 
                 primaryController
-                        .a() // works for L2 as well
+                        .a() // works for L2 as well // I think this stows the elevator
                         .onTrue(elevatorWristCommands.setElevatorWrist(
                                 ElevatorWristState.HOLD));
                 primaryController

@@ -47,7 +47,7 @@ public class ClimbSubsystem extends IronSubsystem {
   private final ClimbCommands commands;
 
   public ClimbSubsystem() {
-    motorConfig.idleMode(IdleMode.kCoast);
+    motorConfig.idleMode(IdleMode.kBrake);
     motorConfig.smartCurrentLimit(ClimbConstants.CURRENT_LIMIT);
 
     motor.configure(

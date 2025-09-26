@@ -51,7 +51,7 @@ public class ElevatorWristCTL extends IronSubsystem {
         HOLD(0), // <- CAD values (need to be negitive)
         INTAKING(-85),
         L2L3(40),
-        L4(10);
+        L4(20);
 
         public final double pos;
 

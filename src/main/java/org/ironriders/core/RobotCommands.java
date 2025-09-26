@@ -114,7 +114,7 @@ public class RobotCommands {
   }
 
   public Command prepareScoreLevel(ElevatorWristState level) {
-    return Commands.sequence(elevatorWristCommands.setElevatorWrist(level));
+    return elevatorWristCommands.setElevatorWrist(level);
   }
 
   private Command scoreAndDown() {

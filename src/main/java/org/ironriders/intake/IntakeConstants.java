@@ -1,5 +1,7 @@
 package org.ironriders.intake;
 
+import static org.ironriders.intake.IntakeConstants.WHEEL_CIRCUMFERENCE;
+
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -19,12 +21,25 @@ public class IntakeConstants {
   public static final double RIGHT_SPEED_MUL = 1;
   public static final double ROLLER_SPEED_MUL = 1;
 
+  public static final double MAX_VEL = 1;
+  public static final double MAX_ACC = 1;
+
+
+  public static final double P = 0.1;  // proportion
+  public static final double I = 0.00; // integral
+  public static final double D = 0.00; // derivative
+  public static final double T = 0.02; // time to next step
+
+  public static final double TOLERANCE = 0.05;
+
   public static final double INTAKE_JOG_TIME = 0.1;
 
   public static final double WHEEL_COMPLIANCE = 0.2; // Adjust for the wheels being able to squish in.
 
   public static final double WHEEL_DIAMETER = 4 - WHEEL_COMPLIANCE;
   public static final double WHEEL_CIRCUMFERENCE = (2 * Math.PI) * (WHEEL_DIAMETER / 2);
+
+  public static final double TARGET_SETPOINT = WHEEL_CIRCUMFERENCE / 2f; // In inches, about half a rotation seems good
 
   // TODO Tune These
   public static final int INTAKE_STATOR_CURRENT = 30; // Stator Current Torque and Acceleration

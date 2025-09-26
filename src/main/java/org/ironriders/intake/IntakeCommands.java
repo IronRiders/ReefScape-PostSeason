@@ -33,7 +33,7 @@ public class IntakeCommands {
     switch (state) {
       case GRAB:
         return command
-            .until(() -> intake.hasHighCurrent())
+            .until(() -> intake.atGoal())
             .finallyDo(() -> intake.set(IntakeState.STOP));
 
       case EJECT:

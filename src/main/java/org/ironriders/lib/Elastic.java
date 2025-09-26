@@ -144,6 +144,16 @@ public final class Elastic {
       this(level, title, description, 3000, 350, -1);
     }
 
+      /**
+     * Creates a new Notification with default display time and dimensions without requiring a level.
+     *
+     * @param title the title text of the notification
+     * @param description the descriptive text of the notification
+     */
+    public Notification(String title, String description) {
+      this(NotificationLevel.INFO, title, description, 3000, 350, -1);
+    }
+
     /**
      * Creates a new Notification with a specified display time and default dimensions.
      *

@@ -38,7 +38,7 @@ public class IntakeSubsystem extends IronSubsystem {
   private double average = 0;
 
   private final DigitalInput beamBreak = new DigitalInput(
-      INTAKE_BEAMBREAK);
+    INTAKE_BEAMBREAK);
 
   public IntakeSubsystem() {
     TalonFXConfiguration mainConfig = new TalonFXConfiguration();
@@ -100,6 +100,10 @@ public class IntakeSubsystem extends IronSubsystem {
   public boolean hasHighCurrent() {
     return false;
     // return average > 12 && !beamBreak.get(); disabled because beam break made it hard to intake
+  }
+
+  public boolean beamBreakTriggered() {
+    return !beamBreak.get();
   }
 
   public IntakeCommands getCommands() {

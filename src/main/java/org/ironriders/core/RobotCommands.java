@@ -9,6 +9,7 @@ import org.ironriders.intake.IntakeCommands;
 import org.ironriders.intake.IntakeSubsystem;
 import org.ironriders.intake.IntakeConstants.IntakeState;
 import org.ironriders.targeting.TargetingCommands;
+import org.ironriders.wrist.WristSubsystem;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -130,9 +131,9 @@ public class RobotCommands {
    * Command to make the robot intake. Runs two commands in parallel:
    * <ul>
    * <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState)
-   * elevator wrist state} to {@link ElevatorWristState#INTAKING "intaking"}.</li>
+   * elevator wrist state} to {@link ElevatorWristState#INTAKING "INTAKING"}.</li>
    * <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to
-   * {@link IntakeState#GRAB "grab"}.</li>
+   * {@link IntakeState#GRAB "GRAB"}.</li>
    * </ul>
    * <br>
    * 
@@ -141,15 +142,9 @@ public class RobotCommands {
    * @return returns the command described above
    */
   public Command intake() {
-    if (intakeCommands.getIntake().hasHighCurrent()) {
-      return new Command() {
-        
-      };
-    }
     return Commands.parallel(
-
         elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING),
-        intakeCommands.set(IntakeState.GRAB));
+        intakeCommands.set(IntakeState.GRAB)).unless(() -> intakeCommands.getIntake().beamBreakTriggered());
   }
 
   /**
@@ -178,7 +173,7 @@ public class RobotCommands {
    */
   public Command stopIntake() {
     return Commands.parallel(elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD),
-        intakeCommands.set(IntakeState.STOP));
+        intakeCommands.set(IntakeState.STOP).unless(() -> intakeCommands.getIntake().beamBreakTriggered()));
   }
 
   /**

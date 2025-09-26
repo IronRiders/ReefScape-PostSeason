@@ -103,7 +103,6 @@ public class ElevatorSubsystem extends IronSubsystem {
         ElevatorConstants.G,
         ElevatorConstants.V);
 
-    pidController.setTolerance(ELEVATOR_POSITION_TOLERANCE);
     reset();
     commands = new ElevatorCommands(this);
   }
@@ -151,10 +150,11 @@ public class ElevatorSubsystem extends IronSubsystem {
   private void UpdateDashboard() {
     publish("Homed", isHomed);
     publish("Goal State", currentTarget.toString());
-    
+    publish("PID", pidController);
     publish("Goal Position", goalSetpoint.position);
+    publish("Real Pos", getHeight());
     if (isHomed)
-      publish("At Goal?", pidController.atSetpoint());
+      publish("At Goal?", isAtPosition());
     else
       publish("At Goal?", "N/A; Not Homed!");
 
@@ -165,6 +165,7 @@ public class ElevatorSubsystem extends IronSubsystem {
         "Reverse Limit Switch",
         primaryMotor.getReverseLimitSwitch().isPressed());
 
+    publish("Is at goal?", isAtPosition());
     publish("Primary Encoder", primaryMotor.getEncoder().getPosition());
     publish("Follower Encoder", followerMotor.getEncoder().getPosition());
   }
@@ -213,7 +214,7 @@ public class ElevatorSubsystem extends IronSubsystem {
   }
 
   public boolean isAtPosition() {
-    return pidController.atSetpoint();
+    return Math.abs(getHeight() - goalSetpoint.position) < ELEVATOR_POSITION_TOLERANCE;
   }
 
   public ElevatorCommands getCommands() {

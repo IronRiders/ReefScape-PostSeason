@@ -1,7 +1,5 @@
 package org.ironriders.intake;
 
-import static org.ironriders.intake.IntakeConstants.WHEEL_CIRCUMFERENCE;
-
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 

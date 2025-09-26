@@ -1,6 +1,5 @@
 package org.ironriders.intake;
 
-import static org.ironriders.intake.IntakeConstants.MAX_ACC;
 import static org.ironriders.intake.IntakeConstants.INTAKE_BEAMBREAK;
 import static org.ironriders.intake.IntakeConstants.INTAKE_MOTOR_LEFT;
 import static org.ironriders.intake.IntakeConstants.INTAKE_MOTOR_LEFT_INVERSION;
@@ -14,6 +13,7 @@ import static org.ironriders.intake.IntakeConstants.INTAKE_SUPPLY_CURRENT;
 import static org.ironriders.intake.IntakeConstants.INTAKE_SUPPLY_CURRENT_LOWER_LIMIT;
 import static org.ironriders.intake.IntakeConstants.INTAKE_SUPPLY_CURRENT_LOWER_TIME;
 import static org.ironriders.intake.IntakeConstants.LEFT_SPEED_MUL;
+import static org.ironriders.intake.IntakeConstants.MAX_ACC;
 import static org.ironriders.intake.IntakeConstants.MAX_VEL;
 import static org.ironriders.intake.IntakeConstants.RIGHT_SPEED_MUL;
 import static org.ironriders.intake.IntakeConstants.ROLLER_SPEED_MUL;
@@ -21,10 +21,9 @@ import static org.ironriders.intake.IntakeConstants.TARGET_SETPOINT;
 import static org.ironriders.intake.IntakeConstants.TOLERANCE;
 import static org.ironriders.intake.IntakeConstants.WHEEL_CIRCUMFERENCE;
 
-import org.ironriders.elevator.ElevatorConstants;
 import org.ironriders.intake.IntakeConstants.IntakeState;
-import org.ironriders.lib.IronSubsystem;
 import org.ironriders.lib.Elastic.Notification;
+import org.ironriders.lib.IronSubsystem;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;

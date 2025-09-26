@@ -19,6 +19,18 @@ public class IntakeConstants {
   public static final double RIGHT_SPEED_MUL = 1;
   public static final double ROLLER_SPEED_MUL = 1;
 
+  public static final double VERTICAL_ENCODER_SCALE = 1; //TODO I just pinged design
+
+  public static final double PROPORTIONAL = 0.01;
+  public static final double INTEGRAL = 0.00;
+  public static final double DERIVATIVE = 0.00;
+  public static final double TOLERANCE = 1.0;
+
+  public static final double MAX_VEL = 30;
+  public static final double MAX_ACC = 30;
+
+  public static final double L4JOGDISTANCE = 20; //IN degrees 
+
   // TODO Tune These
   public static final int INTAKE_STATOR_CURRENT = 30; // Stator Current Torque and Acceleration
   public static final int INTAKE_SUPPLY_CURRENT = 40; // Supply Current Speed + (a little Torque). If Supply
@@ -38,7 +50,8 @@ public class IntakeConstants {
     GRAB(.25),
     SCORE(.30),
     EJECT(-.10),
-    STOP(0.00);
+    STOP(0.00),
+    JOG(0.00);
 
     public final double speed;
 

@@ -183,21 +183,21 @@ public class RobotContainer {
                         .onFalse(intakeCommands.set(IntakeState.STOP));
 
                 primaryController
-                        .button(1) // works for L2 as well (see
-                                   // https://europe1.discourse-cdn.com/unity/original/3X/5/8/58e7b2a50ec35ea142ae9c4d27c9df2d372cd1f3.jpeg)
+                        .a()
                         .onTrue(elevatorWristCommands.setElevatorWrist(
-                                ElevatorWristState.L2));
+                                ElevatorWristState.HOLD));
                 primaryController
-                        .button(2) // works for L1 as well (see the above link for button configuration
-                                   // information)
+                        .b()
                         .onTrue(elevatorWristCommands.setElevatorWrist(
                                 ElevatorWristState.L2));
 
-                primaryController.button(3).onTrue(
-                        elevatorWristCommands.setElevatorWrist(
+                primaryController
+                        .x()
+                        .onTrue(elevatorWristCommands.setElevatorWrist(
                                 ElevatorWristState.L3));
-                primaryController.button(4).onTrue(
-                        elevatorWristCommands.setElevatorWrist(
+                primaryController
+                        .y()
+                        .onTrue(elevatorWristCommands.setElevatorWrist(
                                 ElevatorWristState.L4));
                 break;
 
@@ -295,13 +295,13 @@ public class RobotContainer {
 
         secondaryController
                 .button(14) // TODO decide on buttons for these commands
-                .whileTrue(climbCommands.set(ClimbConstants.Targets.CLIMBED));
+                .whileTrue(climbCommands.set(ClimbConstants.ClimbTargets.CLIMBED));
         secondaryController
                 .button(15) // TODO decide on buttons for these commands
-                .whileTrue(climbCommands.set(ClimbConstants.Targets.MIN));
+                .whileTrue(climbCommands.set(ClimbConstants.ClimbTargets.MIN));
         secondaryController
                 .button(16) // TODO decide on buttons for these commands
-                .whileTrue(climbCommands.set(ClimbConstants.Targets.MAX));
+                .whileTrue(climbCommands.set(ClimbConstants.ClimbTargets.MAX));
     }
 
     /**

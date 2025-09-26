@@ -7,7 +7,7 @@ import static org.ironriders.climb.ClimbConstants.MAX_ACC;
 import static org.ironriders.climb.ClimbConstants.MAX_VEL;
 import static org.ironriders.climb.ClimbConstants.P;
 
-import org.ironriders.climb.ClimbConstants.Targets;
+import org.ironriders.climb.ClimbConstants.ClimbTargets;
 import org.ironriders.lib.IronSubsystem;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -42,7 +42,7 @@ public class ClimbSubsystem extends IronSubsystem {
   private TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State();
   private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State();
 
-  private Targets currentTarget = Targets.MIN;
+  private ClimbTargets currentTarget = ClimbTargets.MIN;
 
   private final ClimbCommands commands;
 
@@ -105,7 +105,7 @@ public class ClimbSubsystem extends IronSubsystem {
   }
 
   public void home() {
-    if (currentTarget != Targets.MIN) { // The climber is not all the way down, resetting it's encoder would cause it to
+    if (currentTarget != ClimbTargets.MIN) { // The climber is not all the way down, resetting it's encoder would cause it to
                                         // go boom.
       logMessage("aborting home, climber state is not MIN!");
       return;
@@ -115,7 +115,7 @@ public class ClimbSubsystem extends IronSubsystem {
     reset();
   }
 
-  protected void setGoal(ClimbConstants.Targets target) {
+  protected void setGoal(ClimbConstants.ClimbTargets target) {
     goalSetpoint = new TrapezoidProfile.State(target.pos, 0);
     currentTarget = target;
 

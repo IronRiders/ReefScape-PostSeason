@@ -3,6 +3,8 @@ package org.ironriders.core;
 import java.util.function.DoubleSupplier;
 
 import org.ironriders.climb.ClimbCommands;
+import org.ironriders.climb.ClimbSubsystem;
+import org.ironriders.climb.ClimbConstants.ClimbTargets;
 import org.ironriders.core.ElevatorWristCTL.ElevatorWristState;
 import org.ironriders.drive.DriveCommands;
 import org.ironriders.intake.IntakeCommands;
@@ -73,7 +75,6 @@ public class RobotCommands {
     NamedCommands.registerCommand("Intake Eject", eject());
     NamedCommands.registerCommand("Intake", intake());
     NamedCommands.registerCommand("Score", scoreAndDown());
-
   }
 
   /**
@@ -82,7 +83,7 @@ public class RobotCommands {
   public Command startup() {
     intakeCommands.setOnSuccess(() -> rumbleController());
 
-    return elevatorWristCommands.reset(); // moves everything to zero
+    return Commands.parallel(elevatorWristCommands.reset(), climbCommands.set(ClimbTargets.MAX));
   }
 
   /**
@@ -101,6 +102,15 @@ public class RobotCommands {
         inputTranslationY,
         inputRotation,
         true);
+  }
+
+  public Command climberReset() {
+    return climbCommands.set(ClimbTargets.MIN);
+  }
+
+  public Command climb() {
+    return Commands.parallel(elevatorWristCommands.setElevatorWrist(ElevatorWristState.CLIMBING),
+        climbCommands.set(ClimbTargets.CLIMBED));
   }
 
   public Command prepareScoreLevel(ElevatorWristState level) {

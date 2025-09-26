@@ -19,6 +19,8 @@ public class IntakeConstants {
   public static final double RIGHT_SPEED_MUL = 1;
   public static final double ROLLER_SPEED_MUL = 1;
 
+  public static final double INTAKE_JOG_TIME = 0.1;
+
   // TODO Tune These
   public static final int INTAKE_STATOR_CURRENT = 30; // Stator Current Torque and Acceleration
   public static final int INTAKE_SUPPLY_CURRENT = 40; // Supply Current Speed + (a little Torque). If Supply
@@ -43,6 +45,17 @@ public class IntakeConstants {
     public final double speed;
 
     IntakeState(double speed) {
+      this.speed = speed;
+    }
+  }
+
+  public enum IntakeJogState {
+    UP(0.5),
+    DOWN(-0.5);
+
+    public final double speed;
+
+    IntakeJogState(double speed) {
       this.speed = speed;
     }
   }

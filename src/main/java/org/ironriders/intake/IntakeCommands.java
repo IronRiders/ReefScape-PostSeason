@@ -1,10 +1,13 @@
 package org.ironriders.intake;
 
 import static org.ironriders.intake.IntakeConstants.DISCHARGE_TIMEOUT;
+import static org.ironriders.intake.IntakeConstants.INTAKE_JOG_TIME;
 
+import org.ironriders.intake.IntakeConstants.IntakeJogState;
 import org.ironriders.intake.IntakeConstants.IntakeState;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 public class IntakeCommands {
 
@@ -20,6 +23,8 @@ public class IntakeCommands {
     intake.publish("Intake Score", set(IntakeState.SCORE));
     intake.publish("Intake Eject", set(IntakeState.EJECT));
     intake.publish("Intake Stop", set(IntakeState.STOP));
+    intake.publish("Intake Jog Up", jog(IntakeJogState.UP));
+    intake.publish("Intake Jog Down", jog(IntakeJogState.DOWN));
   }
 
   public Command set(IntakeConstants.IntakeState state) {
@@ -42,6 +47,11 @@ public class IntakeCommands {
 
   public Command reset() {
     return intake.runOnce(() -> intake.set(IntakeState.STOP));
+  }
+
+  public Command jog(IntakeJogState dir) {
+    return Commands.sequence(intake.runOnce(() -> intake.setMotors(dir.speed)), Commands.waitSeconds(INTAKE_JOG_TIME),
+        set(IntakeState.STOP));
   }
 
   public IntakeSubsystem getIntake() {

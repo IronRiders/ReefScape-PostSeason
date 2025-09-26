@@ -21,6 +21,11 @@ public class IntakeConstants {
 
   public static final double INTAKE_JOG_TIME = 0.1;
 
+  public static final double WHEEL_COMPLIANCE = 0.2; // Adjust for the wheels being able to squish in.
+
+  public static final double WHEEL_DIAMETER = 4 - WHEEL_COMPLIANCE;
+  public static final double WHEEL_CIRCUMFERENCE = (2 * Math.PI) * (WHEEL_DIAMETER / 2);
+
   // TODO Tune These
   public static final int INTAKE_STATOR_CURRENT = 30; // Stator Current Torque and Acceleration
   public static final int INTAKE_SUPPLY_CURRENT = 40; // Supply Current Speed + (a little Torque). If Supply
@@ -34,7 +39,7 @@ public class IntakeConstants {
 
   public static final int INTAKE_BEAMBREAK = 0;
 
-  public static final double DISCHARGE_TIMEOUT = 2; // these are both in SECONDS
+  public static final double DISCHARGE_TIMEOUT = 2;
 
   public enum IntakeState {
     GRAB(.25),

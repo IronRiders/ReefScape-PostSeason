@@ -3,9 +3,6 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2025.3.2"
 }
 
-repositories {
-  mavenCentral() // rewrite is published to Maven Central
-}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17

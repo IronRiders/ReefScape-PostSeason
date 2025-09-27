@@ -7,7 +7,7 @@
     "java.format.settings.profile":"${workspaceFolder}/checkfile.xml" ,
     "java.checkstyle.configuration": "${workspaceFolder}/config/checkstyle/checkstyle.xml",
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "wx-chevalier.google-java-format",
+    "editor.defaultFormatter": "josevseb.google-java-format-for-vs-code",
     "[java]": {
         "editor.defaultFormatter": "josevseb.google-java-format-for-vs-code"
     },

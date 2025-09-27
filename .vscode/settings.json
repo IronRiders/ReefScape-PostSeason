@@ -3,7 +3,7 @@
     "java.checkstyle.properties": {
     "basedir": "${workspaceFolder}"
     },
-    "java.checkstyle.version": "10.12.4",
+    "java.checkstyle.version": "11.0.1",
     "java.format.settings.profile":"${workspaceFolder}/checkfile.xml" ,
     "java.checkstyle.configuration": "${workspaceFolder}/config/checkstyle/checkstyle.xml",
     "editor.formatOnSave": true,

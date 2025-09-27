@@ -26,8 +26,10 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 /**
- * The DriveSubsystem encompasses everything that the Swerve Drive needs to function. It keeps track
- * of the robot's position and angle, and uses the controller input to figure out how the individual
+ * The DriveSubsystem encompasses everything that the Swerve Drive needs to
+ * function. It keeps track
+ * of the robot's position and angle, and uses the controller input to figure
+ * out how the individual
  * modules need to turn and be angled.
  */
 public class DriveSubsystem extends IronSubsystem {
@@ -92,12 +94,14 @@ public class DriveSubsystem extends IronSubsystem {
   }
 
   /**
-   * Vrrrrooooooooom brrrrrrrrr BRRRRRR wheeee BRRR brrrr VRRRRROOOOOOM ZOOOOOOM ZOOOOM WAHOOOOOOOOO
+   * Vrrrrooooooooom brrrrrrrrr BRRRRRR wheeee BRRR brrrr VRRRRROOOOOOM ZOOOOOOM
+   * ZOOOOM WAHOOOOOOOOO
    * WAHAHAHHA (Drives given a desired translation and rotation.)
    *
-   * @param translation Desired translation in meters per second.
-   * @param rotation Desired rotation in radians per second.
-   * @param fieldRelative If not field relative, the robot will move relative to its own rotation.
+   * @param translation   Desired translation in meters per second.
+   * @param rotation      Desired rotation in radians per second.
+   * @param fieldRelative If not field relative, the robot will move relative to
+   *                      its own rotation.
    */
   public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
     swerveDrive.drive(translation, rotation, fieldRelative, false);

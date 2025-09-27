@@ -58,9 +58,12 @@ public class ElevatorWristCTL extends IronSubsystem {
 
     public enum ElevatorWristState {
         HOLD(ElevatorLevel.DOWN, WristRotation.HOLD), CLIMBING(ElevatorLevel.DOWN,
-                WristRotation.L2L3), INTAKING(ElevatorLevel.DOWN, WristRotation.INTAKING), L2(
-                        ElevatorLevel.L2, WristRotation.L2L3), L3(ElevatorLevel.L3,
-                                WristRotation.L2L3), L4(ElevatorLevel.L4, WristRotation.L4);
+                WristRotation.L2L3),
+        INTAKING(ElevatorLevel.DOWN, WristRotation.INTAKING), L2(
+                ElevatorLevel.L2, WristRotation.L2L3),
+        L3(ElevatorLevel.L3,
+                WristRotation.L2L3),
+        L4(ElevatorLevel.L4, WristRotation.L4);
 
         public final ElevatorLevel eLevel;
         public final WristRotation wRot;
@@ -99,8 +102,10 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
 
     /*
-     * This command, in parallel, moves the wrist all the way in and does a PID reset, as well as
-     * moving the elevator all the way down, rehoming it for good measure, and then resetting it's
+     * This command, in parallel, moves the wrist all the way in and does a PID
+     * reset, as well as
+     * moving the elevator all the way down, rehoming it for good measure, and then
+     * resetting it's
      * PID.
      */
 

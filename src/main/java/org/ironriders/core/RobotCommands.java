@@ -20,8 +20,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 /**
- * These commands require more complex logic and are not directly tied to a subsystem. They
- * generally interface w/ multiple subsystems via their commands and are higher-level.
+ * These commands require more complex logic and are not directly tied to a
+ * subsystem. They
+ * generally interface w/ multiple subsystems via their commands and are
+ * higher-level.
  *
  * These commands are those which the driver controls call.
  */
@@ -40,13 +42,13 @@ public class RobotCommands {
   /**
    * Creates final variables for all command classes.
    *
-   * @param driveCommands DriveCommands instance
-   * @param targetingCommands TargetingCommands instance
-   * @param elevatorCommands ElevatorCommands instance
-   * @param coralWristCommands CoralWristCommands instance
+   * @param driveCommands       DriveCommands instance
+   * @param targetingCommands   TargetingCommands instance
+   * @param elevatorCommands    ElevatorCommands instance
+   * @param coralWristCommands  CoralWristCommands instance
    * @param coralIntakeCommands CoralIntakeCommands instance
-   * @param climbCommands ClimbCommands instance
-   * @param controller GenericHID controller (joystick/gamepad) instance
+   * @param climbCommands       ClimbCommands instance
+   * @param controller          GenericHID controller (joystick/gamepad) instance
    */
   public RobotCommands(DriveCommands driveCommands, TargetingCommands targetingCommands,
       IntakeCommands intakeCommands, ElevatorWristCTL elevatorWristCommands,
@@ -89,7 +91,7 @@ public class RobotCommands {
    *
    * @param inputTranslationX DoubleSupplier, value from 0-1.
    * @param inputTranslationY DoubleSupplier, value from 0-1.
-   * @param inputRotation DoubleSupplier, value from 0-1.
+   * @param inputRotation     DoubleSupplier, value from 0-1.
    */
   public Command driveTeleop(DoubleSupplier inputTranslationX, DoubleSupplier inputTranslationY,
       DoubleSupplier inputRotation) {
@@ -115,13 +117,17 @@ public class RobotCommands {
   }
 
   /**
-   * Small translation that is robot-centered rather than field-centered. For example, moving a
-   * little 30 degrees will move 30 degrees relative to the front of the robot, rather than relative
+   * Small translation that is robot-centered rather than field-centered. For
+   * example, moving a
+   * little 30 degrees will move 30 degrees relative to the front of the robot,
+   * rather than relative
    * to the field.
    * 
-   * @param robotRelativeAngleDegrees The angle to move, in degrees relative to where the robot is
-   *        facing
-   * @return Returns command object that calls the {@link DriveCommands#jog(double)} method
+   * @param robotRelativeAngleDegrees The angle to move, in degrees relative to
+   *                                  where the robot is
+   *                                  facing
+   * @return Returns command object that calls the
+   *         {@link DriveCommands#jog(double)} method
    */
   public Command jog(double robotRelativeAngleDegrees) {
     return driveCommands.jog(robotRelativeAngleDegrees);
@@ -131,9 +137,11 @@ public class RobotCommands {
    * <p>
    * Command to make the robot intake. Runs two commands in parallel:
    * <ul>
-   * <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState) elevator wrist state}
+   * <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState)
+   * elevator wrist state}
    * to {@link ElevatorWristState#INTAKING "INTAKING"}.</li>
-   * <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to {@link IntakeState#GRAB
+   * <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to
+   * {@link IntakeState#GRAB
    * "GRAB"}.</li>
    * </ul>
    * <br>
@@ -150,7 +158,8 @@ public class RobotCommands {
   }
 
   /**
-   * Command to make the robot eject. Simply sets the {@link IntakeCommands#set(IntakeState) intake
+   * Command to make the robot eject. Simply sets the
+   * {@link IntakeCommands#set(IntakeState) intake
    * state} to {@link IntakeState#EJECT "eject"}.
    * 
    * @return returns the command described above
@@ -160,11 +169,14 @@ public class RobotCommands {
   }
 
   /**
-   * Command to stop the intake and stow the elevator wrist. Does the following in parallel:
+   * Command to stop the intake and stow the elevator wrist. Does the following in
+   * parallel:
    * <ul>
-   * <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState) elevator wrist state}
+   * <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState)
+   * elevator wrist state}
    * to {@link ElevatorWristState#HOLD "stow"}.</li>
-   * <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to {@link IntakeState#STOP
+   * <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to
+   * {@link IntakeState#STOP
    * "stop"}.</li>
    * </ul>
    * 
@@ -183,10 +195,12 @@ public class RobotCommands {
    * Does this by setting the
    * {@link edu.wpi.first.wpilibj.GenericHID#setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType, double)
    * GenericHID setRumble()} method to
-   * {@link edu.wpi.first.wpilibj.GenericHID.RumbleType#kBothRumble kBothRumble}. This makes all
+   * {@link edu.wpi.first.wpilibj.GenericHID.RumbleType#kBothRumble kBothRumble}.
+   * This makes all
    * motors on a controller rumble.
    * 
-   * @return A command that does what is described above for 0.3 seconds, then returns rumble to 0.
+   * @return A command that does what is described above for 0.3 seconds, then
+   *         returns rumble to 0.
    */
   public Command rumbleController() {
     return Commands

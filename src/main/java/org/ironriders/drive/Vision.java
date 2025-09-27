@@ -24,7 +24,8 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import swervelib.SwerveDrive;
 
 /**
- * Vision is not a subsystem. This class is a utility class for the DriveSubsystem and controls all
+ * Vision is not a subsystem. This class is a utility class for the
+ * DriveSubsystem and controls all
  * of the apriltag processing and pose estimation.
  *
  * (Why is it not a subsystem? Because it doesn't need to be.)
@@ -64,11 +65,11 @@ public class Vision {
   /**
    * Utility method, creates an offset transform.
    *
-   * @param x The x offset in inches.
-   * @param y The y offset in inches.
-   * @param z The z offset in inches.
+   * @param x     The x offset in inches.
+   * @param y     The y offset in inches.
+   * @param z     The z offset in inches.
    * @param pitch The pitch offset in degrees.
-   * @param yaw The yaw offset in degrees.
+   * @param yaw   The yaw offset in degrees.
    */
   public Transform3d createOffset(double x, double y, double z, double pitch, double yaw) {
     return new Transform3d(
@@ -97,7 +98,8 @@ public class Vision {
   }
 
   /**
-   * Class representing a single camera and its respective pose estimator and standard deviations.
+   * Class representing a single camera and its respective pose estimator and
+   * standard deviations.
    * Results and estimates are gettable.
    */
   public class VisionCamera {

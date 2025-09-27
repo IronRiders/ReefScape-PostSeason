@@ -20,8 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public abstract class IronSubsystem extends SubsystemBase {
 
-  private final String diagnosticName =
-      this.getClass().getSimpleName().replaceAll("Subsystem$", "");
+  private final String diagnosticName = this.getClass().getSimpleName().replaceAll("Subsystem$", "");
   private final String dashboardPrefix = "Subsystems/" + diagnosticName + "/";
   private final String messagePrefix = diagnosticName + ": ";
 
@@ -50,9 +49,12 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   /**
-   * Send a elstaic notification with level WARNING. This will also apend your title to "warning in
-   * (your subsystem): and set that as the title". You should be careful to put as little
-   * information in the title as possible so it doesn't overflow. This notification will last 10
+   * Send a elstaic notification with level WARNING. This will also apend your
+   * title to "warning in
+   * (your subsystem): and set that as the title". You should be careful to put as
+   * little
+   * information in the title as possible so it doesn't overflow. This
+   * notification will last 10
    * seconds
    * 
    * @param notif The elastic notification to send.
@@ -67,9 +69,12 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   /**
-   * Send a elstaic notification with level info. This will also apend your title to "Message from
-   * (your subsystem): and set that as the title". You should be careful to put as little
-   * information in the title as possible so it doesn't overflow. This notification will last 5
+   * Send a elstaic notification with level info. This will also apend your title
+   * to "Message from
+   * (your subsystem): and set that as the title". You should be careful to put as
+   * little
+   * information in the title as possible so it doesn't overflow. This
+   * notification will last 5
    * seconds
    * 
    * @param notif The elastic notification to send.
@@ -84,9 +89,12 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   /**
-   * Send a elstaic notification with level ERROR. This will also apend your title to "ERROR in
-   * (your subsystem): and set that as the title". You should be careful to put as little
-   * information in the title as possible so it doesn't overflow. This notification will last 30
+   * Send a elstaic notification with level ERROR. This will also apend your title
+   * to "ERROR in
+   * (your subsystem): and set that as the title". You should be careful to put as
+   * little
+   * information in the title as possible so it doesn't overflow. This
+   * notification will last 30
    * seconds
    * 
    * @param notif The elastic notification to send.

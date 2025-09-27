@@ -29,20 +29,25 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /**
- * Different button configurations for the driver controls PRIMARY_DRIVER: same as Driver Centered
- * Control Layout in the doc PRIMARY_DRIVER_WITH_BOOST: same as `William Boost buttons + primary
- * focus` in the doc SECONDARY_DRIVER_WITH_BOOST: same as `Secondary driver elevator controls` in
+ * Different button configurations for the driver controls PRIMARY_DRIVER: same
+ * as Driver Centered
+ * Control Layout in the doc PRIMARY_DRIVER_WITH_BOOST: same as `William Boost
+ * buttons + primary
+ * focus` in the doc SECONDARY_DRIVER_WITH_BOOST: same as `Secondary driver
+ * elevator controls` in
  * the doc
  */
 enum Config {
         PRIMARY_DRIVER, PRIMARY_DRIVER_WITH_BOOST, SECONDARY_DRIVER_WITH_BOOST;
 }
 
-
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
@@ -65,10 +70,10 @@ public class RobotContainer {
 
         private final SendableChooser<Command> autoChooser;
 
-        private final CommandXboxController primaryController =
-                        new CommandXboxController(DriveConstants.PRIMARY_CONTROLLER_PORT);
-        private final CommandGenericHID secondaryController =
-                        new CommandJoystick(DriveConstants.KEYPAD_CONTROLLER_PORT);
+        private final CommandXboxController primaryController = new CommandXboxController(
+                        DriveConstants.PRIMARY_CONTROLLER_PORT);
+        private final CommandGenericHID secondaryController = new CommandJoystick(
+                        DriveConstants.KEYPAD_CONTROLLER_PORT);
 
         public final RobotCommands robotCommands = new RobotCommands(driveCommands,
                         targetingCommands, intakeCommands, elevatorWristCommands, climbCommands,
@@ -77,7 +82,8 @@ public class RobotContainer {
         /**
          * The container for the robot. Contains subsystems, IO devices, and commands.
          * 
-         * builds the autos using {@link com.pathplanner.lib.auto.AutoBuilder#buildAutoChooser()
+         * builds the autos using
+         * {@link com.pathplanner.lib.auto.AutoBuilder#buildAutoChooser()
          * buildAutoChooser()} posts the auto selection to
          * {@link SmartDashboard#putData(String, SendableChooser) SmartDashboard}
          * 
@@ -92,7 +98,8 @@ public class RobotContainer {
 
         /**
          * Th {@link CommandGenericHID#button(int)} method (such as
-         * {@link CommandXboxController#button(int)}, {@link CommandJoystick#button(int)}, or one of
+         * {@link CommandXboxController#button(int)},
+         * {@link CommandJoystick#button(int)}, or one of
          * the
          * {@link edu.wpi.first.wpilibj2.command.button.Trigger#Trigger(java.util.function.BooleanSupplier)}
          * constructors.

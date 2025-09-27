@@ -16,9 +16,11 @@ public class ElevatorCommands {
   }
 
   /**
-   * Command to set the elevator's target position to one of several predefined levels.
+   * Command to set the elevator's target position to one of several predefined
+   * levels.
    * 
-   * @return a Command to change target, finishes when the elevator has reached it.
+   * @return a Command to change target, finishes when the elevator has reached
+   *         it.
    */
   public Command set(ElevatorLevel level) {
     return new Command() {

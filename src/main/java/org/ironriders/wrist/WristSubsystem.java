@@ -15,12 +15,10 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 
 public class WristSubsystem extends IronSubsystem {
-    final SparkMax primaryMotor =
-            new SparkMax(WristConstants.PRIMARY_WRIST_MOTOR, MotorType.kBrushless);
-    final SparkMax secondaryMotor =
-            new SparkMax(WristConstants.SECONDARY_WRIST_MOTOR, MotorType.kBrushless);
-    final TrapezoidProfile movementProfile =
-            new TrapezoidProfile(new Constraints(WristConstants.MAX_VEL, WristConstants.MAX_ACC));
+    final SparkMax primaryMotor = new SparkMax(WristConstants.PRIMARY_WRIST_MOTOR, MotorType.kBrushless);
+    final SparkMax secondaryMotor = new SparkMax(WristConstants.SECONDARY_WRIST_MOTOR, MotorType.kBrushless);
+    final TrapezoidProfile movementProfile = new TrapezoidProfile(
+            new Constraints(WristConstants.MAX_VEL, WristConstants.MAX_ACC));
 
     private PIDController pidControler;
 
@@ -59,8 +57,7 @@ public class WristSubsystem extends IronSubsystem {
     @Override
     public void periodic() {
         // Apply profile and PID to determine output level
-        periodicSetpoint =
-                movementProfile.calculate(WristConstants.T, periodicSetpoint, goalSetpoint);
+        periodicSetpoint = movementProfile.calculate(WristConstants.T, periodicSetpoint, goalSetpoint);
 
         double speed = pidControler.calculate(getCurrentAngle(), periodicSetpoint.position);
         setMotors(speed);
@@ -82,7 +79,8 @@ public class WristSubsystem extends IronSubsystem {
         return (primaryMotor.getAbsoluteEncoder().getPosition() - WristConstants.ENCODER_OFFSET)
                 * 360 + WristConstants.CAD_POSITION_OFFSET;
         /*
-         * ENCODER_OFFSET is added to encoder to get it to = 0 when it is fully stowed (against
+         * ENCODER_OFFSET is added to encoder to get it to = 0 when it is fully stowed
+         * (against
          * hardstop) CAD_POSITION_OFFSET is adjustment for odd alignment in the CAD
          */
     }

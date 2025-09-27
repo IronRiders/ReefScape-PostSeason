@@ -22,13 +22,11 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public class ClimbSubsystem extends IronSubsystem {
 
-  private final SparkMax motor =
-      new SparkMax(ClimbConstants.CLIMBER_MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax motor = new SparkMax(ClimbConstants.CLIMBER_MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
 
   private final SparkMaxConfig motorConfig = new SparkMaxConfig();
 
-  private final TrapezoidProfile profile =
-      new TrapezoidProfile(new TrapezoidProfile.Constraints(MAX_VEL, MAX_ACC));
+  private final TrapezoidProfile profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(MAX_VEL, MAX_ACC));
 
   private TrapezoidProfile.State stopped;
 

@@ -61,8 +61,7 @@ public class DriveCommands {
 
     // Compute velocity
     var vector = new Translation2d(distance, Rotation2d.fromDegrees(robotRelativeAngleDegrees));
-    var scale =
-        Math.max(Math.abs(vector.getX()), Math.abs(vector.getY())) / DriveConstants.JOG_SPEED;
+    var scale = Math.max(Math.abs(vector.getX()), Math.abs(vector.getY())) / DriveConstants.JOG_SPEED;
     var velocity = vector.div(scale);
 
     return driveSubsystem.runOnce(() -> {

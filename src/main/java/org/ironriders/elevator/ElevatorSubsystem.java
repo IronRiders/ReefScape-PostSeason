@@ -25,7 +25,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 /**
- * This subsystem controls the big ol' elevator that moves the manipulator vertically.
+ * This subsystem controls the big ol' elevator that moves the manipulator
+ * vertically.
  */
 public class ElevatorSubsystem extends IronSubsystem {
   private final ElevatorCommands commands;
@@ -75,11 +76,9 @@ public class ElevatorSubsystem extends IronSubsystem {
     profile = new TrapezoidProfile(
         new TrapezoidProfile.Constraints(ElevatorConstants.MAX_VEL, ElevatorConstants.MAX_ACC));
 
-    pidController =
-        new PIDController(ElevatorConstants.P, ElevatorConstants.I, ElevatorConstants.D);
+    pidController = new PIDController(ElevatorConstants.P, ElevatorConstants.I, ElevatorConstants.D);
 
-    feedforward =
-        new ElevatorFeedforward(ElevatorConstants.S, ElevatorConstants.G, ElevatorConstants.V);
+    feedforward = new ElevatorFeedforward(ElevatorConstants.S, ElevatorConstants.G, ElevatorConstants.V);
 
     reset();
     commands = new ElevatorCommands(this);

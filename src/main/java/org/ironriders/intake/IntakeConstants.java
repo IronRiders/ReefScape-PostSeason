@@ -9,11 +9,9 @@ public class IntakeConstants {
   public static final int INTAKE_MOTOR_LEFT = 15;
   public static final int INTAKE_MOTOR_TOP = 16;
 
-  public static final InvertedValue INTAKE_MOTOR_LEFT_INVERSION =
-      InvertedValue.CounterClockwise_Positive;
+  public static final InvertedValue INTAKE_MOTOR_LEFT_INVERSION = InvertedValue.CounterClockwise_Positive;
   public static final InvertedValue INTAKE_MOTOR_RIGHT_INVERSION = InvertedValue.Clockwise_Positive;
-  public static final InvertedValue INTAKE_MOTOR_ROLLER_INVERSION =
-      InvertedValue.CounterClockwise_Positive;
+  public static final InvertedValue INTAKE_MOTOR_ROLLER_INVERSION = InvertedValue.CounterClockwise_Positive;
 
   public static final NeutralModeValue INTAKE_NEUTRAL_MODE = NeutralModeValue.Brake;
 

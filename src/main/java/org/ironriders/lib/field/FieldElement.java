@@ -29,10 +29,14 @@ public class FieldElement {
    */
   public enum Position {
     LEFT_STATION(0, ElementType.STATION), RIGHT_STATION(1, ElementType.STATION), REEF_FRONT(2,
-        ElementType.REEF), REEF_FRONT_LEFT(3, ElementType.REEF), REEF_BACK_LEFT(4,
-            ElementType.REEF), REEF_BACK(5, ElementType.REEF), REEF_BACK_RIGHT(6,
-                ElementType.REEF), REEF_FRONT_RIGHT(7, ElementType.REEF), PROCESSOR(8,
-                    ElementType.PROCESSOR), BARGE(9, ElementType.BARGE);
+        ElementType.REEF),
+    REEF_FRONT_LEFT(3, ElementType.REEF), REEF_BACK_LEFT(4,
+        ElementType.REEF),
+    REEF_BACK(5, ElementType.REEF), REEF_BACK_RIGHT(6,
+        ElementType.REEF),
+    REEF_FRONT_RIGHT(7, ElementType.REEF), PROCESSOR(8,
+        ElementType.PROCESSOR),
+    BARGE(9, ElementType.BARGE);
 
     public final int id;
     public final ElementType type;
@@ -48,14 +52,12 @@ public class FieldElement {
   public final Pose3d pose;
   public final String name;
 
-  private static int[] BLUE_TAGS = {13, 12, 18, 19, 20, 21, 22, 17, 16, 14};
+  private static int[] BLUE_TAGS = { 13, 12, 18, 19, 20, 21, 22, 17, 16, 14 };
 
-  private static int[] RED_TAGS = {1, 2, 7, 6, 11, 10, 9, 8, 3, 5};
+  private static int[] RED_TAGS = { 1, 2, 7, 6, 11, 10, 9, 8, 3, 5 };
 
-  private static List<FieldElement> BLUE_ELEMENTS =
-      loadElements(DriverStation.Alliance.Blue, BLUE_TAGS);
-  private static List<FieldElement> RED_ELEMENTS =
-      loadElements(DriverStation.Alliance.Red, RED_TAGS);
+  private static List<FieldElement> BLUE_ELEMENTS = loadElements(DriverStation.Alliance.Blue, BLUE_TAGS);
+  private static List<FieldElement> RED_ELEMENTS = loadElements(DriverStation.Alliance.Red, RED_TAGS);
 
   private FieldElement(Position element, Pose3d pose) {
     this.position = element;
@@ -124,8 +126,7 @@ public class FieldElement {
         continue;
       }
 
-      double thisDistance =
-          pose.getTranslation().getDistance(element.pose.toPose2d().getTranslation());
+      double thisDistance = pose.getTranslation().getDistance(element.pose.toPose2d().getTranslation());
       if (found.isEmpty() || distance > thisDistance) {
         distance = thisDistance;
         found = Optional.of(element);

@@ -43,10 +43,9 @@ public class IntakeSubsystem extends IronSubsystem {
   private final TalonFX leftIntake = new TalonFX(INTAKE_MOTOR_LEFT);
   private final TalonFX rollerIntake = new TalonFX(INTAKE_MOTOR_TOP);
 
-  private final TrapezoidProfile profile =
-      new TrapezoidProfile(new TrapezoidProfile.Constraints(MAX_VEL, MAX_ACC));
-  private final PIDController pidController =
-      new PIDController(IntakeConstants.P, IntakeConstants.I, IntakeConstants.D);
+  private final TrapezoidProfile profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(MAX_VEL, MAX_ACC));
+  private final PIDController pidController = new PIDController(IntakeConstants.P, IntakeConstants.I,
+      IntakeConstants.D);
 
   // goalSetpoint is the final goal. periodicSetpoint is a sort-of inbetween
   // setpoint generated every periodic.

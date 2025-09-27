@@ -5,6 +5,5 @@ on:
   pull_request:
     branches: [ main , competition-working ]
 jobs:
-  lint:
-    - name: Super-Linter
-    uses: super-linter/super-linter@v8.1.0
+    - name: lint
+      uses: super-linter/super-linter@v8.1.0

@@ -10,8 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 /**
- * Current robot state required by multiple subsystems.
- * TODO: this is practicly unused now
+ * Current robot state required by multiple subsystems. TODO: this is practicly unused now
  */
 public class GameState {
 
@@ -24,8 +23,7 @@ public class GameState {
   // this represents our current elevator target
   private static ElevatorLevel target = ElevatorLevel.DOWN;
 
-  private GameState() {
-  }
+  private GameState() {}
 
   public static Field2d getField() {
     return field;
@@ -47,8 +45,7 @@ public class GameState {
     return targetRobotPose.get();
   }
 
-  public static void setTargetRobotPose(
-      Supplier<Optional<FieldPose>> robotPose) {
+  public static void setTargetRobotPose(Supplier<Optional<FieldPose>> robotPose) {
     GameState.targetRobotPose = robotPose;
   }
 

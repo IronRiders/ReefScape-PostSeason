@@ -32,14 +32,10 @@ public class IntakeCommands {
 
     switch (state) {
       case GRAB:
-        return command
-            .until(() -> intake.atGoal())
-            .finallyDo(() -> intake.set(IntakeState.STOP));
+        return command.until(() -> intake.atGoal()).finallyDo(() -> intake.set(IntakeState.STOP));
 
       case EJECT:
-        return command
-            .withTimeout(DISCHARGE_TIMEOUT)
-            .finallyDo(() -> intake.set(IntakeState.STOP));
+        return command.withTimeout(DISCHARGE_TIMEOUT).finallyDo(() -> intake.set(IntakeState.STOP));
       default:
         return command.finallyDo(() -> intake.set(IntakeState.STOP));
     }
@@ -50,7 +46,8 @@ public class IntakeCommands {
   }
 
   public Command jog(IntakeJogState state) {
-    return Commands.sequence(intake.runOnce(() -> intake.setGoal(intake.getGoal() + state.increment)),
+    return Commands.sequence(
+        intake.runOnce(() -> intake.setGoal(intake.getGoal() + state.increment)),
         Commands.waitSeconds(INTAKE_JOG_TIME), set(IntakeState.STOP));
   }
 

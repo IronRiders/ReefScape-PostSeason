@@ -95,8 +95,7 @@ public class TargetingSubsystem extends IronSubsystem {
       case STATION:
         return Optional.of(new FieldPose.Station(element, targetSlot));
       case REEF:
-        return Optional.of(
-            new FieldPose.Reef(element, targetPole, targetLevel));
+        return Optional.of(new FieldPose.Reef(element, targetPole, targetLevel));
       default:
         return Optional.of(new FieldPose(element));
     }
@@ -112,8 +111,7 @@ public class TargetingSubsystem extends IronSubsystem {
     if (pose.isEmpty()) {
       return;
     }
-    if (poseAtTargetElement.isPresent() &&
-        pose.get().equals(poseAtTargetElement.get())) {
+    if (poseAtTargetElement.isPresent() && pose.get().equals(poseAtTargetElement.get())) {
       return;
     }
 
@@ -128,9 +126,7 @@ public class TargetingSubsystem extends IronSubsystem {
     }
 
     if (targetElementType.isPresent()) {
-      targetElement = FieldElement.nearestTo(
-          robotPose.get(),
-          targetElementType.get());
+      targetElement = FieldElement.nearestTo(robotPose.get(), targetElementType.get());
     } else {
       targetElement = FieldElement.nearestTo(robotPose.get());
     }

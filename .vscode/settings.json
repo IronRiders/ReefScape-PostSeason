@@ -1,4 +1,8 @@
 {
     "java.configuration.updateBuildConfiguration": "automatic",
-    "java.format.settings.profile": "GoogleStyle"
+    "java.checkstyle.properties": {
+    "basedir": "${workspaceFolder}"
+    },
+    "java.checkstyle.version": "9.3",
+    "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml"
 }

@@ -18,8 +18,7 @@ public class ClimbConstants {
   public static double TOLERANCE = 0.005;
 
   public enum ClimbTargets {
-    MIN(0),
-    MAX(-570), // max position upward
+    MIN(0), MAX(-570), // max position upward
     CLIMBED(-60);
 
     public final double pos;

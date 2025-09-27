@@ -15,16 +15,23 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 
 public class WristSubsystem extends IronSubsystem {
-    final SparkMax primaryMotor = new SparkMax(WristConstants.PRIMARY_WRIST_MOTOR, MotorType.kBrushless);
-    final SparkMax secondaryMotor = new SparkMax(WristConstants.SECONDARY_WRIST_MOTOR, MotorType.kBrushless);
-    final TrapezoidProfile movementProfile = new TrapezoidProfile(
-            new Constraints(WristConstants.MAX_VEL, WristConstants.MAX_ACC));
+    final SparkMax primaryMotor =
+            new SparkMax(WristConstants.PRIMARY_WRIST_MOTOR, MotorType.kBrushless);
+    final SparkMax secondaryMotor =
+            new SparkMax(WristConstants.SECONDARY_WRIST_MOTOR, MotorType.kBrushless);
+    final TrapezoidProfile movementProfile =
+            new TrapezoidProfile(new Constraints(WristConstants.MAX_VEL, WristConstants.MAX_ACC));
 
     private PIDController pidControler;
 
-    private TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State(); // Acts as a final setpoint
-    private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State(); // Acts as a temporary setpoint for
-                                                                                    // calculating the next speed value
+    private TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State(); // Acts as a final
+                                                                                // setpoint
+    private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State(); // Acts as a
+                                                                                    // temporary
+                                                                                    // setpoint for
+                                                                                    // calculating
+                                                                                    // the next
+                                                                                    // speed value
 
     public WristRotation targetRotation = WristRotation.HOLD;
 
@@ -35,22 +42,16 @@ public class WristSubsystem extends IronSubsystem {
     private final SparkMaxConfig motorConfig = new SparkMaxConfig();
 
     public WristSubsystem() {
-        motorConfig
-                .smartCurrentLimit(30) // Can go to 40
+        motorConfig.smartCurrentLimit(30) // Can go to 40
                 .idleMode(IdleMode.kBrake);
 
-        primaryMotor.configure(motorConfig,
-                ResetMode.kResetSafeParameters,
+        primaryMotor.configure(motorConfig, ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
 
-        secondaryMotor.configure(motorConfig,
-                ResetMode.kResetSafeParameters,
+        secondaryMotor.configure(motorConfig, ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
 
-        pidControler = new PIDController(
-                WristConstants.P,
-                WristConstants.I,
-                WristConstants.D);
+        pidControler = new PIDController(WristConstants.P, WristConstants.I, WristConstants.D);
         pidControler.setTolerance(WristConstants.TOLERANCE);
         reset();
     }
@@ -58,10 +59,8 @@ public class WristSubsystem extends IronSubsystem {
     @Override
     public void periodic() {
         // Apply profile and PID to determine output level
-        periodicSetpoint = movementProfile.calculate(
-                WristConstants.T,
-                periodicSetpoint,
-                goalSetpoint);
+        periodicSetpoint =
+                movementProfile.calculate(WristConstants.T, periodicSetpoint, goalSetpoint);
 
         double speed = pidControler.calculate(getCurrentAngle(), periodicSetpoint.position);
         setMotors(speed);
@@ -80,12 +79,11 @@ public class WristSubsystem extends IronSubsystem {
     }
 
     public double getCurrentAngle() {
-        return (primaryMotor.getAbsoluteEncoder().getPosition() - WristConstants.ENCODER_OFFSET) * 360
-                + WristConstants.CAD_POSITION_OFFSET;
+        return (primaryMotor.getAbsoluteEncoder().getPosition() - WristConstants.ENCODER_OFFSET)
+                * 360 + WristConstants.CAD_POSITION_OFFSET;
         /*
-         * ENCODER_OFFSET is added to encoder to get it to = 0 when it is fully stowed
-         * (against hardstop)
-         * CAD_POSITION_OFFSET is adjustment for odd alignment in the CAD
+         * ENCODER_OFFSET is added to encoder to get it to = 0 when it is fully stowed (against
+         * hardstop) CAD_POSITION_OFFSET is adjustment for odd alignment in the CAD
          */
     }
 

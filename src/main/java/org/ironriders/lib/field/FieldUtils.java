@@ -15,25 +15,18 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
  */
 public class FieldUtils {
 
-  public static final AprilTagFieldLayout FIELD_LAYOUT = AprilTagFieldLayout
-      .loadField(AprilTagFields.k2025ReefscapeAndyMark);
+  public static final AprilTagFieldLayout FIELD_LAYOUT =
+      AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
 
-  public static final int[] REEF_TAG_IDS_RED = { 17, 18, 19, 20, 21, 22 };
-  public static final int[] REEF_TAG_IDS_BLUE = { 6, 7, 8, 9, 10, 11 };
+  public static final int[] REEF_TAG_IDS_RED = {17, 18, 19, 20, 21, 22};
+  public static final int[] REEF_TAG_IDS_BLUE = {6, 7, 8, 9, 10, 11};
 
-  public static final Transform2d REEFSIDE_LEFT_OFFSET = createOffset(
-      -14,
-      0,
-      0);
-  public static final Transform2d REEFSIDE_RIGHT_OFFSET = createOffset(
-      -14,
-      13,
-      0);
+  public static final Transform2d REEFSIDE_LEFT_OFFSET = createOffset(-14, 0, 0);
+  public static final Transform2d REEFSIDE_RIGHT_OFFSET = createOffset(-14, 13, 0);
 
   /** Checks if a tag is valid for the reef and the current alliance. */
   public static boolean isValidReefTag(int id) {
-    for (int i : DriverStation.getAlliance().get() == Alliance.Blue
-        ? REEF_TAG_IDS_RED
+    for (int i : DriverStation.getAlliance().get() == Alliance.Blue ? REEF_TAG_IDS_RED
         : REEF_TAG_IDS_BLUE) {
       if (i == id)
         return true;
@@ -47,14 +40,12 @@ public class FieldUtils {
 
   /** Creates basic offset Pose2d from x, y, and rotation */
   public static Transform2d createOffset(double x, double y, double r) {
-    return new Transform2d(
-        new Translation2d(Units.inchesToMeters(x), Units.inchesToMeters(y)),
+    return new Transform2d(new Translation2d(Units.inchesToMeters(x), Units.inchesToMeters(y)),
         new Rotation2d(r));
   }
 
   /**
-   * Gets the pose of a tag on the field (0, 0 is the right-close corner from
-   * perspective of blue)
+   * Gets the pose of a tag on the field (0, 0 is the right-close corner from perspective of blue)
    */
   public static Pose2d getPose(int id) {
     return FIELD_LAYOUT.getTagPose(id).get().toPose2d();

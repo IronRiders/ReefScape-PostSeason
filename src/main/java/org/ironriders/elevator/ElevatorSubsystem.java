@@ -25,18 +25,14 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 /**
- * This subsystem controls the big ol' elevator that moves the
- * manipulator vertically.
+ * This subsystem controls the big ol' elevator that moves the manipulator vertically.
  */
 public class ElevatorSubsystem extends IronSubsystem {
   private final ElevatorCommands commands;
 
-  private final SparkMax primaryMotor = new SparkMax(
-      PRIMARY_MOTOR_ID,
-      MotorType.kBrushless); // lead motor
-  private final SparkMax followerMotor = new SparkMax(
-      FOLLOW_MOTOR_ID,
-      MotorType.kBrushless);
+  private final SparkMax primaryMotor = new SparkMax(PRIMARY_MOTOR_ID, MotorType.kBrushless); // lead
+                                                                                              // motor
+  private final SparkMax followerMotor = new SparkMax(FOLLOW_MOTOR_ID, MotorType.kBrushless);
 
   private final SparkLimitSwitch bottomLimitSwitch = primaryMotor.getReverseLimitSwitch();
 
@@ -61,47 +57,29 @@ public class ElevatorSubsystem extends IronSubsystem {
     SparkMaxConfig followerConfig = new SparkMaxConfig();
 
     LimitSwitchConfig forwardLimitSwitchConfig = new LimitSwitchConfig()
-        .forwardLimitSwitchEnabled(true)
-        .forwardLimitSwitchType(Type.kNormallyClosed);
+        .forwardLimitSwitchEnabled(true).forwardLimitSwitchType(Type.kNormallyClosed);
     LimitSwitchConfig reverseLimitSwitchConfig = new LimitSwitchConfig()
-        .reverseLimitSwitchEnabled(true)
-        .reverseLimitSwitchType(Type.kNormallyClosed);
+        .reverseLimitSwitchEnabled(true).reverseLimitSwitchType(Type.kNormallyClosed);
 
-    primaryConfig
-        .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(ELEVATOR_MOTOR_STALL_LIMIT)
-        .inverted(true)
-        .apply(forwardLimitSwitchConfig)
-        .apply(reverseLimitSwitchConfig);
+    primaryConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(ELEVATOR_MOTOR_STALL_LIMIT)
+        .inverted(true).apply(forwardLimitSwitchConfig).apply(reverseLimitSwitchConfig);
 
-    followerConfig
-        .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(ELEVATOR_MOTOR_STALL_LIMIT)
+    followerConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(ELEVATOR_MOTOR_STALL_LIMIT)
         .follow(ElevatorConstants.PRIMARY_MOTOR_ID, true);
 
-    primaryMotor.configure(
-        primaryConfig,
-        ResetMode.kResetSafeParameters,
+    primaryMotor.configure(primaryConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
-    followerMotor.configure(
-        followerConfig,
-        ResetMode.kResetSafeParameters,
+    followerMotor.configure(followerConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
 
     profile = new TrapezoidProfile(
-        new TrapezoidProfile.Constraints(
-            ElevatorConstants.MAX_VEL,
-            ElevatorConstants.MAX_ACC));
+        new TrapezoidProfile.Constraints(ElevatorConstants.MAX_VEL, ElevatorConstants.MAX_ACC));
 
-    pidController = new PIDController(
-        ElevatorConstants.P,
-        ElevatorConstants.I,
-        ElevatorConstants.D);
+    pidController =
+        new PIDController(ElevatorConstants.P, ElevatorConstants.I, ElevatorConstants.D);
 
-    feedforward = new ElevatorFeedforward(
-        ElevatorConstants.S,
-        ElevatorConstants.G,
-        ElevatorConstants.V);
+    feedforward =
+        new ElevatorFeedforward(ElevatorConstants.S, ElevatorConstants.G, ElevatorConstants.V);
 
     reset();
     commands = new ElevatorCommands(this);
@@ -117,21 +95,15 @@ public class ElevatorSubsystem extends IronSubsystem {
     // }
 
     // Calculate the next state and update the current state
-    periodicSetpoint = profile.calculate(
-        ElevatorConstants.T,
-        periodicSetpoint,
-        goalSetpoint);
+    periodicSetpoint = profile.calculate(ElevatorConstants.T, periodicSetpoint, goalSetpoint);
 
     // Only do PID if homed
     if (isHomed) {
 
-      double pidOutput = pidController.calculate(
-          getHeight(),
-          periodicSetpoint.position);
+      double pidOutput = pidController.calculate(getHeight(), periodicSetpoint.position);
       // It's now recommended you remove the velocity one. Not sure why but it was
       // causing a warning
-      double ff = feedforward.calculate(
-          periodicSetpoint.position);
+      double ff = feedforward.calculate(periodicSetpoint.position);
 
       primaryMotor.set(pidOutput + ff);
     } else {
@@ -159,12 +131,8 @@ public class ElevatorSubsystem extends IronSubsystem {
     else
       publish("At Goal?", "N/A; Not Homed!");
 
-    publish(
-        "Forward Limit Switch",
-        primaryMotor.getForwardLimitSwitch().isPressed());
-    publish(
-        "Reverse Limit Switch",
-        primaryMotor.getReverseLimitSwitch().isPressed());
+    publish("Forward Limit Switch", primaryMotor.getForwardLimitSwitch().isPressed());
+    publish("Reverse Limit Switch", primaryMotor.getReverseLimitSwitch().isPressed());
 
     publish("Is at goal?", isAtPosition());
     publish("Primary Encoder", primaryMotor.getEncoder().getPosition());

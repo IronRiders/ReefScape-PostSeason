@@ -28,8 +28,7 @@ public class FieldPose {
 
     @Override
     protected Distance getYOffset() {
-      return STATION_SLOT_SPACING.times(slot - STATION_SLOT_COUNT / 2).minus(
-          INTAKE_OFFSET.div(2));
+      return STATION_SLOT_SPACING.times(slot - STATION_SLOT_COUNT / 2).minus(INTAKE_OFFSET.div(2));
     }
   }
 
@@ -80,18 +79,14 @@ public class FieldPose {
    * Robot side (robot-relative left or right).
    */
   public enum Side {
-    Left,
-    Right,
+    Left, Right,
   }
 
   /**
    * Reef levels.
    */
   public enum Level {
-    L1,
-    L2,
-    L3,
-    L4,
+    L1, L2, L3, L4,
   }
 
   public FieldPose(FieldElement element) {
@@ -104,20 +99,13 @@ public class FieldPose {
   public Pose2d toPose2d() {
     final var elementPose = this.element.pose.toPose2d();
 
-    final var robotRotation = elementPose
-        .getRotation()
-        .rotateBy(Rotation2d.k180deg);
+    final var robotRotation = elementPose.getRotation().rotateBy(Rotation2d.k180deg);
 
-    final var zeroAngleRelativeTranslation = new Translation2d(
-        getXOffset(),
-        getYOffset());
+    final var zeroAngleRelativeTranslation = new Translation2d(getXOffset(), getYOffset());
 
-    final var relativeTranslation = zeroAngleRelativeTranslation.rotateBy(
-        robotRotation);
+    final var relativeTranslation = zeroAngleRelativeTranslation.rotateBy(robotRotation);
 
-    final var robotTranslation = elementPose
-        .getTranslation()
-        .plus(relativeTranslation);
+    final var robotTranslation = elementPose.getTranslation().plus(relativeTranslation);
 
     return new Pose2d(robotTranslation, robotRotation);
   }

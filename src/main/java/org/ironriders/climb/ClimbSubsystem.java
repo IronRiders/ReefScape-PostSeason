@@ -22,14 +22,13 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public class ClimbSubsystem extends IronSubsystem {
 
-  private final SparkMax motor = new SparkMax(
-      ClimbConstants.CLIMBER_MOTOR_ID,
-      SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax motor =
+      new SparkMax(ClimbConstants.CLIMBER_MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
 
   private final SparkMaxConfig motorConfig = new SparkMaxConfig();
 
-  private final TrapezoidProfile profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(MAX_VEL,
-      MAX_ACC));
+  private final TrapezoidProfile profile =
+      new TrapezoidProfile(new TrapezoidProfile.Constraints(MAX_VEL, MAX_ACC));
 
   private TrapezoidProfile.State stopped;
 
@@ -50,10 +49,7 @@ public class ClimbSubsystem extends IronSubsystem {
     motorConfig.idleMode(IdleMode.kBrake);
     motorConfig.smartCurrentLimit(ClimbConstants.CURRENT_LIMIT);
 
-    motor.configure(
-        motorConfig,
-        ResetMode.kResetSafeParameters,
-        PersistMode.kPersistParameters);
+    motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     pid.setTolerance(ClimbConstants.TOLERANCE);
 
@@ -69,10 +65,7 @@ public class ClimbSubsystem extends IronSubsystem {
     var currentDegrees = getCurrentAngle();
 
     // Apply profile and PID to determine output level
-    periodicSetpoint = profile.calculate(
-        ClimbConstants.T,
-        periodicSetpoint,
-        goalSetpoint);
+    periodicSetpoint = profile.calculate(ClimbConstants.T, periodicSetpoint, goalSetpoint);
 
     var speed = pid.calculate(currentDegrees, periodicSetpoint.position);
     motor.set(speed);
@@ -105,7 +98,8 @@ public class ClimbSubsystem extends IronSubsystem {
   }
 
   public void home() {
-    if (currentTarget != ClimbTargets.MIN) { // The climber is not all the way down, resetting it's encoder would cause
+    if (currentTarget != ClimbTargets.MIN) { // The climber is not all the way down, resetting it's
+                                             // encoder would cause
                                              // it to
       // go boom.
       logMessage("aborting home, climber state is not MIN!");

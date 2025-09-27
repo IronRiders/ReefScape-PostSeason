@@ -1,12 +1,13 @@
-name: lint
-on:
-  push:
-    branches: [ main , competition-working ]
-  pull_request:
-    branches: [ main , competition-working ]
+name: reviewdog
+on: [pull_request]
 jobs:
-    lint:
-      runs-on: ubuntu-latest
-      steps:
-      - name: lint
-        uses: super-linter/super-linter@v8.1.0
+  checkstyle:
+    name: runner / checkstyle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dbelyaev/action-checkstyle@v2
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          level: warning

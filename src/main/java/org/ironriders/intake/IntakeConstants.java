@@ -22,8 +22,7 @@ public class IntakeConstants {
   public static final double MAX_VEL = 1;
   public static final double MAX_ACC = 1;
 
-
-  public static final double P = 0.1;  // proportion
+  public static final double P = 0.1; // proportion
   public static final double I = 0.00; // integral
   public static final double D = 0.00; // derivative
   public static final double T = 0.02; // time to next step
@@ -42,13 +41,13 @@ public class IntakeConstants {
   // TODO Tune These
   public static final int INTAKE_STATOR_CURRENT = 30; // Stator Current Torque and Acceleration
   public static final int INTAKE_SUPPLY_CURRENT = 40; // Supply Current Speed + (a little Torque). If Supply
-                                                            // Current Lower Time is <= 0 then this will be the Supply
-                                                            // Current
+                                                      // Current Lower Time is <= 0 then this will be the Supply
+                                                      // Current
   public static final int INTAKE_SUPPLY_CURRENT_LOWER_LIMIT = 30; // Supply Current if SupplyCurrentLowerTime is
-                                                                        // >0 and applys after
+                                                                  // >0 and applys after
   public static final int INTAKE_SUPPLY_CURRENT_LOWER_TIME = 1; // In Seconds. This determines how long Supply
-                                                                      // Current is applied and then limit is lowered to
-                                                                      // SupplyCurrentLowerLimit
+                                                                // Current is applied and then limit is lowered to
+                                                                // SupplyCurrentLowerLimit
 
   public static final int INTAKE_BEAMBREAK = 0;
 

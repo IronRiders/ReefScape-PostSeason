@@ -8,11 +8,11 @@ public class ClimbConstants {
   public static final double MAX_ACC = 200;
   public static final double MAX_VEL = 200;
 
-  public static final double ENCODER_SCALE = (1f/100f);
+  public static final double ENCODER_SCALE = (1f / 100f);
 
-  public static double P = 0.05;  // proportion
-  public static double I = 0;    // integral
-  public static double D = 0;    // derivative
+  public static double P = 0.05; // proportion
+  public static double I = 0; // integral
+  public static double D = 0; // derivative
   public static double T = 0.02; // time to next step
 
   public static double TOLERANCE = 0.005;
@@ -21,6 +21,7 @@ public class ClimbConstants {
     MIN(0),
     MAX(-570), // max position upward
     CLIMBED(-60);
+
     public final double pos;
 
     ClimbTargets(double pos) {

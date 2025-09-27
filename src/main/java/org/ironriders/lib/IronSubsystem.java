@@ -32,7 +32,8 @@ public abstract class IronSubsystem extends SubsystemBase {
 
   private String getThreadTime() {
     String str = Objects
-        .toString(TimeUnit.MILLISECONDS.convert(System.nanoTime() - startupTime, TimeUnit.NANOSECONDS) / 1000d, "Error, could not get VM time!");
+        .toString(TimeUnit.MILLISECONDS.convert(System.nanoTime() - startupTime, TimeUnit.NANOSECONDS) / 1000d,
+            "Error, could not get VM time!");
 
     return "["
         + str
@@ -55,6 +56,7 @@ public abstract class IronSubsystem extends SubsystemBase {
    * You should be careful to put as little information in the title as possible
    * so it doesn't overflow.
    * This notification will last 10 seconds
+   * 
    * @param notif The elastic notification to send.
    */
   public void notifyWarning(Notification notif) {
@@ -73,6 +75,7 @@ public abstract class IronSubsystem extends SubsystemBase {
    * You should be careful to put as little information in the title as possible
    * so it doesn't overflow.
    * This notification will last 5 seconds
+   * 
    * @param notif The elastic notification to send.
    */
   public void notify(Notification notif) {
@@ -91,6 +94,7 @@ public abstract class IronSubsystem extends SubsystemBase {
    * You should be careful to put as little information in the title as possible
    * so it doesn't overflow.
    * This notification will last 30 seconds
+   * 
    * @param notif The elastic notification to send.
    */
   public void notifyError(Notification notif) {

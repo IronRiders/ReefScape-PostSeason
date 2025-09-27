@@ -167,7 +167,7 @@ public class IntakeSubsystem extends IronSubsystem {
       case GRAB:
         PIDControlOveride = false;
         break;
-    
+
       default:
         PIDControlOveride = true;
         break;

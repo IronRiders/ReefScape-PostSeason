@@ -65,7 +65,7 @@ public class ClimbSubsystem extends IronSubsystem {
   @Override
   public void periodic() {
     updateDashboard();
-    
+
     var currentDegrees = getCurrentAngle();
 
     // Apply profile and PID to determine output level
@@ -96,7 +96,7 @@ public class ClimbSubsystem extends IronSubsystem {
 
   public void reset() {
     pid.reset();
-    stopped =  new TrapezoidProfile.State(getCurrentAngle(), 0);
+    stopped = new TrapezoidProfile.State(getCurrentAngle(), 0);
     goalSetpoint = stopped;
     periodicSetpoint = stopped;
 
@@ -105,8 +105,9 @@ public class ClimbSubsystem extends IronSubsystem {
   }
 
   public void home() {
-    if (currentTarget != ClimbTargets.MIN) { // The climber is not all the way down, resetting it's encoder would cause it to
-                                        // go boom.
+    if (currentTarget != ClimbTargets.MIN) { // The climber is not all the way down, resetting it's encoder would cause
+                                             // it to
+      // go boom.
       logMessage("aborting home, climber state is not MIN!");
       return;
     }

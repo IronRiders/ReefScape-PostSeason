@@ -11,7 +11,7 @@ public class ClimbCommands {
 
     climb.publish("Climb", set(ClimbConstants.ClimbTargets.CLIMBED));
     climb.publish("Climb MAX", set(ClimbConstants.ClimbTargets.MAX));
-    climb.publish("Climb MIN", set(ClimbConstants.ClimbTargets.MIN)); 
+    climb.publish("Climb MIN", set(ClimbConstants.ClimbTargets.MIN));
     climb.publish("Rehome", home());
   }
 

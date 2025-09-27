@@ -99,8 +99,9 @@ public class ElevatorWristCTL extends IronSubsystem {
 
     public Command setElevatorWrist(ElevatorWristState state) {
         logMessage("goes to " + state.toString());
-        return Commands.sequence(wristCommands.set(WristRotation.HOLD), elevatorCommands.set(state.eLevel), wristCommands.set(state.wRot));
-        
+        return Commands.sequence(wristCommands.set(WristRotation.HOLD), elevatorCommands.set(state.eLevel),
+                wristCommands.set(state.wRot));
+
     }
 
     /*

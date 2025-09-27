@@ -41,9 +41,10 @@ public class IntakeSubsystem extends IronSubsystem {
   private final TalonFX leftIntake = new TalonFX(INTAKE_MOTOR_LEFT);
   private final TalonFX rollerIntake = new TalonFX(INTAKE_MOTOR_TOP);
 
-  private final TrapezoidProfile profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(MAX_VEL, MAX_ACC));
-  private final PIDController pidController = new PIDController(IntakeConstants.P, IntakeConstants.I,
-      IntakeConstants.D);
+  private final TrapezoidProfile profile =
+      new TrapezoidProfile(new TrapezoidProfile.Constraints(MAX_VEL, MAX_ACC));
+  private final PIDController pidController =
+      new PIDController(IntakeConstants.P, IntakeConstants.I, IntakeConstants.D);
 
   // goalSetpoint is the final goal. periodicSetpoint is a sort-of inbetween
   // setpoint generated every periodic.
@@ -60,24 +61,30 @@ public class IntakeSubsystem extends IronSubsystem {
   public IntakeSubsystem() {
     TalonFXConfiguration mainConfig = new TalonFXConfiguration();
     mainConfig
-        .withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimitEnable(true)
-            .withSupplyCurrentLimitEnable(true).withStatorCurrentLimit(INTAKE_STATOR_CURRENT)
-            .withSupplyCurrentLimit(INTAKE_SUPPLY_CURRENT)
-            .withSupplyCurrentLowerLimit(INTAKE_SUPPLY_CURRENT_LOWER_LIMIT)
-            .withSupplyCurrentLowerTime(INTAKE_SUPPLY_CURRENT_LOWER_TIME))
+        .withCurrentLimits(
+            new CurrentLimitsConfigs()
+                .withStatorCurrentLimitEnable(true)
+                .withSupplyCurrentLimitEnable(true)
+                .withStatorCurrentLimit(INTAKE_STATOR_CURRENT)
+                .withSupplyCurrentLimit(INTAKE_SUPPLY_CURRENT)
+                .withSupplyCurrentLowerLimit(INTAKE_SUPPLY_CURRENT_LOWER_LIMIT)
+                .withSupplyCurrentLowerTime(INTAKE_SUPPLY_CURRENT_LOWER_TIME))
         .withMotorOutput(new MotorOutputConfigs().withNeutralMode(INTAKE_NEUTRAL_MODE));
 
     // TODO: This is ugly as hell
     leftIntake.getConfigurator().apply(mainConfig);
-    leftIntake.getConfigurator()
+    leftIntake
+        .getConfigurator()
         .apply(new MotorOutputConfigs().withInverted(INTAKE_MOTOR_LEFT_INVERSION));
 
     rightIntake.getConfigurator().apply(mainConfig);
-    rightIntake.getConfigurator()
+    rightIntake
+        .getConfigurator()
         .apply(new MotorOutputConfigs().withInverted(INTAKE_MOTOR_RIGHT_INVERSION));
 
     rollerIntake.getConfigurator().apply(mainConfig);
-    rollerIntake.getConfigurator()
+    rollerIntake
+        .getConfigurator()
         .apply(new MotorOutputConfigs().withInverted(INTAKE_MOTOR_ROLLER_INVERSION));
 
     pidController.setTolerance(TOLERANCE);
@@ -194,7 +201,9 @@ public class IntakeSubsystem extends IronSubsystem {
    */
   public double getRotation() {
     return ((leftIntake.getPosition().getValueAsDouble()
-        + rightIntake.getPosition().getValueAsDouble()) / 2f) * WHEEL_CIRCUMFERENCE;
+                + rightIntake.getPosition().getValueAsDouble())
+            / 2f)
+        * WHEEL_CIRCUMFERENCE;
   }
 
   public IntakeCommands getCommands() {

@@ -6,19 +6,13 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 
-/**
- * Fully specified robot pose relative to a field element.
- */
+/** Fully specified robot pose relative to a field element. */
 public class FieldPose {
 
-  /**
-   * Field pose at coral station.
-   */
+  /** Field pose at coral station. */
   public static class Station extends FieldPose {
 
-    /**
-     * Target slot (0-8). Slot 0 is closest to driver.
-     */
+    /** Target slot (0-8). Slot 0 is closest to driver. */
     public final int slot;
 
     public Station(FieldElement element, int slot) {
@@ -32,19 +26,13 @@ public class FieldPose {
     }
   }
 
-  /**
-   * Field pose at reef.
-   */
+  /** Field pose at reef. */
   public static class Reef extends FieldPose {
 
-    /**
-     * Target pole. Only affects targeting of reef.
-     */
+    /** Target pole. Only affects targeting of reef. */
     public final Side pole;
 
-    /**
-     * Target level. Only affects targeting of reef.
-     */
+    /** Target level. Only affects targeting of reef. */
     public final Level level;
 
     public Reef(FieldElement element, Side pole, Level level) {
@@ -70,32 +58,28 @@ public class FieldPose {
   public static final int STATION_SLOT_COUNT = 9;
   static final Distance REEF_POLE_SPACING = Units.Inches.of(-12.94);
 
-  /**
-   * The element targeted.
-   */
+  /** The element targeted. */
   public final FieldElement element;
 
-  /**
-   * Robot side (robot-relative left or right).
-   */
+  /** Robot side (robot-relative left or right). */
   public enum Side {
-    Left, Right,
+    Left,
+    Right,
   }
 
-  /**
-   * Reef levels.
-   */
+  /** Reef levels. */
   public enum Level {
-    L1, L2, L3, L4,
+    L1,
+    L2,
+    L3,
+    L4,
   }
 
   public FieldPose(FieldElement element) {
     this.element = element;
   }
 
-  /**
-   * Create a concrete Pose2d relative to this abstract pose.
-   */
+  /** Create a concrete Pose2d relative to this abstract pose. */
   public Pose2d toPose2d() {
     final var elementPose = this.element.pose.toPose2d();
 

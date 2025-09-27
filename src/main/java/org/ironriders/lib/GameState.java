@@ -2,16 +2,12 @@ package org.ironriders.lib;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import java.util.Optional;
+import java.util.function.Supplier;
 import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
 import org.ironriders.lib.field.FieldPose;
 
-import java.util.Optional;
-import java.util.function.Supplier;
-
-/**
- * Current robot state required by multiple subsystems. TODO: this is practicly
- * unused now
- */
+/** Current robot state required by multiple subsystems. TODO: this is practicly unused now */
 public class GameState {
 
   public static boolean controlInverted;
@@ -23,8 +19,7 @@ public class GameState {
   // this represents our current elevator target
   private static ElevatorLevel target = ElevatorLevel.DOWN;
 
-  private GameState() {
-  }
+  private GameState() {}
 
   public static Field2d getField() {
     return field;

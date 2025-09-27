@@ -18,19 +18,16 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import org.ironriders.climb.ClimbConstants.ClimbTargets;
 import org.ironriders.lib.IronSubsystem;
 
-/**
- * The sumsystem in charge of the climber.
- */
-
+/** The sumsystem in charge of the climber. */
 public class ClimbSubsystem extends IronSubsystem {
 
-  private final SparkMax motor = new SparkMax(ClimbConstants.CLIMBER_MOTOR_ID,
-      SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax motor =
+      new SparkMax(ClimbConstants.CLIMBER_MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
 
   private final SparkMaxConfig motorConfig = new SparkMaxConfig();
 
-  private final TrapezoidProfile profile = new TrapezoidProfile(
-      new TrapezoidProfile.Constraints(MAX_VEL, MAX_ACC));
+  private final TrapezoidProfile profile =
+      new TrapezoidProfile(new TrapezoidProfile.Constraints(MAX_VEL, MAX_ACC));
 
   private TrapezoidProfile.State stopped;
 
@@ -47,10 +44,7 @@ public class ClimbSubsystem extends IronSubsystem {
 
   private final ClimbCommands commands;
 
-  /**
-   * initalize.
-   */
-
+  /** initalize. */
   public ClimbSubsystem() {
     motorConfig.idleMode(IdleMode.kBrake);
     motorConfig.smartCurrentLimit(ClimbConstants.CURRENT_LIMIT);
@@ -79,7 +73,6 @@ public class ClimbSubsystem extends IronSubsystem {
     atGoal = pid.atSetpoint();
 
     publish("Pid out", speed);
-
   }
 
   private void updateDashboard() {
@@ -105,8 +98,8 @@ public class ClimbSubsystem extends IronSubsystem {
 
   public void home() {
     if (currentTarget != ClimbTargets.MIN) { // The climber is not all the way down, resetting it's
-                                             // encoder would cause
-                                             // it to
+      // encoder would cause
+      // it to
       // go boom.
       logMessage("aborting home, climber state is not MIN!");
       return;

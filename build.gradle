@@ -1,13 +1,17 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2025.3.2"
+    id("checkstyle")
     id("org.openrewrite.rewrite") version("7.16.0")
+}
+
+checkstyle {
+    toolVersion = "10.12.4"
 }
 
 rewrite {
     exclusion("*.gradle")
     activeRecipe("org.openrewrite.staticanalysis.CodeCleanup")
-    checkstyleConfigFile = file("checkfile.xml")
 }
 
 repositories {

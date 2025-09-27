@@ -3,7 +3,13 @@
     "java.checkstyle.properties": {
     "basedir": "${workspaceFolder}"
     },
-    "java.checkstyle.version": "11.0.1",
+    "java.checkstyle.version": "10.12.4",
     "java.format.settings.profile":"${workspaceFolder}/checkfile.xml" ,
-    "java.checkstyle.configuration": "/google_checks.xml"
+    "java.checkstyle.configuration": "${workspaceFolder}/config/checkstyle/checkstyle.xml",
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "wx-chevalier.google-java-format",
+    "[java]": {
+        "editor.defaultFormatter": "josevseb.google-java-format-for-vs-code"
+    },
+    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable"
 }

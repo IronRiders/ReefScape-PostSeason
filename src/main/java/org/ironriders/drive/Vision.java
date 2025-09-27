@@ -9,6 +9,11 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 import org.ironriders.lib.field.FieldUtils;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -18,18 +23,11 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import swervelib.SwerveDrive;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
-
 /**
- * Vision is not a subsystem. This class is a utility class for the
- * DriveSubsystem and controls all
+ * Vision is not a subsystem. This class is a utility class for the DriveSubsystem and controls all
  * of the apriltag processing and pose estimation.
  *
- * (Why is it not a subsystem? Because it doesn't need to be.)
+ * <p>(Why is it not a subsystem? Because it doesn't need to be.)
  */
 public class Vision {
 
@@ -42,24 +40,30 @@ public class Vision {
 
   public Vision(SwerveDrive drive) {
     this.swerveDrive = drive;
-    cams.add(new VisionCamera("frontLeft", createOffset(11.5, 11.5, 6.5, 15, 22.5),
-        VecBuilder.fill(0.5, 0.5, 1.0)));
+    cams.add(
+        new VisionCamera(
+            "frontLeft", createOffset(11.5, 11.5, 6.5, 15, 22.5), VecBuilder.fill(0.5, 0.5, 1.0)));
     // cams.add(new VisionCamera("backLeft",
     // createOffset(11.5, -11.5, 6.5, 15, 157.5),
     // VecBuilder.fill(0.5, 0.5, 1.0)));
     // cams.add(new VisionCamera("backRight",
     // createOffset(-11.5, 11.5, 6.5, 15, -157.5),
     // VecBuilder.fill(0.5, 0.5, 1.0)));
-    cams.add(new VisionCamera("frontRight", createOffset(11.5, -11.5, 6.5, 15, -22.5),
-        VecBuilder.fill(0.5, 0.5, 1.0)));
+    cams.add(
+        new VisionCamera(
+            "frontRight",
+            createOffset(11.5, -11.5, 6.5, 15, -22.5),
+            VecBuilder.fill(0.5, 0.5, 1.0)));
   }
 
   public void addPoseEstimates() {
     for (VisionCamera v : cams) {
       Optional<EstimatedRobotPose> estimate = v.getEstimate();
       if (estimate.isPresent()) {
-        swerveDrive.addVisionMeasurement(estimate.get().estimatedPose.toPose2d(),
-            v.latestResult.getTimestampSeconds(), v.deviations);
+        swerveDrive.addVisionMeasurement(
+            estimate.get().estimatedPose.toPose2d(),
+            v.latestResult.getTimestampSeconds(),
+            v.deviations);
       }
     }
   }
@@ -67,16 +71,16 @@ public class Vision {
   /**
    * Utility method, creates an offset transform.
    *
-   * @param x     The x offset in inches.
-   * @param y     The y offset in inches.
-   * @param z     The z offset in inches.
+   * @param x The x offset in inches.
+   * @param y The y offset in inches.
+   * @param z The z offset in inches.
    * @param pitch The pitch offset in degrees.
-   * @param yaw   The yaw offset in degrees.
+   * @param yaw The yaw offset in degrees.
    */
   public Transform3d createOffset(double x, double y, double z, double pitch, double yaw) {
     return new Transform3d(
-        new Translation3d(Units.inchesToMeters(x), Units.inchesToMeters(y),
-            Units.inchesToMeters(z)),
+        new Translation3d(
+            Units.inchesToMeters(x), Units.inchesToMeters(y), Units.inchesToMeters(z)),
         new Rotation3d(0, Units.degreesToRadians(pitch), Units.degreesToRadians(yaw)));
   }
 
@@ -101,8 +105,7 @@ public class Vision {
   }
 
   /**
-   * Class representing a single camera and its respective pose estimator and
-   * standard deviations.
+   * Class representing a single camera and its respective pose estimator and standard deviations.
    * Results and estimates are gettable.
    */
   public class VisionCamera {
@@ -117,16 +120,15 @@ public class Vision {
     private VisionCamera(String camName, Transform3d offset, Matrix<N3, N1> deviations) {
       photonCamera = new PhotonCamera(camName);
 
-      estimator = new PhotonPoseEstimator(FieldUtils.FIELD_LAYOUT,
-          PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, offset);
+      estimator =
+          new PhotonPoseEstimator(
+              FieldUtils.FIELD_LAYOUT, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, offset);
       estimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
 
       this.deviations = deviations;
     }
 
-    /**
-     * Updates the camera/estimator, only run once per loop.
-     */
+    /** Updates the camera/estimator, only run once per loop. */
     public void update() {
       // check results, if none are good just return
       List<PhotonPipelineResult> results = photonCamera.getAllUnreadResults();
@@ -179,9 +181,7 @@ public class Vision {
       return currentEstimate;
     }
 
-    /**
-     * A TV show reference? In my code? It's more likely than you think.
-     */
+    /** A TV show reference? In my code? It's more likely than you think. */
     private Optional<EstimatedRobotPose> refineMacrodata(EstimatedRobotPose pose) {
       double minAmbiguity = 1;
       // find best ambiguity between all targets
@@ -198,8 +198,10 @@ public class Vision {
       double minDistance = DISTANCE_TOLERANCE;
       // find closest distance between all targets
       for (PhotonTrackedTarget t : pose.targetsUsed) {
-        double dist = Math.sqrt(
-            Math.pow(t.bestCameraToTarget.getX(), 2) + Math.pow(t.bestCameraToTarget.getY(), 2));
+        double dist =
+            Math.sqrt(
+                Math.pow(t.bestCameraToTarget.getX(), 2)
+                    + Math.pow(t.bestCameraToTarget.getY(), 2));
 
         if (dist < minDistance) {
           minDistance = dist;

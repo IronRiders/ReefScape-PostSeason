@@ -12,4 +12,4 @@ jobs:
           reporter: github-pr-review
           level: warning
           checkstyle_config: google_checks.xml,
-          checkstyle_version: "9.3"
+          checkstyle_version: "10.12.4"

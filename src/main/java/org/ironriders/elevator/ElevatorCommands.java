@@ -15,17 +15,14 @@ public class ElevatorCommands {
   }
 
   /**
-   * Command to set the elevator's target position to one of several predefined
-   * levels.
-   * 
-   * @return a Command to change target, finishes when the elevator has reached
-   *         it.
+   * Command to set the elevator's target position to one of several predefined levels.
+   *
+   * @return a Command to change target, finishes when the elevator has reached it.
    */
   public Command set(ElevatorLevel level) {
     return new Command() {
       public void initialize() {
         elevatorSubsystem.setGoal(level);
-
       }
 
       public boolean isFinished() {
@@ -36,7 +33,7 @@ public class ElevatorCommands {
 
   /**
    * Command to home the elevator, finding the bottom pos and remembering it.
-   * 
+   *
    * @return a Command that finishes when the bottom limit switch is pressed.
    */
   public Command home() {
@@ -44,7 +41,7 @@ public class ElevatorCommands {
   }
 
   public Command downRehomeReset() {
-    return Commands.sequence(set(ElevatorLevel.DOWN), home(),
-        elevatorSubsystem.runOnce(elevatorSubsystem::reset));
+    return Commands.sequence(
+        set(ElevatorLevel.DOWN), home(), elevatorSubsystem.runOnce(elevatorSubsystem::reset));
   }
 }

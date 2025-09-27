@@ -22,15 +22,13 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
 import org.ironriders.lib.IronSubsystem;
 
-/**
- * This subsystem controls the big ol' elevator that moves the manipulator
- * vertically.
- */
+/** This subsystem controls the big ol' elevator that moves the manipulator vertically. */
 public class ElevatorSubsystem extends IronSubsystem {
   private final ElevatorCommands commands;
 
-  private final SparkMax primaryMotor = new SparkMax(PRIMARY_MOTOR_ID, MotorType.kBrushless); // lead
-                                                                                              // motor
+  private final SparkMax primaryMotor =
+      new SparkMax(PRIMARY_MOTOR_ID, MotorType.kBrushless); // lead
+  // motor
   private final SparkMax followerMotor = new SparkMax(FOLLOW_MOTOR_ID, MotorType.kBrushless);
 
   private final SparkLimitSwitch bottomLimitSwitch = primaryMotor.getReverseLimitSwitch();
@@ -55,28 +53,41 @@ public class ElevatorSubsystem extends IronSubsystem {
     SparkMaxConfig primaryConfig = new SparkMaxConfig();
     SparkMaxConfig followerConfig = new SparkMaxConfig();
 
-    LimitSwitchConfig forwardLimitSwitchConfig = new LimitSwitchConfig()
-        .forwardLimitSwitchEnabled(true).forwardLimitSwitchType(Type.kNormallyClosed);
-    LimitSwitchConfig reverseLimitSwitchConfig = new LimitSwitchConfig()
-        .reverseLimitSwitchEnabled(true).reverseLimitSwitchType(Type.kNormallyClosed);
+    LimitSwitchConfig forwardLimitSwitchConfig =
+        new LimitSwitchConfig()
+            .forwardLimitSwitchEnabled(true)
+            .forwardLimitSwitchType(Type.kNormallyClosed);
+    LimitSwitchConfig reverseLimitSwitchConfig =
+        new LimitSwitchConfig()
+            .reverseLimitSwitchEnabled(true)
+            .reverseLimitSwitchType(Type.kNormallyClosed);
 
-    primaryConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(ELEVATOR_MOTOR_STALL_LIMIT)
-        .inverted(true).apply(forwardLimitSwitchConfig).apply(reverseLimitSwitchConfig);
+    primaryConfig
+        .idleMode(IdleMode.kBrake)
+        .smartCurrentLimit(ELEVATOR_MOTOR_STALL_LIMIT)
+        .inverted(true)
+        .apply(forwardLimitSwitchConfig)
+        .apply(reverseLimitSwitchConfig);
 
-    followerConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(ELEVATOR_MOTOR_STALL_LIMIT)
+    followerConfig
+        .idleMode(IdleMode.kBrake)
+        .smartCurrentLimit(ELEVATOR_MOTOR_STALL_LIMIT)
         .follow(ElevatorConstants.PRIMARY_MOTOR_ID, true);
 
-    primaryMotor.configure(primaryConfig, ResetMode.kResetSafeParameters,
-        PersistMode.kPersistParameters);
-    followerMotor.configure(followerConfig, ResetMode.kResetSafeParameters,
-        PersistMode.kPersistParameters);
+    primaryMotor.configure(
+        primaryConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    followerMotor.configure(
+        followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    profile = new TrapezoidProfile(
-        new TrapezoidProfile.Constraints(ElevatorConstants.MAX_VEL, ElevatorConstants.MAX_ACC));
+    profile =
+        new TrapezoidProfile(
+            new TrapezoidProfile.Constraints(ElevatorConstants.MAX_VEL, ElevatorConstants.MAX_ACC));
 
-    pidController = new PIDController(ElevatorConstants.P, ElevatorConstants.I, ElevatorConstants.D);
+    pidController =
+        new PIDController(ElevatorConstants.P, ElevatorConstants.I, ElevatorConstants.D);
 
-    feedforward = new ElevatorFeedforward(ElevatorConstants.S, ElevatorConstants.G, ElevatorConstants.V);
+    feedforward =
+        new ElevatorFeedforward(ElevatorConstants.S, ElevatorConstants.G, ElevatorConstants.V);
 
     reset();
     commands = new ElevatorCommands(this);

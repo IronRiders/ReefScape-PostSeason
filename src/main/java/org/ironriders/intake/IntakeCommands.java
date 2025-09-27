@@ -47,7 +47,8 @@ public class IntakeCommands {
   public Command jog(IntakeJogState state) {
     return Commands.sequence(
         intake.runOnce(() -> intake.setGoal(intake.getGoal() + state.increment)),
-        Commands.waitSeconds(INTAKE_JOG_TIME), set(IntakeState.STOP));
+        Commands.waitSeconds(INTAKE_JOG_TIME),
+        set(IntakeState.STOP));
   }
 
   public IntakeSubsystem getIntake() {

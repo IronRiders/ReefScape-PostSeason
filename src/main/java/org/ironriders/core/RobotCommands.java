@@ -4,28 +4,21 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import java.util.function.DoubleSupplier;
 import org.ironriders.climb.ClimbCommands;
 import org.ironriders.climb.ClimbConstants.ClimbTargets;
-import org.ironriders.climb.ClimbSubsystem;
 import org.ironriders.core.ElevatorWristCTL.ElevatorWristState;
 import org.ironriders.drive.DriveCommands;
 import org.ironriders.intake.IntakeCommands;
 import org.ironriders.intake.IntakeConstants.IntakeState;
-import org.ironriders.intake.IntakeSubsystem;
 import org.ironriders.targeting.TargetingCommands;
-import org.ironriders.wrist.WristSubsystem;
-
-import java.util.function.DoubleSupplier;
 
 /**
- * These commands require more complex logic and are not directly tied to a
- * subsystem. They
- * generally interface w/ multiple subsystems via their commands and are
- * higher-level.
+ * These commands require more complex logic and are not directly tied to a subsystem. They
+ * generally interface w/ multiple subsystems via their commands and are higher-level.
  *
- * These commands are those which the driver controls call.
+ * <p>These commands are those which the driver controls call.
  */
-
 @SuppressWarnings("unused") // Targeting and climb are unused by high-level commands
 public class RobotCommands {
 
@@ -40,17 +33,21 @@ public class RobotCommands {
   /**
    * Creates final variables for all command classes.
    *
-   * @param driveCommands       DriveCommands instance
-   * @param targetingCommands   TargetingCommands instance
-   * @param elevatorCommands    ElevatorCommands instance
-   * @param coralWristCommands  CoralWristCommands instance
+   * @param driveCommands DriveCommands instance
+   * @param targetingCommands TargetingCommands instance
+   * @param elevatorCommands ElevatorCommands instance
+   * @param coralWristCommands CoralWristCommands instance
    * @param coralIntakeCommands CoralIntakeCommands instance
-   * @param climbCommands       ClimbCommands instance
-   * @param controller          GenericHID controller (joystick/gamepad) instance
+   * @param climbCommands ClimbCommands instance
+   * @param controller GenericHID controller (joystick/gamepad) instance
    */
-  public RobotCommands(DriveCommands driveCommands, TargetingCommands targetingCommands,
-      IntakeCommands intakeCommands, ElevatorWristCTL elevatorWristCommands,
-      ClimbCommands climbCommands, GenericHID controller) {
+  public RobotCommands(
+      DriveCommands driveCommands,
+      TargetingCommands targetingCommands,
+      IntakeCommands intakeCommands,
+      ElevatorWristCTL elevatorWristCommands,
+      ClimbCommands climbCommands,
+      GenericHID controller) {
     this.driveCommands = driveCommands;
     this.targetingCommands = targetingCommands;
     this.intakeCommands = intakeCommands;
@@ -59,12 +56,12 @@ public class RobotCommands {
     this.controller = controller;
     // TODO: More named commands, implement good autos
 
-    NamedCommands.registerCommand("ElevatorWrist L2",
-        elevatorWristCommands.setElevatorWrist(ElevatorWristState.L2));
-    NamedCommands.registerCommand("ElevatorWrist L3",
-        elevatorWristCommands.setElevatorWrist(ElevatorWristState.L3));
-    NamedCommands.registerCommand("ElevatorWrist L4",
-        elevatorWristCommands.setElevatorWrist(ElevatorWristState.L4));
+    NamedCommands.registerCommand(
+        "ElevatorWrist L2", elevatorWristCommands.setElevatorWrist(ElevatorWristState.L2));
+    NamedCommands.registerCommand(
+        "ElevatorWrist L3", elevatorWristCommands.setElevatorWrist(ElevatorWristState.L3));
+    NamedCommands.registerCommand(
+        "ElevatorWrist L4", elevatorWristCommands.setElevatorWrist(ElevatorWristState.L4));
 
     NamedCommands.registerCommand("Prepare Score L4", prepareScoreLevel(ElevatorWristState.L4));
     NamedCommands.registerCommand("Prepare Score L3", prepareScoreLevel(ElevatorWristState.L3));
@@ -75,9 +72,7 @@ public class RobotCommands {
     NamedCommands.registerCommand("Score", scoreAndDown());
   }
 
-  /**
-   * Initialize all subsystems when first enabled.
-   */
+  /** Initialize all subsystems when first enabled. */
   public Command startup() {
     intakeCommands.setOnSuccess(() -> rumbleController());
 
@@ -89,9 +84,11 @@ public class RobotCommands {
    *
    * @param inputTranslationX DoubleSupplier, value from 0-1.
    * @param inputTranslationY DoubleSupplier, value from 0-1.
-   * @param inputRotation     DoubleSupplier, value from 0-1.
+   * @param inputRotation DoubleSupplier, value from 0-1.
    */
-  public Command driveTeleop(DoubleSupplier inputTranslationX, DoubleSupplier inputTranslationY,
+  public Command driveTeleop(
+      DoubleSupplier inputTranslationX,
+      DoubleSupplier inputTranslationY,
       DoubleSupplier inputRotation) {
     return driveCommands.driveTeleop(inputTranslationX, inputTranslationY, inputRotation, true);
   }
@@ -101,7 +98,8 @@ public class RobotCommands {
   }
 
   public Command climb() {
-    return Commands.parallel(elevatorWristCommands.setElevatorWrist(ElevatorWristState.CLIMBING),
+    return Commands.parallel(
+        elevatorWristCommands.setElevatorWrist(ElevatorWristState.CLIMBING),
         climbCommands.set(ClimbTargets.CLIMBED));
   }
 
@@ -110,56 +108,49 @@ public class RobotCommands {
   }
 
   private Command scoreAndDown() {
-    return Commands.sequence(intakeCommands.set(IntakeState.SCORE),
+    return Commands.sequence(
+        intakeCommands.set(IntakeState.SCORE),
         elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD));
   }
 
   /**
-   * Small translation that is robot-centered rather than field-centered. For
-   * example, moving a
-   * little 30 degrees will move 30 degrees relative to the front of the robot,
-   * rather than relative
+   * Small translation that is robot-centered rather than field-centered. For example, moving a
+   * little 30 degrees will move 30 degrees relative to the front of the robot, rather than relative
    * to the field.
-   * 
-   * @param robotRelativeAngleDegrees The angle to move, in degrees relative to
-   *                                  where the robot is
-   *                                  facing
-   * @return Returns command object that calls the
-   *         {@link DriveCommands#jog(double)} method
+   *
+   * @param robotRelativeAngleDegrees The angle to move, in degrees relative to where the robot is
+   *     facing
+   * @return Returns command object that calls the {@link DriveCommands#jog(double)} method
    */
   public Command jog(double robotRelativeAngleDegrees) {
     return driveCommands.jog(robotRelativeAngleDegrees);
   }
 
   /**
-   * <p>
    * Command to make the robot intake. Runs two commands in parallel:
+   *
    * <ul>
-   * <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState)
-   * elevator wrist state}
-   * to {@link ElevatorWristState#INTAKING "INTAKING"}.</li>
-   * <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to
-   * {@link IntakeState#GRAB
-   * "GRAB"}.</li>
+   *   <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState) elevator wrist
+   *       state} to {@link ElevatorWristState#INTAKING "INTAKING"}.
+   *   <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to {@link IntakeState#GRAB
+   *       "GRAB"}.
    * </ul>
+   *
    * <br>
-   * 
-   * </p>
-   * 
+   *
    * @return returns the command described above
    */
   public Command intake() {
-    return Commands
-        .parallel(elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING),
+    return Commands.parallel(
+            elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING),
             intakeCommands.set(IntakeState.GRAB))
         .unless(() -> intakeCommands.getIntake().beamBreakTriggered());
   }
 
   /**
-   * Command to make the robot eject. Simply sets the
-   * {@link IntakeCommands#set(IntakeState) intake
+   * Command to make the robot eject. Simply sets the {@link IntakeCommands#set(IntakeState) intake
    * state} to {@link IntakeState#EJECT "eject"}.
-   * 
+   *
    * @return returns the command described above
    */
   public Command eject() {
@@ -167,42 +158,38 @@ public class RobotCommands {
   }
 
   /**
-   * Command to stop the intake and stow the elevator wrist. Does the following in
-   * parallel:
+   * Command to stop the intake and stow the elevator wrist. Does the following in parallel:
+   *
    * <ul>
-   * <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState)
-   * elevator wrist state}
-   * to {@link ElevatorWristState#HOLD "stow"}.</li>
-   * <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to
-   * {@link IntakeState#STOP
-   * "stop"}.</li>
+   *   <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState) elevator wrist
+   *       state} to {@link ElevatorWristState#HOLD "stow"}.
+   *   <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to {@link IntakeState#STOP
+   *       "stop"}.
    * </ul>
-   * 
-   * 
+   *
    * @return returns the command described above
    */
   public Command stopIntake() {
-    return Commands.parallel(elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD),
-        intakeCommands.set(IntakeState.STOP)
+    return Commands.parallel(
+        elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD),
+        intakeCommands
+            .set(IntakeState.STOP)
             .unless(() -> intakeCommands.getIntake().beamBreakTriggered()));
   }
 
   /**
    * Sets the rumble on the controller for 0.3 seconds.
-   * 
-   * Does this by setting the
-   * {@link edu.wpi.first.wpilibj.GenericHID#setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType, double)
-   * GenericHID setRumble()} method to
-   * {@link edu.wpi.first.wpilibj.GenericHID.RumbleType#kBothRumble kBothRumble}.
-   * This makes all
-   * motors on a controller rumble.
-   * 
-   * @return A command that does what is described above for 0.3 seconds, then
-   *         returns rumble to 0.
+   *
+   * <p>Does this by setting the {@link
+   * edu.wpi.first.wpilibj.GenericHID#setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType, double)
+   * GenericHID setRumble()} method to {@link
+   * edu.wpi.first.wpilibj.GenericHID.RumbleType#kBothRumble kBothRumble}. This makes all motors on
+   * a controller rumble.
+   *
+   * @return A command that does what is described above for 0.3 seconds, then returns rumble to 0.
    */
   public Command rumbleController() {
-    return Commands
-        .sequence(
+    return Commands.sequence(
             Commands.runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 1)),
             Commands.waitSeconds(0.3),
             Commands.runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 0)))

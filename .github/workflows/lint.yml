@@ -5,5 +5,8 @@ on:
   pull_request:
     branches: [ main , competition-working ]
 jobs:
-    - name: lint
-      uses: super-linter/super-linter@v8.1.0
+    lint:
+      runs-on: ubuntu-latest
+      steps:
+      - name: lint
+        uses: super-linter/super-linter@v8.1.0

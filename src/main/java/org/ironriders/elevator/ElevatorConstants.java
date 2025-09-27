@@ -26,4 +26,7 @@ public class ElevatorConstants {
   public static final double SPROCKET_DIAMETER = 1.7567;
   public static final int NUMBER_OF_STAGES = 2;
   public static final double INCHES_PER_ROTATION = GEAR_RATIO * SPROCKET_DIAMETER * Math.PI * NUMBER_OF_STAGES;
+
+  private ElevatorConstants() {
+  }
 }

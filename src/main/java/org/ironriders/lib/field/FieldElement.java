@@ -1,14 +1,14 @@
 package org.ironriders.lib.field;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj.DriverStation;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * Representation of an element on the field.
@@ -52,12 +52,12 @@ public class FieldElement {
   public final Pose3d pose;
   public final String name;
 
-  private static int[] BLUE_TAGS = { 13, 12, 18, 19, 20, 21, 22, 17, 16, 14 };
+  private static final int[] BLUE_TAGS = {13, 12, 18, 19, 20, 21, 22, 17, 16, 14};
 
-  private static int[] RED_TAGS = { 1, 2, 7, 6, 11, 10, 9, 8, 3, 5 };
+  private static final int[] RED_TAGS = {1, 2, 7, 6, 11, 10, 9, 8, 3, 5};
 
-  private static List<FieldElement> BLUE_ELEMENTS = loadElements(DriverStation.Alliance.Blue, BLUE_TAGS);
-  private static List<FieldElement> RED_ELEMENTS = loadElements(DriverStation.Alliance.Red, RED_TAGS);
+  private static final List<FieldElement> BLUE_ELEMENTS = loadElements(DriverStation.Alliance.Blue, BLUE_TAGS);
+  private static final List<FieldElement> RED_ELEMENTS = loadElements(DriverStation.Alliance.Red, RED_TAGS);
 
   private FieldElement(Position element, Pose3d pose) {
     this.position = element;

@@ -1,18 +1,16 @@
 package org.ironriders.wrist;
 
-import org.ironriders.core.ElevatorWristCTL.WristRotation;
-import org.ironriders.lib.IronSubsystem;
-
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import org.ironriders.core.ElevatorWristCTL.WristRotation;
+import org.ironriders.lib.IronSubsystem;
 
 public class WristSubsystem extends IronSubsystem {
     final SparkMax primaryMotor = new SparkMax(WristConstants.PRIMARY_WRIST_MOTOR, MotorType.kBrushless);
@@ -20,7 +18,7 @@ public class WristSubsystem extends IronSubsystem {
     final TrapezoidProfile movementProfile = new TrapezoidProfile(
             new Constraints(WristConstants.MAX_VEL, WristConstants.MAX_ACC));
 
-    private PIDController pidControler;
+    private final PIDController pidControler;
 
     private TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State(); // Acts as a final
                                                                                 // setpoint
@@ -40,7 +38,7 @@ public class WristSubsystem extends IronSubsystem {
     private final SparkMaxConfig motorConfig = new SparkMaxConfig();
 
     public WristSubsystem() {
-        motorConfig.smartCurrentLimit(30) // Can go to 40
+        motorConfig.smartCurrentLimit(30)// Can go to 40
                 .idleMode(IdleMode.kBrake);
 
         primaryMotor.configure(motorConfig, ResetMode.kResetSafeParameters,

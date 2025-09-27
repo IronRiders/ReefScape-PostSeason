@@ -1,16 +1,14 @@
 package org.ironriders.core;
 
+import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import org.ironriders.elevator.ElevatorCommands;
 import org.ironriders.elevator.ElevatorSubsystem;
 import org.ironriders.lib.IronSubsystem;
 import org.ironriders.wrist.WristCommands;
 import org.ironriders.wrist.WristSubsystem;
-
-import com.pathplanner.lib.auto.NamedCommands;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 
 // This class contains all the state for the moving the elevator and wrist together. You should not
 // call the wrist or elevator commands independently

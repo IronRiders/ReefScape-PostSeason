@@ -1,13 +1,12 @@
 package org.ironriders.lib;
 
-import java.util.Optional;
-import java.util.function.Supplier;
-
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
 import org.ironriders.lib.field.FieldPose;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Current robot state required by multiple subsystems. TODO: this is practicly

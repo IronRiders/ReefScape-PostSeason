@@ -3,11 +3,10 @@ package org.ironriders.intake;
 import static org.ironriders.intake.IntakeConstants.DISCHARGE_TIMEOUT;
 import static org.ironriders.intake.IntakeConstants.INTAKE_JOG_TIME;
 
-import org.ironriders.intake.IntakeConstants.IntakeJogState;
-import org.ironriders.intake.IntakeConstants.IntakeState;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import org.ironriders.intake.IntakeConstants.IntakeJogState;
+import org.ironriders.intake.IntakeConstants.IntakeState;
 
 public class IntakeCommands {
 

@@ -7,26 +7,30 @@ import static org.ironriders.climb.ClimbConstants.MAX_ACC;
 import static org.ironriders.climb.ClimbConstants.MAX_VEL;
 import static org.ironriders.climb.ClimbConstants.P;
 
-import org.ironriders.climb.ClimbConstants.ClimbTargets;
-import org.ironriders.lib.IronSubsystem;
-
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import org.ironriders.climb.ClimbConstants.ClimbTargets;
+import org.ironriders.lib.IronSubsystem;
+
+/**
+ * The sumsystem in charge of the climber.
+ */
 
 public class ClimbSubsystem extends IronSubsystem {
 
-  private final SparkMax motor = new SparkMax(ClimbConstants.CLIMBER_MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax motor = new SparkMax(ClimbConstants.CLIMBER_MOTOR_ID,
+      SparkLowLevel.MotorType.kBrushless);
 
   private final SparkMaxConfig motorConfig = new SparkMaxConfig();
 
-  private final TrapezoidProfile profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(MAX_VEL, MAX_ACC));
+  private final TrapezoidProfile profile = new TrapezoidProfile(
+      new TrapezoidProfile.Constraints(MAX_VEL, MAX_ACC));
 
   private TrapezoidProfile.State stopped;
 
@@ -42,6 +46,10 @@ public class ClimbSubsystem extends IronSubsystem {
   private ClimbTargets currentTarget = ClimbTargets.MIN;
 
   private final ClimbCommands commands;
+
+  /**
+   * initalize.
+   */
 
   public ClimbSubsystem() {
     motorConfig.idleMode(IdleMode.kBrake);

@@ -79,4 +79,7 @@ public class IntakeConstants {
       this.increment = increment;
     }
   }
+
+  private IntakeConstants() {
+  }
 }

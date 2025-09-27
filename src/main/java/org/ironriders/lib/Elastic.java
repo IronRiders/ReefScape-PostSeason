@@ -428,4 +428,7 @@ public final class Elastic {
       return this;
     }
   }
+
+  private Elastic() {
+  }
 }

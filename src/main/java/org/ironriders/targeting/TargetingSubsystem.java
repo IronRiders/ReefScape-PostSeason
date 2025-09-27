@@ -1,6 +1,5 @@
 package org.ironriders.targeting;
 
-import java.util.Optional;
 import org.ironriders.lib.GameState;
 import org.ironriders.lib.IronSubsystem;
 import org.ironriders.lib.field.FieldElement;
@@ -8,6 +7,8 @@ import org.ironriders.lib.field.FieldElement.ElementType;
 import org.ironriders.lib.field.FieldPose;
 import org.ironriders.lib.field.FieldPose.Level;
 import org.ironriders.lib.field.FieldPose.Side;
+
+import java.util.Optional;
 
 /**
  * Handles targeting of field elements for autonomous movement.
@@ -23,7 +24,7 @@ public class TargetingSubsystem extends IronSubsystem {
 
   private Side targetPole = Side.Left;
   private Level targetLevel = Level.L1;
-  private TargetingCommands commands;
+  private final TargetingCommands commands;
 
   public TargetingSubsystem() {
     commands = new TargetingCommands(this);

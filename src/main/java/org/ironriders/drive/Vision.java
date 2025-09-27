@@ -9,11 +9,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
 import org.ironriders.lib.field.FieldUtils;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -22,6 +17,12 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import swervelib.SwerveDrive;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 /**
  * Vision is not a subsystem. This class is a utility class for the
@@ -34,10 +35,10 @@ public class Vision {
 
   private static final double AMBIGUITY_TOLERANCE = 0.4; // percentage
   private static final double DISTANCE_TOLERANCE = 2.5; // meters
-  private SwerveDrive swerveDrive = null;
-  private List<VisionCamera> cams = new ArrayList<>();
+  private final SwerveDrive swerveDrive;
+  private final List<VisionCamera> cams = new ArrayList<>();
 
-  public boolean hasPose = false;
+  public boolean hasPose;
 
   public Vision(SwerveDrive drive) {
     this.swerveDrive = drive;
@@ -56,9 +57,10 @@ public class Vision {
   public void addPoseEstimates() {
     for (VisionCamera v : cams) {
       Optional<EstimatedRobotPose> estimate = v.getEstimate();
-      if (estimate.isPresent())
+      if (estimate.isPresent()) {
         swerveDrive.addVisionMeasurement(estimate.get().estimatedPose.toPose2d(),
             v.latestResult.getTimestampSeconds(), v.deviations);
+      }
     }
   }
 
@@ -85,8 +87,9 @@ public class Vision {
    */
   public VisionCamera getCamera(String name) throws RuntimeException {
     for (VisionCamera v : cams) {
-      if (v.photonCamera.getName().equals(name))
+      if (v.photonCamera.getName().equals(name)) {
         return v;
+      }
     }
     throw new RuntimeException("Camera with name '" + name + "' not found");
   }
@@ -135,8 +138,9 @@ public class Vision {
       // find most recent result
       latestResult = results.get(0);
       for (PhotonPipelineResult r : results) {
-        if (r.getTimestampSeconds() > latestResult.getTimestampSeconds())
+        if (r.getTimestampSeconds() > latestResult.getTimestampSeconds()) {
           latestResult = r;
+        }
       }
 
       Optional<EstimatedRobotPose> optional = estimator.update(latestResult);
@@ -154,8 +158,9 @@ public class Vision {
      * @return An optional int, empty if there are no targets visible.
      */
     public OptionalInt getClosestVisible() {
-      if (!latestResult.hasTargets())
+      if (!latestResult.hasTargets()) {
         return OptionalInt.empty();
+      }
 
       Iterator<PhotonTrackedTarget> iterator = latestResult.getTargets().iterator();
       PhotonTrackedTarget closest = iterator.next();
@@ -181,12 +186,14 @@ public class Vision {
       double minAmbiguity = 1;
       // find best ambiguity between all targets
       for (PhotonTrackedTarget t : pose.targetsUsed) {
-        if (t.poseAmbiguity != -1 && t.poseAmbiguity < minAmbiguity)
+        if (t.poseAmbiguity != -1 && t.poseAmbiguity < minAmbiguity) {
           minAmbiguity = t.poseAmbiguity;
+        }
       }
       // trash past 30% ambiguity
-      if (minAmbiguity >= AMBIGUITY_TOLERANCE)
+      if (minAmbiguity >= AMBIGUITY_TOLERANCE) {
         return Optional.empty();
+      }
 
       double minDistance = DISTANCE_TOLERANCE;
       // find closest distance between all targets
@@ -194,12 +201,14 @@ public class Vision {
         double dist = Math.sqrt(
             Math.pow(t.bestCameraToTarget.getX(), 2) + Math.pow(t.bestCameraToTarget.getY(), 2));
 
-        if (dist < minDistance)
+        if (dist < minDistance) {
           minDistance = dist;
+        }
       }
       // trash past tolerance
-      if (minDistance >= DISTANCE_TOLERANCE)
+      if (minDistance >= DISTANCE_TOLERANCE) {
         return Optional.empty();
+      }
 
       // trash if estimate is too far from the believed current pose
       Transform2d differenceTransform = pose.estimatedPose.toPose2d().minus(swerveDrive.getPose());

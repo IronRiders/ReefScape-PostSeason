@@ -35,7 +35,7 @@ public class RobotUtils {
    * @return The normalized volatge value within the range (0.0, 1.0).
    */
   public static double percentOfMaxVoltage(double voltage, int maxVoltage) {
-    return (voltage / maxVoltage);
+    return voltage / maxVoltage;
   }
 
   public static double clamp(double min, double max, double in) {
@@ -46,5 +46,8 @@ public class RobotUtils {
       in = min;
     }
     return in;
+  }
+
+  private RobotUtils() {
   }
 }

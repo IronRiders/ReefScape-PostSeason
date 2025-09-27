@@ -8,7 +8,7 @@ public class ClimbConstants {
   public static final double MAX_ACC = 200;
   public static final double MAX_VEL = 200;
 
-  public static final double ENCODER_SCALE = (1f / 100f);
+  public static final double ENCODER_SCALE = 1f / 100f;
 
   public static double P = 0.05; // proportion
   public static double I = 0; // integral
@@ -26,5 +26,8 @@ public class ClimbConstants {
     ClimbTargets(double pos) {
       this.pos = pos;
     }
+  }
+
+  private ClimbConstants() {
   }
 }

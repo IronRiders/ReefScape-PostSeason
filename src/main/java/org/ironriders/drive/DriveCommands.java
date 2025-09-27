@@ -1,14 +1,7 @@
 package org.ironriders.drive;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
-import org.ironriders.lib.GameState;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
-
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,6 +10,11 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import org.ironriders.lib.GameState;
+
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 @Logged
 public class DriveCommands {
@@ -39,8 +37,9 @@ public class DriveCommands {
 
   public Command driveTeleop(DoubleSupplier inputTranslationX, DoubleSupplier inputTranslationY,
       DoubleSupplier inputRotation, boolean fieldRelative) {
-    if (DriverStation.isAutonomous())
+    if (DriverStation.isAutonomous()) {
       return Commands.none();
+    }
 
     double invert = DriverStation.getAlliance().isEmpty()
         || DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? 1 : -1;

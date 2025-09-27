@@ -18,8 +18,8 @@ public class FieldUtils {
   public static final AprilTagFieldLayout FIELD_LAYOUT = AprilTagFieldLayout
       .loadField(AprilTagFields.k2025ReefscapeAndyMark);
 
-  public static final int[] REEF_TAG_IDS_RED = { 17, 18, 19, 20, 21, 22 };
-  public static final int[] REEF_TAG_IDS_BLUE = { 6, 7, 8, 9, 10, 11 };
+  public static final int[] REEF_TAG_IDS_RED = {17, 18, 19, 20, 21, 22};
+  public static final int[] REEF_TAG_IDS_BLUE = {6, 7, 8, 9, 10, 11};
 
   public static final Transform2d REEFSIDE_LEFT_OFFSET = createOffset(-14, 0, 0);
   public static final Transform2d REEFSIDE_RIGHT_OFFSET = createOffset(-14, 13, 0);
@@ -28,8 +28,9 @@ public class FieldUtils {
   public static boolean isValidReefTag(int id) {
     for (int i : DriverStation.getAlliance().get() == Alliance.Blue ? REEF_TAG_IDS_RED
         : REEF_TAG_IDS_BLUE) {
-      if (i == id)
+      if (i == id) {
         return true;
+      }
     }
     return false;
   }
@@ -50,5 +51,8 @@ public class FieldUtils {
    */
   public static Pose2d getPose(int id) {
     return FIELD_LAYOUT.getTagPose(id).get().toPose2d();
+  }
+
+  private FieldUtils() {
   }
 }

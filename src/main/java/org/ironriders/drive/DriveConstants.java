@@ -1,11 +1,10 @@
 package org.ironriders.drive;
 
-import java.io.File;
-
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-
 import edu.wpi.first.wpilibj.Filesystem;
+
+import java.io.File;
 
 public class DriveConstants {
 
@@ -49,4 +48,7 @@ public class DriveConstants {
 
         public static final double JOG_DISTANCE_INCHES = 0.5;
         public static final double JOG_SPEED = .25;
+
+  private DriveConstants() {
+  }
 }

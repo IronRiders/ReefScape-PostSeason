@@ -1,6 +1,17 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2025.3.2"
+    id("org.openrewrite.rewrite") version("7.16.0")
+}
+
+rewrite {
+    exclusion("*.gradle")
+    activeRecipe("org.openrewrite.staticanalysis.CodeCleanup")
+    checkstyleConfigFile = file("checkfile.xml")
+}
+
+repositories {
+  mavenCentral() // rewrite is published to Maven Central
 }
 
 java {
@@ -72,6 +83,8 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    rewrite("org.openrewrite.recipe:rewrite-static-analysis:latest.release") 
 }
 
 test {

@@ -3,6 +3,7 @@
     "java.checkstyle.properties": {
     "basedir": "${workspaceFolder}"
     },
-    "java.checkstyle.version": "9.3",
-    "java.format.settings.url": "https://raw.githubusercontent.com/checkstyle/checkstyle/refs/heads/master/src/main/resources/google_checks.xml"
+    "java.checkstyle.version": "11.0.1",
+    "java.format.settings.profile":"${workspaceFolder}/checkfile.xml" ,
+    "java.checkstyle.configuration": "/google_checks.xml"
 }

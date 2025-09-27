@@ -1,23 +1,21 @@
 package org.ironriders.core;
 
-import java.util.function.DoubleSupplier;
-
-import org.ironriders.climb.ClimbCommands;
-import org.ironriders.climb.ClimbSubsystem;
-import org.ironriders.climb.ClimbConstants.ClimbTargets;
-import org.ironriders.core.ElevatorWristCTL.ElevatorWristState;
-import org.ironriders.drive.DriveCommands;
-import org.ironriders.intake.IntakeCommands;
-import org.ironriders.intake.IntakeSubsystem;
-import org.ironriders.intake.IntakeConstants.IntakeState;
-import org.ironriders.targeting.TargetingCommands;
-import org.ironriders.wrist.WristSubsystem;
-
 import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import org.ironriders.climb.ClimbCommands;
+import org.ironriders.climb.ClimbConstants.ClimbTargets;
+import org.ironriders.climb.ClimbSubsystem;
+import org.ironriders.core.ElevatorWristCTL.ElevatorWristState;
+import org.ironriders.drive.DriveCommands;
+import org.ironriders.intake.IntakeCommands;
+import org.ironriders.intake.IntakeConstants.IntakeState;
+import org.ironriders.intake.IntakeSubsystem;
+import org.ironriders.targeting.TargetingCommands;
+import org.ironriders.wrist.WristSubsystem;
+
+import java.util.function.DoubleSupplier;
 
 /**
  * These commands require more complex logic and are not directly tied to a

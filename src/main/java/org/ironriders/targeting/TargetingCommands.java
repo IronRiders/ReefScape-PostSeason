@@ -6,7 +6,7 @@ import org.ironriders.lib.field.FieldPose.Side;
 
 public class TargetingCommands {
 
-  private TargetingSubsystem targetingSubsystem;
+  private final TargetingSubsystem targetingSubsystem;
 
   public TargetingCommands(TargetingSubsystem targetingSubsystem) {
     this.targetingSubsystem = targetingSubsystem;

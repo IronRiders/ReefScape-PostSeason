@@ -6,9 +6,6 @@ import static org.ironriders.elevator.ElevatorConstants.FOLLOW_MOTOR_ID;
 import static org.ironriders.elevator.ElevatorConstants.INCHES_PER_ROTATION;
 import static org.ironriders.elevator.ElevatorConstants.PRIMARY_MOTOR_ID;
 
-import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
-import org.ironriders.lib.IronSubsystem;
-
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -19,10 +16,11 @@ import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
+import org.ironriders.lib.IronSubsystem;
 
 /**
  * This subsystem controls the big ol' elevator that moves the manipulator
@@ -49,8 +47,8 @@ public class ElevatorSubsystem extends IronSubsystem {
   private TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State();
   private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State();
 
-  private ElevatorLevel currentTarget = ElevatorLevel.DOWN;
-  private boolean isHomed = false;
+  private final ElevatorLevel currentTarget = ElevatorLevel.DOWN;
+  private boolean isHomed;
 
   public ElevatorSubsystem() {
     // lots of config!!
@@ -125,10 +123,11 @@ public class ElevatorSubsystem extends IronSubsystem {
     publish("PID", pidController);
     publish("Goal Position", goalSetpoint.position);
     publish("Real Pos", getHeight());
-    if (isHomed)
+    if (isHomed) {
       publish("At Goal?", isAtPosition());
-    else
+    } else {
       publish("At Goal?", "N/A; Not Homed!");
+    }
 
     publish("Forward Limit Switch", primaryMotor.getForwardLimitSwitch().isPressed());
     publish("Reverse Limit Switch", primaryMotor.getReverseLimitSwitch().isPressed());

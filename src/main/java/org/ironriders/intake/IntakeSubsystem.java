@@ -21,19 +21,17 @@ import static org.ironriders.intake.IntakeConstants.TARGET_SETPOINT;
 import static org.ironriders.intake.IntakeConstants.TOLERANCE;
 import static org.ironriders.intake.IntakeConstants.WHEEL_CIRCUMFERENCE;
 
-import org.ironriders.intake.IntakeConstants.IntakeState;
-import org.ironriders.lib.Elastic.Notification;
-import org.ironriders.lib.IronSubsystem;
-
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
+import org.ironriders.intake.IntakeConstants.IntakeState;
+import org.ironriders.lib.Elastic.Notification;
+import org.ironriders.lib.IronSubsystem;
 
 public class IntakeSubsystem extends IronSubsystem {
 
@@ -49,11 +47,11 @@ public class IntakeSubsystem extends IronSubsystem {
 
   // goalSetpoint is the final goal. periodicSetpoint is a sort-of inbetween
   // setpoint generated every periodic.
-  private TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State();
+  private final TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State();
   private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State();
 
-  private boolean shouldPIDControl = false;
-  private boolean PIDControlOveride = false;
+  private boolean shouldPIDControl;
+  private boolean PIDControlOveride;
   private double targetSpeed = 0;
   private double positionOffset = 0;
 
@@ -172,8 +170,9 @@ public class IntakeSubsystem extends IronSubsystem {
   }
 
   public double getOffsetRotation() {
-    if (positionOffset == 0)
+    if (positionOffset == 0) {
       notifyWarning(new Notification("Offset not set!", "Bad things will happen!"));
+    }
 
     double offsetRotation = getRotation() - positionOffset;
 

@@ -71,10 +71,10 @@ public class IntakeConstants {
     UP(0.5),
     DOWN(-0.5);
 
-    public final double speed;
+    public final double increment;
 
-    IntakeJogState(double speed) {
-      this.speed = speed;
+    IntakeJogState(double increment) {
+      this.increment = increment;
     }
   }
 }

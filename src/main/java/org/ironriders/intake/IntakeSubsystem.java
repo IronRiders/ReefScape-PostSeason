@@ -135,6 +135,14 @@ public class IntakeSubsystem extends IronSubsystem {
     rollerIntake.set(speed);
   }
 
+  public void setGoal(double goal) {
+    goalSetpoint.position = goal;
+  }
+
+  public double getGoal() {
+    return goalSetpoint.position;
+  }
+
   public boolean atGoal() {
     return pidController.atSetpoint();
   }

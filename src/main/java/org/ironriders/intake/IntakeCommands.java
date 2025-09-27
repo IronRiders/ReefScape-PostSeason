@@ -49,9 +49,9 @@ public class IntakeCommands {
     return intake.runOnce(() -> intake.set(IntakeState.STOP));
   }
 
-  public Command jog(IntakeJogState dir) {
-    return Commands.sequence(intake.runOnce(() -> intake.setMotors(dir.speed)), Commands.waitSeconds(INTAKE_JOG_TIME),
-        set(IntakeState.STOP));
+  public Command jog(IntakeJogState state) {
+    return Commands.sequence(intake.runOnce(() -> intake.setGoal(intake.getGoal() + state.increment)),
+        Commands.waitSeconds(INTAKE_JOG_TIME), set(IntakeState.STOP));
   }
 
   public IntakeSubsystem getIntake() {

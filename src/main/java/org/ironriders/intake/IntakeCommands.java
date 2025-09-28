@@ -15,6 +15,11 @@ public class IntakeCommands {
   @SuppressWarnings("unused")
   private Runnable onSuccess;
 
+  /**
+   * Initalizer.
+   *
+   * @param intake the intake subsystem
+   */
   public IntakeCommands(IntakeSubsystem intake) {
     this.intake = intake;
 
@@ -26,6 +31,12 @@ public class IntakeCommands {
     intake.publish("Intake Jog Down", jog(IntakeJogState.DOWN));
   }
 
+  /**
+   * Set the intake state.
+   *
+   * @param state state to set too
+   * @return Command to do that
+   */
   public Command set(IntakeConstants.IntakeState state) {
     Command command = intake.run(() -> intake.set(state));
 
@@ -44,9 +55,7 @@ public class IntakeCommands {
     return intake.runOnce(() -> intake.set(IntakeState.STOP));
   }
 
-  /*
-   * Command to "jog" the corral in the intake. Uses PID controll.
-   */
+  /** Command to "jog" the corral in the intake. Uses PID controll. */
   public Command jog(IntakeJogState state) {
     return Commands.sequence(
         intake.runOnce(() -> intake.setGoal(intake.getGoal() + state.increment)),

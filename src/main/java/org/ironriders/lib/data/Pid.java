@@ -11,7 +11,7 @@ public class Pid {
    * @param p the p
    */
   public Pid(double p) {
-    this.p = p;
+    this.proportional = p;
   }
 
   /**
@@ -21,8 +21,8 @@ public class Pid {
    * @param i the i
    */
   public Pid(double p, double i) {
-    this.p = p;
-    this.i = i;
+    this.proportional = p;
+    this.integral = i;
   }
 
   /**
@@ -33,12 +33,12 @@ public class Pid {
    * @param d the d
    */
   public Pid(double p, double i, double d) {
-    this.p = p;
-    this.i = i;
-    this.d = d;
+    this.proportional = p;
+    this.integral = i;
+    this.derivative = d;
   }
 
-  public double p;
-  public double i;
-  public double d;
+  public double proportional;
+  public double integral;
+  public double derivative;
 }

@@ -31,7 +31,7 @@ public class ClimbCommands {
   }
 
   /**
-   * Reset the relative enocder to zero.
+   * Reset the relative encoder to zero.
    *
    * @return Command to do that
    */

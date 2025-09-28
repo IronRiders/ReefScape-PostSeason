@@ -92,10 +92,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     return wristSubsystem;
   }
 
-  /*
-   * This command sets both a elevator position and a wrist position.
-   */
-
+  /** This command sets both a elevator position and a wrist position. */
   public Command setElevatorWrist(ElevatorWristState state) {
     logMessage("goes to " + state.toString());
     return Commands.sequence(

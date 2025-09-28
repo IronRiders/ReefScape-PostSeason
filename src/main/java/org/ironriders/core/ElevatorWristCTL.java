@@ -10,8 +10,9 @@ import org.ironriders.lib.IronSubsystem;
 import org.ironriders.wrist.WristCommands;
 import org.ironriders.wrist.WristSubsystem;
 
-// This class contains all the state for the moving the elevator and wrist together. You should not
-// call the wrist or elevator commands independently
+/* This class contains all the state for the moving the elevator and wrist together. You should not
+ * call the wrist or elevator commands independently
+ */
 public class ElevatorWristCTL extends IronSubsystem {
   private final WristSubsystem wristSubsystem = new WristSubsystem();
   private final WristCommands wristCommands = wristSubsystem.getCommands();
@@ -33,7 +34,10 @@ public class ElevatorWristCTL extends IronSubsystem {
     NamedCommands.registerCommand("Elevator Wrist Reset", (Command) reset());
   }
 
-  public enum ElevatorLevel { // Position in inches
+  /*
+   * Enum holding the elevator setpoints in inches.
+   */
+  public enum ElevatorLevel {
     DOWN(0),
     L2(19.5),
     L3(39),
@@ -46,8 +50,11 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
   }
 
-  public enum WristRotation { // Position in degrees
-    HOLD(0), // <- CAD values (need to be negitive)
+  /*
+   * Enum holding the wrist rotation setpoints in degrees. 0 is straight up.
+   */
+  public enum WristRotation {
+    HOLD(0),
     INTAKING(-85),
     L2L3(40),
     L4(0);
@@ -59,6 +66,9 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
   }
 
+  /*
+   * Enum that holds the combined states for both the wrist and elevator positions for various levels.
+   */
   public enum ElevatorWristState {
     HOLD(ElevatorLevel.DOWN, WristRotation.HOLD),
     CLIMBING(ElevatorLevel.DOWN, WristRotation.L2L3),
@@ -67,12 +77,12 @@ public class ElevatorWristCTL extends IronSubsystem {
     L3(ElevatorLevel.L3, WristRotation.L2L3),
     L4(ElevatorLevel.L4, WristRotation.L4);
 
-    public final ElevatorLevel eLevel;
-    public final WristRotation wRot;
+    public final ElevatorLevel elevatorLevel;
+    public final WristRotation wristRot;
 
-    ElevatorWristState(ElevatorLevel eLevel, WristRotation wRot) {
-      this.eLevel = eLevel;
-      this.wRot = wRot;
+    ElevatorWristState(ElevatorLevel elevatorLevel, WristRotation wristRot) {
+      this.elevatorLevel = elevatorLevel;
+      this.wristRot = wristRot;
     }
   }
 
@@ -92,13 +102,13 @@ public class ElevatorWristCTL extends IronSubsystem {
     return wristSubsystem;
   }
 
-  /** This command sets both a elevator position and a wrist position. */
+  /* This command sets both a elevator position and a wrist position. */
   public Command setElevatorWrist(ElevatorWristState state) {
     logMessage("goes to " + state.toString());
     return Commands.sequence(
         wristCommands.set(WristRotation.HOLD),
-        elevatorCommands.set(state.eLevel),
-        wristCommands.set(state.wRot));
+        elevatorCommands.set(state.elevatorLevel),
+        wristCommands.set(state.wristRot));
   }
 
   /*
@@ -108,7 +118,6 @@ public class ElevatorWristCTL extends IronSubsystem {
    * resetting it's
    * PID.
    */
-
   public Command reset() {
     return Commands.sequence(
         logMessage("reseting"), wristCommands.stowReset(), elevatorCommands.home());

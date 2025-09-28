@@ -33,6 +33,7 @@ public class FieldUtils {
     return false;
   }
 
+  /** transform a pose by a transform. */
   public static Pose2d applyOffset(Pose2d pose, Transform2d offset) {
     return pose.transformBy(offset);
   }

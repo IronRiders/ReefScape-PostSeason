@@ -4,7 +4,7 @@ public class MotorSetup {
 
   public MotorSetup(int motorId, boolean InversionStatus) {
     this.motorId = motorId;
-    this.InversionStatus = InversionStatus;
+    this.inversionStatus = InversionStatus;
   }
 
   public int getId() {
@@ -12,9 +12,9 @@ public class MotorSetup {
   }
 
   public boolean getInversionStatus() {
-    return InversionStatus;
+    return inversionStatus;
   }
 
   public int motorId;
-  public boolean InversionStatus;
+  public boolean inversionStatus;
 }

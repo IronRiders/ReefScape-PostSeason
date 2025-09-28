@@ -5,6 +5,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.wpilibj.Filesystem;
 import java.io.File;
 
+/** Class to store all the drive constants. */
 public class DriveConstants {
 
   public static final double ROBOT_WIDTH = 37; // Front-back

@@ -38,6 +38,11 @@ public class Vision {
 
   public boolean hasPose;
 
+  /**
+   * Initalizer.
+   *
+   * @param drive drive subbsystem
+   */
   public Vision(SwerveDrive drive) {
     this.swerveDrive = drive;
     cams.add(
@@ -56,6 +61,7 @@ public class Vision {
             VecBuilder.fill(0.5, 0.5, 1.0)));
   }
 
+  /** Add pose estimates from all camera to the drive system. */
   public void addPoseEstimates() {
     for (VisionCamera v : cams) {
       Optional<EstimatedRobotPose> estimate = v.getEstimate();
@@ -98,6 +104,7 @@ public class Vision {
     throw new RuntimeException("Camera with name '" + name + "' not found");
   }
 
+  /** Get latest data from all cameras. */
   public void updateAll() {
     for (VisionCamera v : cams) {
       v.update();

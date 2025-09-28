@@ -1,5 +1,6 @@
 package org.ironriders.climb;
 
+/** Class for storing all the climb constants. */
 public class ClimbConstants {
 
   public static final int CLIMBER_MOTOR_ID = 17;

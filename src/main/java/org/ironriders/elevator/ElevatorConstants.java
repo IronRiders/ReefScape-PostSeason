@@ -1,5 +1,6 @@
 package org.ironriders.elevator;
 
+/** Where all the elevators constants are stored. */
 public class ElevatorConstants {
 
   public static final int PRIMARY_MOTOR_ID = 11;

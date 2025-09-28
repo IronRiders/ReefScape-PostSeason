@@ -51,6 +51,11 @@ public class IntakeCommands {
     }
   }
 
+  /**
+   * Stop the intake.
+   *
+   * @return Command to do that
+   */
   public Command reset() {
     return intake.runOnce(() -> intake.set(IntakeState.STOP));
   }

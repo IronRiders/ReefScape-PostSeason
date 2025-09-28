@@ -3,6 +3,7 @@ package org.ironriders.intake;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+/** Class to store all the intakes constants. */
 public class IntakeConstants {
 
   public static final int INTAKE_MOTOR_RIGHT = 14;
@@ -42,7 +43,7 @@ public class IntakeConstants {
   public static final double TARGET_SETPOINT = WHEEL_CIRCUMFERENCE / 2f; // In inches, about half a
   // rotation seems good
 
-  // TODO Tune These
+  // TODO: Tune These
   public static final int INTAKE_STATOR_CURRENT = 30; // Stator Current Torque and Acceleration
   public static final int INTAKE_SUPPLY_CURRENT = 40; // Supply Current Speed + (a little Torque).
   // If Supply
@@ -75,8 +76,9 @@ public class IntakeConstants {
     }
   }
 
-  /*
-   * Enum that defines the states for joging the coral in the intake. These are in inches, controlled by PID.
+  /**
+   * Enum that defines the states for joging the coral in the intake. These are in inches,
+   * controlled by PID.
    */
   public enum IntakeJogState {
     UP(0.5),

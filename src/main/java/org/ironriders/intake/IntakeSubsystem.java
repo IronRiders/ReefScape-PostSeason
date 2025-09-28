@@ -59,6 +59,7 @@ public class IntakeSubsystem extends IronSubsystem {
 
   private final DigitalInput beamBreak = new DigitalInput(INTAKE_BEAMBREAK);
 
+  /** Initalizer. */
   public IntakeSubsystem() {
     TalonFXConfiguration mainConfig = new TalonFXConfiguration();
     mainConfig
@@ -219,6 +220,11 @@ public class IntakeSubsystem extends IronSubsystem {
     // hard to intake
   }
 
+  /**
+   * Is there a coral piece triggering the sensor?. (You have to have a period)
+   *
+   * @return well is there?
+   */
   public boolean beamBreakTriggered() {
     return !beamBreak.get();
   }

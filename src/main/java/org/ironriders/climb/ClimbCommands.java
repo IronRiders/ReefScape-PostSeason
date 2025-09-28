@@ -30,6 +30,11 @@ public class ClimbCommands {
     return climb.runOnce(() -> climb.setGoal(target));
   }
 
+  /**
+   * Reset the relative enocder to zero.
+   *
+   * @return Command to do that
+   */
   public Command home() {
     return climb.runOnce(() -> climb.home());
   }

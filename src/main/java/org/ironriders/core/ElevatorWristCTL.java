@@ -24,6 +24,7 @@ public class ElevatorWristCTL extends IronSubsystem {
   private final String diagnosticName = this.getClass().getSimpleName();
   private final String dashboardPrefix = "Subsystems/" + diagnosticName + "/";
 
+  /** Initalizer. */
   public ElevatorWristCTL() {
     publish("Set to STOW", setElevatorWrist(ElevatorWristState.HOLD));
     publish("Set to INTAKING", setElevatorWrist(ElevatorWristState.INTAKING));

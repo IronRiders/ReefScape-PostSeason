@@ -35,7 +35,6 @@ public class RobotCommands {
    *
    * @param driveCommands DriveCommands instance
    * @param targetingCommands TargetingCommands instance
-   * @param elevatorCommands ElevatorCommands instance
    * @param climbCommands ClimbCommands instance
    * @param controller GenericHID controller (joystick/gamepad) instance
    */
@@ -91,6 +90,11 @@ public class RobotCommands {
     return driveCommands.driveTeleop(inputTranslationX, inputTranslationY, inputRotation, true);
   }
 
+  /**
+   * move the climber to the starting position.
+   *
+   * @return Command to do that
+   */
   public Command climberReset() {
     return climbCommands.set(ClimbTargets.MIN);
   }
@@ -101,6 +105,12 @@ public class RobotCommands {
         climbCommands.set(ClimbTargets.CLIMBED));
   }
 
+  /**
+   * Move the elevator and wrist to prepare to score at a location.
+   *
+   * @param level The level to get ready for
+   * @return Command to do that
+   */
   public Command prepareScoreLevel(ElevatorWristState level) {
     return elevatorWristCommands.setElevatorWrist(level);
   }

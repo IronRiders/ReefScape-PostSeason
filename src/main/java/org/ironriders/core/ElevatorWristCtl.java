@@ -14,7 +14,7 @@ import org.ironriders.wrist.WristSubsystem;
  * This class contains all the state for the moving the elevator and wrist together. You should not
  * call the wrist or elevator commands independently
  */
-public class ElevatorWristCTL extends IronSubsystem {
+public class ElevatorWristCtl extends IronSubsystem {
   private final WristSubsystem wristSubsystem = new WristSubsystem();
   private final WristCommands wristCommands = wristSubsystem.getCommands();
 
@@ -25,7 +25,7 @@ public class ElevatorWristCTL extends IronSubsystem {
   private final String dashboardPrefix = "Subsystems/" + diagnosticName + "/";
 
   /** Initalizer. */
-  public ElevatorWristCTL() {
+  public ElevatorWristCtl() {
     publish("Set to STOW", setElevatorWrist(ElevatorWristState.HOLD));
     publish("Set to INTAKING", setElevatorWrist(ElevatorWristState.INTAKING));
     publish("Set to L2", setElevatorWrist(ElevatorWristState.L2));

@@ -157,6 +157,12 @@ public class DriveCommands {
         });
   }
 
+  /**
+   * Sets a multiplier for the swerve speed.
+   *
+   * @param speed the multiplier
+   * @return Command to do that
+   */
   public Command setDriveTrainSpeed(double speed) {
     return driveSubsystem.runOnce(
         () -> {

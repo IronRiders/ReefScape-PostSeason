@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.ironriders.climb.ClimbCommands;
 import org.ironriders.climb.ClimbConstants;
 import org.ironriders.climb.ClimbSubsystem;
-import org.ironriders.core.ElevatorWristCTL.ElevatorWristState;
+import org.ironriders.core.ElevatorWristCtl.ElevatorWristState;
 import org.ironriders.drive.DriveCommands;
 import org.ironriders.drive.DriveConstants;
 import org.ironriders.drive.DriveSubsystem;
@@ -52,7 +52,7 @@ public class RobotContainer {
   public final TargetingSubsystem targetingSubsystem = new TargetingSubsystem();
   public final TargetingCommands targetingCommands = targetingSubsystem.getCommands();
 
-  public final ElevatorWristCTL elevatorWristCommands = new ElevatorWristCTL();
+  public final ElevatorWristCtl elevatorWristCommands = new ElevatorWristCtl();
 
   public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   public final IntakeCommands intakeCommands = intakeSubsystem.getCommands();

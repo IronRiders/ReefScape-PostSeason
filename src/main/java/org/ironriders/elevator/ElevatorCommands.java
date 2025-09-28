@@ -2,7 +2,7 @@ package org.ironriders.elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
+import org.ironriders.core.ElevatorWristCtl.ElevatorLevel;
 
 public class ElevatorCommands {
 

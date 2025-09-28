@@ -9,7 +9,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import org.ironriders.core.ElevatorWristCTL.WristRotation;
+import org.ironriders.core.ElevatorWristCtl.WristRotation;
 import org.ironriders.lib.IronSubsystem;
 
 /**

@@ -38,6 +38,11 @@ public class DriveSubsystem extends IronSubsystem {
   public Command pathfindCommand;
   public double controlSpeedMultipler = 1;
 
+  /**
+   * Initalizer.
+   *
+   * @throws RuntimeException Some form of initalization error
+   */
   public DriveSubsystem() throws RuntimeException {
     try {
       swerveDrive =

@@ -2,7 +2,7 @@ package org.ironriders.wrist;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import org.ironriders.core.ElevatorWristCTL.WristRotation;
+import org.ironriders.core.ElevatorWristCtl.WristRotation;
 
 public class WristCommands {
 

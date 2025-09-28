@@ -128,6 +128,7 @@ public class ElevatorSubsystem extends IronSubsystem {
     UpdateDashboard();
   }
 
+  /** Put all the elevators values to smart dashboard. */
   private void UpdateDashboard() {
     publish("Homed", isHomed);
     publish("Goal State", currentTarget.toString());
@@ -158,6 +159,7 @@ public class ElevatorSubsystem extends IronSubsystem {
     pidController.reset();
   }
 
+  /** set the goal to zero. */
   public void zeroGoal() {
     logMessage("set zero goal");
     goalSetpoint = new TrapezoidProfile.State(0, 0d);

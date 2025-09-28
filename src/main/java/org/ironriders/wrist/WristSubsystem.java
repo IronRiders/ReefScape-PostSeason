@@ -93,10 +93,9 @@ public class WristSubsystem extends IronSubsystem {
     return pidController.atSetpoint();
   }
 
-  /*
-   * This function is run on startup. It resets the PID controllers integral and error,
-   * then sets the target setpoints to be the current position.
-   * It then forcibly stops the intake motors.
+  /**
+   * This function is run on startup. It resets the PID controllers integral and error, then sets
+   * the target setpoints to be the current position. It then forcibly stops the intake motors.
    */
   public void reset() {
     logMessage("resetting");

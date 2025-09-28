@@ -26,14 +26,11 @@ public class WristSubsystem extends IronSubsystem {
 
   private final PIDController pidControler;
 
-  private TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State(); // Acts as a final
-  // setpoint
-  private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State(); // Acts as a
-  // temporary
-  // setpoint for
-  // calculating
-  // the next
-  // speed value
+  private TrapezoidProfile.State goalSetpoint =
+      new TrapezoidProfile.State(); // Acts as a finalsetpoint
+  private TrapezoidProfile.State periodicSetpoint =
+      new TrapezoidProfile
+          .State(); // Acts as atemporary setpoint for calculating the next speed value
 
   public WristRotation targetRotation = WristRotation.HOLD;
 
@@ -43,6 +40,7 @@ public class WristSubsystem extends IronSubsystem {
 
   private final SparkMaxConfig motorConfig = new SparkMaxConfig();
 
+  /** Initalizer. */
   public WristSubsystem() {
     motorConfig
         .smartCurrentLimit(30) // Can go to 40
@@ -71,6 +69,7 @@ public class WristSubsystem extends IronSubsystem {
     updateDashboard();
   }
 
+  /** Put all the wrists values to smart dashboard. */
   public void updateDashboard() {
     publish("Current target", targetRotation.toString());
     publish("Current goal pos", goalSetpoint.position);

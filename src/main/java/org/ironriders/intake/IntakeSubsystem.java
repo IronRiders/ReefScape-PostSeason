@@ -33,6 +33,7 @@ import org.ironriders.intake.IntakeConstants.IntakeState;
 import org.ironriders.lib.Elastic.Notification;
 import org.ironriders.lib.IronSubsystem;
 
+/** The subsystem in charge of the intake. */
 public class IntakeSubsystem extends IronSubsystem {
 
   private final IntakeCommands commands;
@@ -46,13 +47,13 @@ public class IntakeSubsystem extends IronSubsystem {
   private final PIDController pidController =
       new PIDController(IntakeConstants.P, IntakeConstants.I, IntakeConstants.D);
 
-  // goalSetpoint is the final goal. periodicSetpoint is a sort-of between
+  // goalSetpoint is the final goal. periodicSetpoint is a sort-of inbetween
   // setpoint generated every periodic.
   private final TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State();
   private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State();
 
-  private boolean shouldPIDControl;
-  private boolean PIDControlOverride;
+  private boolean shouldPidControl;
+  private boolean PidControlOveride;
   private double targetSpeed = 0;
   private double positionOffset = 0;
 
@@ -94,22 +95,22 @@ public class IntakeSubsystem extends IronSubsystem {
 
   @Override
   public void periodic() {
-    if (beamBreakTriggered() && !shouldPIDControl) { // leading edge
-      shouldPIDControl = true;
+    if (beamBreakTriggered() && !shouldPidControl) { // leading edge
+      shouldPidControl = true;
       positionOffset = getRotation();
       goalSetpoint.position = TARGET_SETPOINT;
       logMessage("starting pid control");
     }
 
-    if (atGoal() && shouldPIDControl) { // trailing edge
-      shouldPIDControl = false;
+    if (atGoal() && shouldPidControl) { // trailing edge
+      shouldPidControl = false;
       targetSpeed = 0;
       logMessage("stoping pid control, at setpoint");
     }
 
     periodicSetpoint = profile.calculate(IntakeConstants.T, periodicSetpoint, goalSetpoint);
 
-    if (shouldPIDControl && !PIDControlOverride) {
+    if (shouldPidControl && !PidControlOveride) {
       double pidOutput = pidController.calculate(getOffsetRotation(), periodicSetpoint.position);
 
       setMotorsNoDiff(pidOutput);
@@ -120,14 +121,21 @@ public class IntakeSubsystem extends IronSubsystem {
     updateDashboard();
   }
 
+  /**
+   * Set all three of the intake motors. Accounts for the gearing differances
+   *
+   * @param speed the speed
+   */
   public void setMotors(double speed) {
     leftIntake.set(speed * outputDifferential(speed, LEFT_SPEED_MUL));
     rightIntake.set(speed * outputDifferential(speed, RIGHT_SPEED_MUL));
     rollerIntake.set(speed * outputDifferential(speed, ROLLER_SPEED_MUL));
   }
 
-  /*
-   * Sets the motor speeds without using @see outputDifferential
+  /**
+   * Set all three of the intake motors. Dosen't accounts for the gearing differances
+   *
+   * @param speed the speed
    */
   public void setMotorsNoDiff(double speed) {
     leftIntake.set(speed);
@@ -143,54 +151,53 @@ public class IntakeSubsystem extends IronSubsystem {
     return goalSetpoint.position;
   }
 
-  /*
-   * Are we at the PID controllers goal? Uses @see TOLERANCE
+  /**
+   * Has the intake moved to where it should be?.
+   *
+   * @return well has it?
    */
   public boolean atGoal() {
     return pidController.atSetpoint();
   }
 
-  /*
-   * Updates Smart Dashboard / Elastic with debugging and control values.
-   */
+  /** Push all of the intake values to elastic. */
   public void updateDashboard() {
     publish("Left Velocity", leftIntake.getVelocity().getValue().in(Units.DegreesPerSecond));
     publish("Right Velocity", rightIntake.getVelocity().getValue().in(Units.DegreesPerSecond));
     publish("Beam Break Triggered", beamBreakTriggered());
     publish("Target Speed", targetSpeed);
-    publish("Under PID Control?", shouldPIDControl);
+    publish("Under PID Control?", shouldPidControl);
     publish("Intake PID", pidController);
   }
 
+  /**
+   * Set the the state the intake is in.
+   *
+   * @param state the state
+   */
   public void set(IntakeState state) {
     publish("Intake State", state.toString());
     // logMessage("goes to " + state.toString());]
     switch (state) {
       case GRAB:
-        PIDControlOverride = false;
+        PidControlOveride = false;
         break;
 
       default:
-        PIDControlOverride = true;
+        PidControlOveride = true;
         break;
     }
 
     targetSpeed = state.speed;
   }
 
-  /*
-   * Applies a differential to the intakes target speed values when grabbing, so we can handle the case of a sideways corral. Otherwise just returns one.
-   */
-  public double outputDifferential(Double speed, double controlSpeedMultiplier) {
+  public double outputDifferential(Double speed, double controlSpeedMultipler) {
     if (speed != IntakeState.GRAB.speed) {
-      return controlSpeedMultiplier;
+      return controlSpeedMultipler;
     }
     return 1;
   }
 
-  /*
-   * Get the rotation of the wheels offset by their rotation on the leading edge of shouldPIDControl. This is basically to home the PID so we can move the coral accurately.
-   */
   public double getOffsetRotation() {
     if (positionOffset == 0) {
       notifyWarning(new Notification("Offset not set!", "Bad things will happen!"));
@@ -201,6 +208,11 @@ public class IntakeSubsystem extends IronSubsystem {
     return offsetRotation;
   }
 
+  /**
+   * Would say if the coral peice has hit the bumper by sensing the current but is disabled.
+   *
+   * @return see above
+   */
   public boolean hasHighCurrent() {
     return false;
     // return average > 12 && !beamBreak.get(); disabled because beam break made it
@@ -211,9 +223,7 @@ public class IntakeSubsystem extends IronSubsystem {
     return !beamBreak.get();
   }
 
-  /*
-   * Returns in INCHES!
-   */
+  /** Returns in INCHES. */
   public double getRotation() {
     return ((leftIntake.getPosition().getValueAsDouble()
                 + rightIntake.getPosition().getValueAsDouble())

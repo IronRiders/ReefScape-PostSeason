@@ -22,6 +22,7 @@ public abstract class IronSubsystem extends SubsystemBase {
 
   private final long startupTime;
 
+  /** initalizer. */
   public IronSubsystem() {
     startupTime = System.nanoTime();
   }
@@ -96,10 +97,22 @@ public abstract class IronSubsystem extends SubsystemBase {
     putNotifcation(notif);
   }
 
+  /**
+   * Send a notification with a title and text.
+   *
+   * @param title titile
+   * @param text text
+   */
   public void putTitleTextNotifcation(String title, String text) {
     Elastic.sendNotification(new Notification().withTitle(title).withDescription(text));
   }
 
+  /**
+   * display a message in elastic.
+   *
+   * @param msg the message
+   * @return a command to do that
+   */
   public Command logMessage(String msg) {
     putTitleTextNotifcation(getThreadTime() + messagePrefix, msg);
     return Commands.runOnce(() -> System.out.println(getThreadTime() + messagePrefix + msg));
@@ -109,18 +122,42 @@ public abstract class IronSubsystem extends SubsystemBase {
     return SmartDashboard.getNumber(name, defaultValue);
   }
 
+  /**
+   * Publish a value to elastic.
+   *
+   * @param name Name
+   * @param value Value
+   */
   public void publish(String name, boolean value) {
     SmartDashboard.putBoolean(dashboardPrefix + name, value);
   }
 
+  /**
+   * Publish a value to elastic.
+   *
+   * @param name Name
+   * @param value Value
+   */
   public void publish(String name, double value) {
     SmartDashboard.putNumber(dashboardPrefix + name, value);
   }
 
+  /**
+   * Publish a value to elastic.
+   *
+   * @param name Name
+   * @param value Value
+   */
   public void publish(String name, String value) {
     SmartDashboard.putString(dashboardPrefix + name, value);
   }
 
+  /**
+   * Publish a value to elastic.
+   *
+   * @param name Name
+   * @param value Value
+   */
   public void publish(String name, Sendable value) {
     SmartDashboard.putData(dashboardPrefix + name, value);
     if (value instanceof Command) {
@@ -128,6 +165,11 @@ public abstract class IronSubsystem extends SubsystemBase {
     }
   }
 
+  /**
+   * Report an error to elastic.
+   *
+   * @param message The error to report
+   */
   public void reportError(String message) {
     DriverStation.reportError(getThreadTime() + messagePrefix + message, false);
     Elastic.sendNotification(
@@ -137,6 +179,11 @@ public abstract class IronSubsystem extends SubsystemBase {
             .withDescription(message));
   }
 
+  /**
+   * Report a warning to elastic.
+   *
+   * @param message The warning to report
+   */
   public void reportWarning(String message) {
     DriverStation.reportWarning(getThreadTime() + messagePrefix + message, false);
     Elastic.sendNotification(

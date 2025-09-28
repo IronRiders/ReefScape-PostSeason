@@ -60,6 +60,12 @@ public class DriveCommands {
         () -> fieldRelative);
   }
 
+  /**
+   * Move the robot a small amount in a given direction.
+   *
+   * @param robotRelativeAngleDegrees the direction
+   * @return the command to do that
+   */
   public Command jog(double robotRelativeAngleDegrees) {
     // Note - PathFinder does not do well with small moves so we move manually
 
@@ -87,6 +93,12 @@ public class DriveCommands {
         });
   }
 
+  /**
+   * Make the robot drive to a given pose.
+   *
+   * @param targetPose Where to go
+   * @return The command to go there
+   */
   public Command pathfindToPose(Pose2d targetPose) {
     return driveSubsystem.defer(
         () -> {
@@ -102,6 +114,11 @@ public class DriveCommands {
         });
   }
 
+  /**
+   * Invert the driver controls. Hopefully should NEVER be used but is
+   *
+   * @return Command to do that
+   */
   public Command invertControls() {
     return driveSubsystem.runOnce(
         () -> {
@@ -109,6 +126,11 @@ public class DriveCommands {
         });
   }
 
+  /**
+   * Path find to the target from the targeting system. Mostly unused
+   *
+   * @return Command to do that
+   */
   public Command pathfindToTarget() {
     return driveSubsystem.defer(
         () -> {
@@ -121,6 +143,11 @@ public class DriveCommands {
         });
   }
 
+  /**
+   * Abort any autonomous movements running.
+   *
+   * @return Command to do that
+   */
   public Command cancelPathfind() {
     return driveSubsystem.runOnce(
         () -> {

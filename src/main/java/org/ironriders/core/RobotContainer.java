@@ -310,22 +310,22 @@ public class RobotContainer {
             .onFalse(driveCommands.setDriveTrainSpeed(1));
 
         secondaryController
-            .button(5) // TODO put actual button #
+            .button(5) // TODO: put actual button #
             .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.L2));
         secondaryController
-            .button(6) // TODO put actual button #
+            .button(6) // TODO: put actual button #
             .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.L2));
         secondaryController
-            .button(7) // TODO put actual button #
+            .button(7) // TODO: put actual button #
             .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.L3));
         secondaryController
-            .button(8) // TODO put actual button #
+            .button(8) // TODO: put actual button #
             .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.L4));
         secondaryController
-            .button(9) // TODO put actual button #
+            .button(9) // TODO: put actual button #
             .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING));
         secondaryController
-            .button(10) // TODO put actual button #
+            .button(10) // TODO: put actual button #
             .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD));
         break;
       default:
@@ -333,17 +333,19 @@ public class RobotContainer {
     }
 
     secondaryController
-        .button(14) // TODO decide on buttons for these commands
+        .button(14) // TODO: decide on buttons for these commands
         .whileTrue(climbCommands.set(ClimbConstants.ClimbTargets.CLIMBED));
     secondaryController
-        .button(15) // TODO decide on buttons for these commands
+        .button(15) // TODO: decide on buttons for these commands
         .whileTrue(climbCommands.set(ClimbConstants.ClimbTargets.MIN));
     secondaryController
-        .button(16) // TODO decide on buttons for these commands
+        .button(16) // TODO: decide on buttons for these commands
         .whileTrue(climbCommands.set(ClimbConstants.ClimbTargets.MAX));
   }
 
   /**
+   * Get the autonomous command set in elastic.
+   *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {

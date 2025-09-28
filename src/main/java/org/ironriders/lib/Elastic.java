@@ -13,6 +13,7 @@ import edu.wpi.first.networktables.PubSubOption;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StringTopic;
 
+/** Utils to interact with elastic. */
 public final class Elastic {
   private static final StringTopic notificationTopic =
       NetworkTableInstance.getDefault().getStringTopic("/Elastic/RobotNotifications");
@@ -29,11 +30,11 @@ public final class Elastic {
    * used to indicate the severity or type of notification.
    */
   public enum NotificationLevel {
-    /** Informational Message */
+    /** Informational Message. */
     INFO,
-    /** Warning message */
+    /** Warning message. */
     WARNING,
-    /** Error message */
+    /** Error message. */
     ERROR
   }
 
@@ -184,7 +185,7 @@ public final class Elastic {
     }
 
     /**
-     * Updates the level of this notification
+     * Updates the level of this notification.
      *
      * @param level the level to set the notification to
      */
@@ -193,14 +194,16 @@ public final class Elastic {
     }
 
     /**
-     * @return the level of this notification
+     * Get this notifications level.
+     *
+     * @return the level of this notification.
      */
     public NotificationLevel getLevel() {
       return level;
     }
 
     /**
-     * Updates the title of this notification
+     * Updates the title of this notification.
      *
      * @param title the title to set the notification to
      */
@@ -209,7 +212,7 @@ public final class Elastic {
     }
 
     /**
-     * Gets the title of this notification
+     * Gets the title of this notification.
      *
      * @return the title of this notification
      */
@@ -218,7 +221,7 @@ public final class Elastic {
     }
 
     /**
-     * Updates the description of this notification
+     * Updates the description of this notification.
      *
      * @param description the description to set the notification to
      */
@@ -231,7 +234,7 @@ public final class Elastic {
     }
 
     /**
-     * Updates the display time of the notification
+     * Updates the display time of the notification.
      *
      * @param seconds the number of seconds to display the notification for
      */
@@ -240,7 +243,7 @@ public final class Elastic {
     }
 
     /**
-     * Updates the display time of the notification in milliseconds
+     * Updates the display time of the notification in milliseconds.
      *
      * @param displayTimeMillis the number of milliseconds to display the notification for
      */
@@ -249,7 +252,7 @@ public final class Elastic {
     }
 
     /**
-     * Gets the display time of the notification in milliseconds
+     * Gets the display time of the notification in milliseconds.
      *
      * @return the number of milliseconds the notification is displayed for
      */
@@ -258,7 +261,7 @@ public final class Elastic {
     }
 
     /**
-     * Updates the width of the notification
+     * Updates the width of the notification.
      *
      * @param width the width to set the notification to
      */
@@ -267,7 +270,7 @@ public final class Elastic {
     }
 
     /**
-     * Gets the width of the notification
+     * Gets the width of the notification.
      *
      * @return the width of the notification
      */
@@ -276,7 +279,7 @@ public final class Elastic {
     }
 
     /**
-     * Updates the height of the notification
+     * Updates the height of the notification.
      *
      * <p>If the height is set to -1, the height will be determined automatically by the dashboard
      *
@@ -287,7 +290,7 @@ public final class Elastic {
     }
 
     /**
-     * Gets the height of the notification
+     * Gets the height of the notification.
      *
      * @return the height of the notification
      */
@@ -296,7 +299,7 @@ public final class Elastic {
     }
 
     /**
-     * Modifies the notification's level and returns itself to allow for method chaining
+     * Modifies the notification's level and returns itself to allow for method chaining.
      *
      * @param level the level to set the notification to
      * @return the current notification
@@ -307,7 +310,7 @@ public final class Elastic {
     }
 
     /**
-     * Modifies the notification's title and returns itself to allow for method chaining
+     * Modifies the notification's title and returns itself to allow for method chaining.
      *
      * @param title the title to set the notification to
      * @return the current notification
@@ -318,7 +321,7 @@ public final class Elastic {
     }
 
     /**
-     * Modifies the notification's description and returns itself to allow for method chaining
+     * Modifies the notification's description and returns itself to allow for method chaining.
      *
      * @param description the description to set the notification to
      * @return the current notification
@@ -329,7 +332,7 @@ public final class Elastic {
     }
 
     /**
-     * Modifies the notification's display time and returns itself to allow for method chaining
+     * Modifies the notification's display time and returns itself to allow for method chaining.
      *
      * @param seconds the number of seconds to display the notification for
      * @return the current notification
@@ -339,7 +342,7 @@ public final class Elastic {
     }
 
     /**
-     * Modifies the notification's display time and returns itself to allow for method chaining
+     * Modifies the notification's display time and returns itself to allow for method chaining.
      *
      * @param displayTimeMillis the number of milliseconds to display the notification for
      * @return the current notification
@@ -350,7 +353,7 @@ public final class Elastic {
     }
 
     /**
-     * Modifies the notification's width and returns itself to allow for method chaining
+     * Modifies the notification's width and returns itself to allow for method chaining.
      *
      * @param width the width to set the notification to
      * @return the current notification
@@ -361,7 +364,7 @@ public final class Elastic {
     }
 
     /**
-     * Modifies the notification's height and returns itself to allow for method chaining
+     * Modifies the notification's height and returns itself to allow for method chaining.
      *
      * @param height the height to set the notification to
      * @return the current notification
@@ -372,7 +375,7 @@ public final class Elastic {
     }
 
     /**
-     * Modifies the notification's height and returns itself to allow for method chaining
+     * Modifies the notification's height and returns itself to allow for method chaining.
      *
      * <p>This will set the height to -1 to have it automatically determined by the dashboard
      *
@@ -384,7 +387,7 @@ public final class Elastic {
     }
 
     /**
-     * Modifies the notification to disable the auto dismiss behavior
+     * Modifies the notification to disable the auto dismiss behavior.
      *
      * <p>This sets the display time to 0 milliseconds
      *

@@ -26,15 +26,13 @@ public class RobotUtils {
   }
 
   /**
-   * Normalizes Added Voltage from Feed Forward to a number between (0.0, 1.0).
+   * if in > max: in = max; if in < min: in = min.
    *
-   * @param input The additional voltage.
-   * @return The normalized volatge value within the range (0.0, 1.0).
+   * @param min min
+   * @param max max
+   * @param in value
+   * @return output
    */
-  public static double percentOfMaxVoltage(double voltage, int maxVoltage) {
-    return voltage / maxVoltage;
-  }
-
   public static double clamp(double min, double max, double in) {
     if (in > max) {
       in = max;

@@ -10,7 +10,8 @@ import org.ironriders.lib.IronSubsystem;
 import org.ironriders.wrist.WristCommands;
 import org.ironriders.wrist.WristSubsystem;
 
-/* This class contains all the state for the moving the elevator and wrist together. You should not
+/**
+ * This class contains all the state for the moving the elevator and wrist together. You should not
  * call the wrist or elevator commands independently
  */
 public class ElevatorWristCTL extends IronSubsystem {
@@ -34,9 +35,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     NamedCommands.registerCommand("Elevator Wrist Reset", (Command) reset());
   }
 
-  /*
-   * Enum holding the elevator setpoints in inches.
-   */
+  /** Enum holding the elevator setpoints in inches. */
   public enum ElevatorLevel {
     DOWN(0),
     L2(19.5),
@@ -50,9 +49,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
   }
 
-  /*
-   * Enum holding the wrist rotation setpoints in degrees. 0 is straight up.
-   */
+  /** Enum holding the wrist rotation setpoints in degrees. 0 is straight up. */
   public enum WristRotation {
     HOLD(0),
     INTAKING(-85),
@@ -66,9 +63,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
   }
 
-  /*
-   * Enum that holds the combined states for both the wrist and elevator positions for various levels.
-   */
+  /** Enum that holds the combined states for both the wrist and elevator positions. */
   public enum ElevatorWristState {
     HOLD(ElevatorLevel.DOWN, WristRotation.HOLD),
     CLIMBING(ElevatorLevel.DOWN, WristRotation.L2L3),
@@ -102,7 +97,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     return wristSubsystem;
   }
 
-  /* This command sets both a elevator position and a wrist position. */
+  /** This command sets both a elevator position and a wrist position. */
   public Command setElevatorWrist(ElevatorWristState state) {
     logMessage("goes to " + state.toString());
     return Commands.sequence(
@@ -111,11 +106,9 @@ public class ElevatorWristCTL extends IronSubsystem {
         wristCommands.set(state.wristRot));
   }
 
-  /*
-   * This command, in parallel, moves the wrist all the way in and does a PID
-   * reset, as well as
-   * moving the elevator all the way down, rehoming it for good measure, and then
-   * resetting it's
+  /**
+   * This command, in parallel, moves the wrist all the way in and does a PID reset, as well as
+   * moving the elevator all the way down, rehoming it for good measure, and then resetting it's
    * PID.
    */
   public Command reset() {

@@ -12,9 +12,9 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import org.ironriders.core.ElevatorWristCTL.WristRotation;
 import org.ironriders.lib.IronSubsystem;
 
-/*
- * Subsystem for controlling the wrist, mounted on the elevator,
- * which in turn has the intake mounted on it.
+/**
+ * Subsystem for controlling the wrist, mounted on the elevator, which in turn has the intake
+ * mounted on it.
  */
 public class WristSubsystem extends IronSubsystem {
   final SparkMax primaryMotor =

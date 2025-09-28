@@ -75,6 +75,9 @@ public class IntakeConstants {
     }
   }
 
+  /*
+   * Enum that defines the states for joging the coral in the intake. These are in inches, controlled by PID.
+   */
   public enum IntakeJogState {
     UP(0.5),
     DOWN(-0.5);

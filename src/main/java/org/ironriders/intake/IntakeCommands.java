@@ -44,6 +44,9 @@ public class IntakeCommands {
     return intake.runOnce(() -> intake.set(IntakeState.STOP));
   }
 
+  /*
+   * Command to "jog" the corral in the intake. Uses PID controll.
+   */
   public Command jog(IntakeJogState state) {
     return Commands.sequence(
         intake.runOnce(() -> intake.setGoal(intake.getGoal() + state.increment)),

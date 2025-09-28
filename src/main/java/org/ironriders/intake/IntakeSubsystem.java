@@ -46,13 +46,13 @@ public class IntakeSubsystem extends IronSubsystem {
   private final PIDController pidController =
       new PIDController(IntakeConstants.P, IntakeConstants.I, IntakeConstants.D);
 
-  // goalSetpoint is the final goal. periodicSetpoint is a sort-of inbetween
+  // goalSetpoint is the final goal. periodicSetpoint is a sort-of between
   // setpoint generated every periodic.
   private final TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State();
   private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State();
 
   private boolean shouldPIDControl;
-  private boolean PIDControlOveride;
+  private boolean PIDControlOverride;
   private double targetSpeed = 0;
   private double positionOffset = 0;
 
@@ -109,7 +109,7 @@ public class IntakeSubsystem extends IronSubsystem {
 
     periodicSetpoint = profile.calculate(IntakeConstants.T, periodicSetpoint, goalSetpoint);
 
-    if (shouldPIDControl && !PIDControlOveride) {
+    if (shouldPIDControl && !PIDControlOverride) {
       double pidOutput = pidController.calculate(getOffsetRotation(), periodicSetpoint.position);
 
       setMotorsNoDiff(pidOutput);
@@ -126,6 +126,9 @@ public class IntakeSubsystem extends IronSubsystem {
     rollerIntake.set(speed * outputDifferential(speed, ROLLER_SPEED_MUL));
   }
 
+  /*
+   * Sets the motor speeds without using @see outputDifferential
+   */
   public void setMotorsNoDiff(double speed) {
     leftIntake.set(speed);
     rightIntake.set(speed);
@@ -140,10 +143,16 @@ public class IntakeSubsystem extends IronSubsystem {
     return goalSetpoint.position;
   }
 
+  /*
+   * Are we at the PID controllers goal? Uses @see TOLERANCE
+   */
   public boolean atGoal() {
     return pidController.atSetpoint();
   }
 
+  /*
+   * Updates Smart Dashboard / Elastic with debugging and control values.
+   */
   public void updateDashboard() {
     publish("Left Velocity", leftIntake.getVelocity().getValue().in(Units.DegreesPerSecond));
     publish("Right Velocity", rightIntake.getVelocity().getValue().in(Units.DegreesPerSecond));
@@ -158,24 +167,30 @@ public class IntakeSubsystem extends IronSubsystem {
     // logMessage("goes to " + state.toString());]
     switch (state) {
       case GRAB:
-        PIDControlOveride = false;
+        PIDControlOverride = false;
         break;
 
       default:
-        PIDControlOveride = true;
+        PIDControlOverride = true;
         break;
     }
 
     targetSpeed = state.speed;
   }
 
-  public double outputDifferential(Double speed, double controlSpeedMultipler) {
+  /*
+   * Applies a differential to the intakes target speed values when grabbing, so we can handle the case of a sideways corral. Otherwise just returns one.
+   */
+  public double outputDifferential(Double speed, double controlSpeedMultiplier) {
     if (speed != IntakeState.GRAB.speed) {
-      return controlSpeedMultipler;
+      return controlSpeedMultiplier;
     }
     return 1;
   }
 
+  /*
+   * Get the rotation of the wheels offset by their rotation on the leading edge of shouldPIDControl. This is basically to home the PID so we can move the coral accurately.
+   */
   public double getOffsetRotation() {
     if (positionOffset == 0) {
       notifyWarning(new Notification("Offset not set!", "Bad things will happen!"));

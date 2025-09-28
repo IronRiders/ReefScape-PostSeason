@@ -6,6 +6,11 @@ public class ClimbCommands {
 
   public final ClimbSubsystem climb;
 
+  /**
+   * Initalizer.
+   *
+   * @param climb the climb subsystem
+   */
   public ClimbCommands(ClimbSubsystem climb) {
     this.climb = climb;
 
@@ -15,6 +20,12 @@ public class ClimbCommands {
     climb.publish("Rehome", home());
   }
 
+  /**
+   * Set where the climber should go.
+   *
+   * @param target where
+   * @return Command to do it
+   */
   public Command set(ClimbConstants.ClimbTargets target) {
     return climb.runOnce(() -> climb.setGoal(target));
   }

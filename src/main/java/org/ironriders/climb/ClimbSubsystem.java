@@ -96,6 +96,7 @@ public class ClimbSubsystem extends IronSubsystem {
     logMessage("resetting");
   }
 
+  /** Sets the climbers relative encoder to zero. doesn't actually move it */
   public void home() {
     if (currentTarget != ClimbTargets.MIN) { // The climber is not all the way down, resetting it's
       // encoder would cause

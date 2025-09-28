@@ -1,16 +1,37 @@
 package org.ironriders.lib.data;
 
+/**
+ * Generic class to store PID values. I'm honestly not sure it ever gets used, but i'm just
+ * documenting
+ */
 public class PID {
-
+  /**
+   * Make one with just p.
+   *
+   * @param p the p
+   */
   public PID(double p) {
     this.p = p;
   }
 
+  /**
+   * With the p and the i.
+   *
+   * @param p the p
+   * @param i the i
+   */
   public PID(double p, double i) {
     this.p = p;
     this.i = i;
   }
 
+  /**
+   * Give it everything.
+   *
+   * @param p the p
+   * @param i the i
+   * @param d the d
+   */
   public PID(double p, double i, double d) {
     this.p = p;
     this.i = i;

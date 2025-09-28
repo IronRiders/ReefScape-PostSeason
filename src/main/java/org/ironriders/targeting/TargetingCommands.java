@@ -42,10 +42,20 @@ public class TargetingCommands {
         .ignoringDisable(true);
   }
 
+  /**
+   * Target the nearest element.
+   *
+   * @return Command to do that
+   */
   public Command targetNearest() {
     return targetingSubsystem.runOnce(targetingSubsystem::targetNearest).ignoringDisable(true);
   }
 
+  /**
+   * Target the nearest element of given type.
+   *
+   * @return Command to do that
+   */
   public Command targetNearest(ElementType type) {
     return targetingSubsystem
         .runOnce(() -> targetingSubsystem.targetNearest(type))

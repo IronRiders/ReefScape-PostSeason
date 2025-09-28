@@ -86,6 +86,7 @@ public class ClimbSubsystem extends IronSubsystem {
     publish("Motor raw angle", motor.getEncoder().getPosition());
   }
 
+  /** Reset all the things. */
   public void reset() {
     pid.reset();
     stopped = new TrapezoidProfile.State(getCurrentAngle(), 0);

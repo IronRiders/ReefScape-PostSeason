@@ -139,6 +139,7 @@ public class DriveSubsystem extends IronSubsystem {
     swerveDrive.resetOdometry(new Pose2d(pose2d.getTranslation(), new Rotation2d(0)));
   }
 
+  /** Invert the controls. */
   public void switchInvertControl() {
     if (invertStatus) {
       invertStatus = false;
@@ -147,6 +148,11 @@ public class DriveSubsystem extends IronSubsystem {
     }
   }
 
+  /**
+   * Get the inversion multiplier.
+   *
+   * @return -1 or 1
+   */
   public int getinversionStatus() {
     if (invertStatus) {
       return -1;

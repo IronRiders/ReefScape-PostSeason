@@ -73,11 +73,13 @@ public class TargetingSubsystem extends IronSubsystem {
     targetElementType = Optional.of(type);
   }
 
+  /** set the target element. */
   public void setTargetElement(FieldElement element) {
     targetElement = Optional.of(element);
     setTargetNearest(false);
   }
 
+  /** set the target element. */
   public void setTargetElement(Optional<FieldElement> element) {
     if (element.isEmpty()) {
       setTargetNearest(true);
@@ -90,6 +92,11 @@ public class TargetingSubsystem extends IronSubsystem {
     targetNearestElement = value;
   }
 
+  /**
+   * Get the pose of the target element.
+   *
+   * @return the pose
+   */
   public Optional<FieldPose> getTargetPose() {
     if (targetElement.isEmpty()) {
       return Optional.empty();

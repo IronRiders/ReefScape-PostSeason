@@ -15,6 +15,12 @@ public class FieldPose {
     /** Target slot (0-8). Slot 0 is closest to driver. */
     public final int slot;
 
+    /**
+     * A coral station where coral is dropped by the human player.
+     *
+     * @param element an element
+     * @param slot which one?
+     */
     public Station(FieldElement element, int slot) {
       super(element);
       this.slot = slot;
@@ -75,6 +81,11 @@ public class FieldPose {
     L4,
   }
 
+  /**
+   * Set the targeted element.
+   *
+   * @param element the element
+   */
   public FieldPose(FieldElement element) {
     this.element = element;
   }

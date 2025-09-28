@@ -53,7 +53,7 @@ public class IntakeSubsystem extends IronSubsystem {
   private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State();
 
   private boolean shouldPidControl;
-  private boolean PidControlOveride;
+  private boolean pidControlOverride;
   private double targetSpeed = 0;
   private double positionOffset = 0;
 
@@ -111,7 +111,7 @@ public class IntakeSubsystem extends IronSubsystem {
 
     periodicSetpoint = profile.calculate(IntakeConstants.T, periodicSetpoint, goalSetpoint);
 
-    if (shouldPidControl && !PidControlOveride) {
+    if (shouldPidControl && !pidControlOverride) {
       double pidOutput = pidController.calculate(getOffsetRotation(), periodicSetpoint.position);
 
       setMotorsNoDiff(pidOutput);
@@ -123,7 +123,7 @@ public class IntakeSubsystem extends IronSubsystem {
   }
 
   /**
-   * Set all three of the intake motors. Accounts for the gearing differances
+   * Set all three of the intake motors. Accounts for the gearing differences.
    *
    * @param speed the speed
    */
@@ -181,17 +181,21 @@ public class IntakeSubsystem extends IronSubsystem {
     // logMessage("goes to " + state.toString());]
     switch (state) {
       case GRAB:
-        PidControlOveride = false;
+        pidControlOverride = false;
         break;
 
       default:
-        PidControlOveride = true;
+        pidControlOverride = true;
         break;
     }
 
     targetSpeed = state.speed;
   }
 
+  /*
+   * Applies a differential to the speed values of the intake motors while grabbing.
+   * Otherwise, has no effect
+   */
   public double outputDifferential(Double speed, double controlSpeedMultipler) {
     if (speed != IntakeState.GRAB.speed) {
       return controlSpeedMultipler;
@@ -199,6 +203,11 @@ public class IntakeSubsystem extends IronSubsystem {
     return 1;
   }
 
+  /*
+   * Gets the position of the motors minus the position they where in on the
+   * leading edge of @see shouldPidControl. this effectively gets the position "homed"
+   * for the PID controller.
+   */
   public double getOffsetRotation() {
     if (positionOffset == 0) {
       notifyWarning(new Notification("Offset not set!", "Bad things will happen!"));
@@ -210,7 +219,7 @@ public class IntakeSubsystem extends IronSubsystem {
   }
 
   /**
-   * Would say if the coral peice has hit the bumper by sensing the current but is disabled.
+   * Would say if the coral piece has hit the bumper by sensing the current but is disabled.
    *
    * @return see above
    */

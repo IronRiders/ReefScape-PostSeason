@@ -99,6 +99,10 @@ public class RobotCommands {
     return climbCommands.set(ClimbTargets.MIN);
   }
 
+  /*
+   * Move the climber to the climbed position. Hopefully lifts the robot off the ground.
+   * @return Command to do that
+   */
   public Command climb() {
     return Commands.parallel(
         elevatorWristCommands.setElevatorWrist(ElevatorWristState.CLIMBING),

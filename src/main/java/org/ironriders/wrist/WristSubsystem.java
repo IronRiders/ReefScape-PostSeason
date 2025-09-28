@@ -24,7 +24,7 @@ public class WristSubsystem extends IronSubsystem {
   final TrapezoidProfile movementProfile =
       new TrapezoidProfile(new Constraints(WristConstants.MAX_VEL, WristConstants.MAX_ACC));
 
-  private final PIDController pidControler;
+  private final PIDController pidController;
 
   private TrapezoidProfile.State goalSetpoint =
       new TrapezoidProfile.State(); // Acts as a finalsetpoint
@@ -52,8 +52,8 @@ public class WristSubsystem extends IronSubsystem {
     secondaryMotor.configure(
         motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    pidControler = new PIDController(WristConstants.P, WristConstants.I, WristConstants.D);
-    pidControler.setTolerance(WristConstants.TOLERANCE);
+    pidController = new PIDController(WristConstants.P, WristConstants.I, WristConstants.D);
+    pidController.setTolerance(WristConstants.TOLERANCE);
     reset();
   }
 
@@ -62,7 +62,7 @@ public class WristSubsystem extends IronSubsystem {
     // Apply profile and PID to determine output level
     periodicSetpoint = movementProfile.calculate(WristConstants.T, periodicSetpoint, goalSetpoint);
 
-    double speed = pidControler.calculate(getCurrentAngle(), periodicSetpoint.position);
+    double speed = pidController.calculate(getCurrentAngle(), periodicSetpoint.position);
     setMotors(speed);
 
     publish("Current PID ouput", speed);
@@ -76,7 +76,7 @@ public class WristSubsystem extends IronSubsystem {
     publish("Current angle", getCurrentAngle());
     publish("Current angle raw", primaryMotor.getAbsoluteEncoder().getPosition());
     publish("At goal?", isAtPosition());
-    publish("Wrist PID", pidControler);
+    publish("Wrist PID", pidController);
   }
 
   public double getCurrentAngle() {
@@ -90,13 +90,18 @@ public class WristSubsystem extends IronSubsystem {
   }
 
   public boolean isAtPosition() {
-    return pidControler.atSetpoint();
+    return pidController.atSetpoint();
   }
 
+  /*
+   * This function is run on startup. It resets the PID controllers integral and error,
+   * then sets the target setpoints to be the current position.
+   * It then forcibly stops the intake motors.
+   */
   public void reset() {
     logMessage("resetting");
 
-    pidControler.reset();
+    pidController.reset();
 
     stopped = new TrapezoidProfile.State(getCurrentAngle(), 0);
 
@@ -111,6 +116,9 @@ public class WristSubsystem extends IronSubsystem {
     secondaryMotor.set(-speed);
   }
 
+  /*
+   * This function sets the goal setpoint to @param rotation.
+   */
   protected void setGoal(WristRotation rotation) {
     goalSetpoint = new TrapezoidProfile.State(rotation.pos, 0);
     targetRotation = rotation;

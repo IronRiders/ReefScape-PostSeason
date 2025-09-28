@@ -110,6 +110,9 @@ public class ClimbSubsystem extends IronSubsystem {
     reset();
   }
 
+  /*
+   * This function sets the PID controllers goal to be @param target.
+   */
   protected void setGoal(ClimbConstants.ClimbTargets target) {
     goalSetpoint = new TrapezoidProfile.State(target.pos, 0);
     currentTarget = target;

@@ -37,14 +37,14 @@ public class FieldUtils {
     return pose.transformBy(offset);
   }
 
-  /** Creates basic offset Pose2d from x, y, and rotation */
+  /** Creates basic offset Pose2d from x, y, and rotation. */
   public static Transform2d createOffset(double x, double y, double r) {
     return new Transform2d(
         new Translation2d(Units.inchesToMeters(x), Units.inchesToMeters(y)), new Rotation2d(r));
   }
 
   /**
-   * Gets the pose of a tag on the field (0, 0 is the right-close corner from perspective of blue)
+   * Gets the pose of a tag on the field (0, 0 is the right-close corner from perspective of blue).
    */
   public static Pose2d getPose(int id) {
     return FIELD_LAYOUT.getTagPose(id).get().toPose2d();

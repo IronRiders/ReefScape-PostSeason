@@ -23,6 +23,7 @@ public class TargetingSubsystem extends IronSubsystem {
   private Level targetLevel = Level.L1;
   private final TargetingCommands commands;
 
+  /** Initalizer. */
   public TargetingSubsystem() {
     commands = new TargetingCommands(this);
     GameState.setTargetRobotPose(this::getTargetPose);
@@ -56,11 +57,17 @@ public class TargetingSubsystem extends IronSubsystem {
     return targetLevel;
   }
 
+  /** Taget the nearest thing. */
   public void targetNearest() {
     targetNearestElement = true;
     targetElementType = Optional.empty();
   }
 
+  /**
+   * Go to the nearest thing of a given type.
+   *
+   * @param type the type of thing
+   */
   public void targetNearest(ElementType type) {
     targetNearestElement = true;
     targetElementType = Optional.of(type);

@@ -53,7 +53,7 @@ public class IntakeSubsystem extends IronSubsystem {
   private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State();
 
   private boolean shouldPidControl;
-  private boolean PidControlOveride;
+  private boolean pidControlOveride;
   private double targetSpeed = 0;
   private double positionOffset = 0;
 
@@ -111,7 +111,7 @@ public class IntakeSubsystem extends IronSubsystem {
 
     periodicSetpoint = profile.calculate(IntakeConstants.T, periodicSetpoint, goalSetpoint);
 
-    if (shouldPidControl && !PidControlOveride) {
+    if (shouldPidControl && !pidControlOveride) {
       double pidOutput = pidController.calculate(getOffsetRotation(), periodicSetpoint.position);
 
       setMotorsNoDiff(pidOutput);
@@ -181,11 +181,11 @@ public class IntakeSubsystem extends IronSubsystem {
     // logMessage("goes to " + state.toString());]
     switch (state) {
       case GRAB:
-        PidControlOveride = false;
+        pidControlOveride = false;
         break;
 
       default:
-        PidControlOveride = true;
+        pidControlOveride = true;
         break;
     }
 

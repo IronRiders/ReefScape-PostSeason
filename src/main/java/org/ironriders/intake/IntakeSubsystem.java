@@ -134,7 +134,7 @@ public class IntakeSubsystem extends IronSubsystem {
   }
 
   /**
-   * Set all three of the intake motors. doesn't accounts for the gearing differences
+   * Set all three of the intake motors. doesn't account for the gearing differences
    *
    * @param speed the speed
    */

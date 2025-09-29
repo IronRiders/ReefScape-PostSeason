@@ -33,7 +33,7 @@ import org.ironriders.intake.IntakeConstants.IntakeState;
 import org.ironriders.lib.Elastic.Notification;
 import org.ironriders.lib.IronSubsystem;
 
-/** The subsystem in charge of the intake. */
+/* The subsystem in charge of the intake. */
 public class IntakeSubsystem extends IronSubsystem {
 
   private final IntakeCommands commands;
@@ -47,7 +47,7 @@ public class IntakeSubsystem extends IronSubsystem {
   private final PIDController pidController =
       new PIDController(IntakeConstants.P, IntakeConstants.I, IntakeConstants.D);
 
-  // goalSetpoint is the final goal. periodicSetpoint is a sort-of inbetween
+  // goalSetpoint is the final goal. periodicSetpoint is a sort-of between
   // setpoint generated every periodic.
   private final TrapezoidProfile.State goalSetpoint = new TrapezoidProfile.State();
   private TrapezoidProfile.State periodicSetpoint = new TrapezoidProfile.State();
@@ -59,7 +59,7 @@ public class IntakeSubsystem extends IronSubsystem {
 
   private final DigitalInput beamBreak = new DigitalInput(INTAKE_BEAMBREAK);
 
-  /** Initalizer. */
+  /* Initalizer. */
   public IntakeSubsystem() {
     TalonFXConfiguration mainConfig = new TalonFXConfiguration();
     mainConfig
@@ -106,7 +106,7 @@ public class IntakeSubsystem extends IronSubsystem {
     if (atGoal() && shouldPidControl) { // trailing edge
       shouldPidControl = false;
       targetSpeed = 0;
-      logMessage("stoping pid control, at setpoint");
+      logMessage("stopping pid control, at setpoint");
     }
 
     periodicSetpoint = profile.calculate(IntakeConstants.T, periodicSetpoint, goalSetpoint);
@@ -134,7 +134,7 @@ public class IntakeSubsystem extends IronSubsystem {
   }
 
   /**
-   * Set all three of the intake motors. Dosen't accounts for the gearing differances
+   * Set all three of the intake motors. doesn't accounts for the gearing differences
    *
    * @param speed the speed
    */

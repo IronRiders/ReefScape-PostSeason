@@ -192,9 +192,9 @@ public class IntakeSubsystem extends IronSubsystem {
     targetSpeed = state.speed;
   }
 
-  /*
-   * Applies a differential to the speed values of the intake motors while grabbing.
-   * Otherwise, has no effect
+  /**
+   * Applies a differential to the speed values of the intake motors while grabbing. Otherwise, has
+   * no effect
    */
   public double outputDifferential(Double speed, double controlSpeedMultipler) {
     if (speed != IntakeState.GRAB.speed) {
@@ -203,10 +203,9 @@ public class IntakeSubsystem extends IronSubsystem {
     return 1;
   }
 
-  /*
-   * Gets the position of the motors minus the position they where in on the
-   * leading edge of @see shouldPidControl. this effectively gets the position "homed"
-   * for the PID controller.
+  /**
+   * Gets the position of the motors minus the position they where in on the leading edge of @see
+   * shouldPidControl. this effectively gets the position "homed" for the PID controller.
    */
   public double getOffsetRotation() {
     if (positionOffset == 0) {

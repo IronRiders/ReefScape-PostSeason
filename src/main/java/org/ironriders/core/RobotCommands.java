@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import java.util.function.DoubleSupplier;
 import org.ironriders.climb.ClimbCommands;
 import org.ironriders.climb.ClimbConstants.ClimbTargets;
-import org.ironriders.core.ElevatorWristCTL.ElevatorWristState;
+import org.ironriders.core.ElevatorWristCtl.ElevatorWristState;
 import org.ironriders.drive.DriveCommands;
 import org.ironriders.intake.IntakeCommands;
 import org.ironriders.intake.IntakeConstants.IntakeState;
@@ -26,7 +26,7 @@ public class RobotCommands {
   private final TargetingCommands targetingCommands;
   private final IntakeCommands intakeCommands;
   private final ClimbCommands climbCommands;
-  private final ElevatorWristCTL elevatorWristCommands;
+  private final ElevatorWristCtl elevatorWristCommands;
 
   private final GenericHID controller;
 
@@ -42,7 +42,7 @@ public class RobotCommands {
       DriveCommands driveCommands,
       TargetingCommands targetingCommands,
       IntakeCommands intakeCommands,
-      ElevatorWristCTL elevatorWristCommands,
+      ElevatorWristCtl elevatorWristCommands,
       ClimbCommands climbCommands,
       GenericHID controller) {
     this.driveCommands = driveCommands;
@@ -99,8 +99,9 @@ public class RobotCommands {
     return climbCommands.set(ClimbTargets.MIN);
   }
 
-  /*
+  /**
    * Move the climber to the climbed position. Hopefully lifts the robot off the ground.
+   *
    * @return Command to do that
    */
   public Command climb() {
@@ -142,7 +143,7 @@ public class RobotCommands {
    * Command to make the robot intake. Runs two commands in parallel:
    *
    * <ul>
-   *   <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState) elevator wrist
+   *   <li>Sets the {@link ElevatorWristCtl#setElevatorWrist(ElevatorWristState) elevator wrist
    *       state} to {@link ElevatorWristState#INTAKING "INTAKING"}.
    *   <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to {@link IntakeState#GRAB
    *       "GRAB"}.
@@ -173,7 +174,7 @@ public class RobotCommands {
    * Command to stop the intake and stow the elevator wrist. Does the following in parallel:
    *
    * <ul>
-   *   <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState) elevator wrist
+   *   <li>Sets the {@link ElevatorWristCtl#setElevatorWrist(ElevatorWristState) elevator wrist
    *       state} to {@link ElevatorWristState#HOLD "stow"}.
    *   <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to {@link IntakeState#STOP
    *       "stop"}.

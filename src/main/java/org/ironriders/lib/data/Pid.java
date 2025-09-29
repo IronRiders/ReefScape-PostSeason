@@ -4,14 +4,14 @@ package org.ironriders.lib.data;
  * Generic class to store PID values. I'm honestly not sure it ever gets used, but i'm just
  * documenting
  */
-public class PID {
+public class Pid {
   /**
    * Make one with just p.
    *
    * @param p the p
    */
-  public PID(double p) {
-    this.p = p;
+  public Pid(double p) {
+    this.proportional = p;
   }
 
   /**
@@ -20,9 +20,9 @@ public class PID {
    * @param p the p
    * @param i the i
    */
-  public PID(double p, double i) {
-    this.p = p;
-    this.i = i;
+  public Pid(double p, double i) {
+    this.proportional = p;
+    this.integral = i;
   }
 
   /**
@@ -32,13 +32,13 @@ public class PID {
    * @param i the i
    * @param d the d
    */
-  public PID(double p, double i, double d) {
-    this.p = p;
-    this.i = i;
-    this.d = d;
+  public Pid(double p, double i, double d) {
+    this.proportional = p;
+    this.integral = i;
+    this.derivative = d;
   }
 
-  public double p;
-  public double i;
-  public double d;
+  public double proportional;
+  public double integral;
+  public double derivative;
 }

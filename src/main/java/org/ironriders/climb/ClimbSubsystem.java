@@ -86,6 +86,7 @@ public class ClimbSubsystem extends IronSubsystem {
     publish("Motor raw angle", motor.getEncoder().getPosition());
   }
 
+  /** Reset all the things. */
   public void reset() {
     pid.reset();
     stopped = new TrapezoidProfile.State(getCurrentAngle(), 0);
@@ -110,8 +111,10 @@ public class ClimbSubsystem extends IronSubsystem {
     reset();
   }
 
-  /*
-   * This function sets the PID controllers goal to be @param target.
+  /**
+   * This function sets the PID controllers goal to be.
+   *
+   * @param target The goal
    */
   protected void setGoal(ClimbConstants.ClimbTargets target) {
     goalSetpoint = new TrapezoidProfile.State(target.pos, 0);

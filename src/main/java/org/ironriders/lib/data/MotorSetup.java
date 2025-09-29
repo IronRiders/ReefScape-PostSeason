@@ -1,10 +1,15 @@
 package org.ironriders.lib.data;
 
 public class MotorSetup {
-
-  public MotorSetup(int motorId, boolean InversionStatus) {
+  /**
+   * Initalizer.
+   *
+   * @param motorId the can id of the motor
+   * @param inversionStatus should it be inverted?
+   */
+  public MotorSetup(int motorId, boolean inversionStatus) {
     this.motorId = motorId;
-    this.InversionStatus = InversionStatus;
+    this.inversionStatus = inversionStatus;
   }
 
   public int getId() {
@@ -12,9 +17,9 @@ public class MotorSetup {
   }
 
   public boolean getInversionStatus() {
-    return InversionStatus;
+    return inversionStatus;
   }
 
   public int motorId;
-  public boolean InversionStatus;
+  public boolean inversionStatus;
 }

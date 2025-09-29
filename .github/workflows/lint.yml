@@ -1,4 +1,4 @@
-name: reviewdog
+name: Linter
 on: [pull_request]
 jobs:
   checkstyle:

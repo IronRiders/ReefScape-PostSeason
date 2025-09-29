@@ -9,12 +9,12 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import org.ironriders.core.ElevatorWristCTL.WristRotation;
+import org.ironriders.core.ElevatorWristCtl.WristRotation;
 import org.ironriders.lib.IronSubsystem;
 
-/*
- * Subsystem for controlling the wrist, mounted on the elevator,
- * which in turn has the intake mounted on it.
+/**
+ * Subsystem for controlling the wrist, mounted on the elevator, which in turn has the intake
+ * mounted on it.
  */
 public class WristSubsystem extends IronSubsystem {
   final SparkMax primaryMotor =
@@ -93,10 +93,9 @@ public class WristSubsystem extends IronSubsystem {
     return pidController.atSetpoint();
   }
 
-  /*
-   * This function is run on startup. It resets the PID controllers integral and error,
-   * then sets the target setpoints to be the current position.
-   * It then forcibly stops the intake motors.
+  /**
+   * This function is run on startup. It resets the PID controllers integral and error, then sets
+   * the target setpoints to be the current position. It then forcibly stops the intake motors.
    */
   public void reset() {
     logMessage("resetting");
@@ -116,9 +115,7 @@ public class WristSubsystem extends IronSubsystem {
     secondaryMotor.set(-speed);
   }
 
-  /*
-   * This function sets the goal setpoint to @param rotation.
-   */
+  /** This function sets the goal setpoint to @param rotation. */
   protected void setGoal(WristRotation rotation) {
     goalSetpoint = new TrapezoidProfile.State(rotation.pos, 0);
     targetRotation = rotation;

@@ -2,12 +2,17 @@ package org.ironriders.elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
+import org.ironriders.core.ElevatorWristCtl.ElevatorLevel;
 
 public class ElevatorCommands {
 
   private final ElevatorSubsystem elevatorSubsystem;
 
+  /**
+   * Initalizer.
+   *
+   * @param elevator Elevator subsystem
+   */
   public ElevatorCommands(ElevatorSubsystem elevator) {
     this.elevatorSubsystem = elevator;
 
@@ -40,6 +45,11 @@ public class ElevatorCommands {
     return Commands.runOnce(() -> elevatorSubsystem.setNotHomed());
   }
 
+  /**
+   * Move all the way down, home, and then reset.
+   *
+   * @return Command to do that
+   */
   public Command downRehomeReset() {
     return Commands.sequence(
         set(ElevatorLevel.DOWN), home(), elevatorSubsystem.runOnce(elevatorSubsystem::reset));

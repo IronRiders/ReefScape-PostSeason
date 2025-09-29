@@ -19,7 +19,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
+import org.ironriders.core.ElevatorWristCtl.ElevatorLevel;
 import org.ironriders.lib.IronSubsystem;
 
 /** This subsystem controls the big ol' elevator that moves the manipulator vertically. */
@@ -48,6 +48,7 @@ public class ElevatorSubsystem extends IronSubsystem {
   private final ElevatorLevel currentTarget = ElevatorLevel.DOWN;
   private boolean isHomed;
 
+  /** Subsystem in charge of the elevator. */
   public ElevatorSubsystem() {
     // lots of config!!
     SparkMaxConfig primaryConfig = new SparkMaxConfig();
@@ -117,7 +118,7 @@ public class ElevatorSubsystem extends IronSubsystem {
     } else {
       if (bottomLimitSwitch.isPressed()) {
         setHomed();
-        UpdateDashboard();
+        updateDashboard();
         return;
       }
 
@@ -125,11 +126,11 @@ public class ElevatorSubsystem extends IronSubsystem {
       primaryMotor.set(-ElevatorConstants.HOME_SPEED);
     }
 
-    UpdateDashboard();
+    updateDashboard();
   }
 
   /** Put all the elevators values to smart dashboard. */
-  private void UpdateDashboard() {
+  private void updateDashboard() {
     publish("Homed", isHomed);
     publish("Goal State", currentTarget.toString());
     publish("PID", pidController);

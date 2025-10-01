@@ -161,7 +161,7 @@ public class RobotContainer {
             // now
             () ->
                 RobotUtils.controlCurve(
-                    primaryController.getLeftX() // this
+                    -primaryController.getLeftX() // this
                         // sets
                         // the
                         // robot's

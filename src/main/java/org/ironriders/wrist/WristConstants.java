@@ -13,8 +13,8 @@ public class WristConstants {
 
     public static final double TOLERANCE = 1;
 
-    public static final double MAX_ACC = 180; // After intial testing for each position velocity and acceleration should be increased a lot. 
-    public static final double MAX_VEL = 360; // I would recomend bumping these up to 360 for acc and 180 for velocity 
+    public static final double MAX_ACC = 90;
+    public static final double MAX_VEL = 200;
 
     public static final double ENCODER_SCALE = 1;
     public static final double CAD_POSITION_OFFSET = 50; // Adjustment for odd alignment in the CAD

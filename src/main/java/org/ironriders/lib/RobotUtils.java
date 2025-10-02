@@ -49,4 +49,12 @@ public class RobotUtils {
     }
     return in;
   }
+
+  public static boolean tolerance(double curent, double goal, double tolerance) {
+    if (tolerance < 0) {
+      return false;
+    }
+
+    return Math.abs(curent - goal) < tolerance;
+  }
 }

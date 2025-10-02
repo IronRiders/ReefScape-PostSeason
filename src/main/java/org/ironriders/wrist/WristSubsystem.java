@@ -2,6 +2,7 @@ package org.ironriders.wrist;
 
 import org.ironriders.core.ElevatorWristCTL.WristRotation;
 import org.ironriders.lib.IronSubsystem;
+import org.ironriders.lib.RobotUtils;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -10,6 +11,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -33,6 +35,7 @@ public class WristSubsystem extends IronSubsystem {
     private final WristCommands commands = new WristCommands(this);
 
     private final SparkMaxConfig motorConfig = new SparkMaxConfig();
+    //private final ArmFeedforward feedforward = new ArmFeedforward(, , ); TODO
 
     public WristSubsystem() {
         motorConfig
@@ -107,7 +110,7 @@ public class WristSubsystem extends IronSubsystem {
     }
 
     public boolean atGoal() {
-        return pidControler.atSetpoint();
+        return RobotUtils.tolerance(getCurrentAngle(), goalSetpoint.position, WristConstants.TOLERANCE);
     }
 
     private void setMotors(double speed) {

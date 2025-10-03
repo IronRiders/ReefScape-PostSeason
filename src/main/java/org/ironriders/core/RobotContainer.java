@@ -294,13 +294,13 @@ public class RobotContainer {
 
         secondaryController
                 .button(14) // TODO decide on buttons for these commands
-                .whileTrue(climbCommands.set(ClimbConstants.Targets.CLIMBED));
+                .whileTrue(climbCommands.set(ClimbConstants.ClimbTargets.CLIMBED));
         secondaryController
                 .button(15) // TODO decide on buttons for these commands
-                .whileTrue(climbCommands.set(ClimbConstants.Targets.MIN));
+                .whileTrue(climbCommands.set(ClimbConstants.ClimbTargets.MIN));
         secondaryController
                 .button(16) // TODO decide on buttons for these commands
-                .whileTrue(climbCommands.set(ClimbConstants.Targets.MAX));
+                .whileTrue(climbCommands.set(ClimbConstants.ClimbTargets.MAX));
     }
 
     /**

@@ -83,6 +83,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     public enum ElevatorWristState {
         HOLD(ElevatorLevel.DOWN, WristRotation.HOLD),
         INTAKING(ElevatorLevel.DOWN, WristRotation.INTAKING),
+        CLIMBING(ElevatorLevel.DOWN, WristRotation.L2L3),
         L2(ElevatorLevel.L2, WristRotation.L2L3),
         L3(ElevatorLevel.L3, WristRotation.L2L3),
         L4(ElevatorLevel.L4, WristRotation.L4);

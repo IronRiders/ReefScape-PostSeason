@@ -17,13 +17,13 @@ public class ClimbConstants {
 
   public static double TOLERANCE = 0.005;
 
-  public enum Targets {
+  public enum ClimbTargets {
     MIN(0),
     MAX(-580), // max position upward
     CLIMBED(-60);
     public final double pos;
 
-    Targets(double pos) {
+    ClimbTargets(double pos) {
       this.pos = pos;
     }
   }

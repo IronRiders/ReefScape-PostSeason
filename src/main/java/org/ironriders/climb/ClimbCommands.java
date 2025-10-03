@@ -9,27 +9,27 @@ public class ClimbCommands {
   /**
    * Publishes commands to set climb to various positions to {@linkplain edu.wpi.first.wpilibj.smartdashboard.SmartDashboard SmartDashboard};
    * <ul>
-   * <li>Publish {@code "Climb"}; {@linkplain #set(ClimbConstants.Targets) set} {@linkplain ClimbConstants.Targets#CLIMBED Climbed}</li>
-   * <li>Publish {@code "Climb MAX"}; {@linkplain #set(ClimbConstants.Targets) set} {@linkplain ClimbConstants.Targets#MAX Max}</li>
-   * <li>Publish {@code "Climb MIN"}; {@linkplain #set(ClimbConstants.Targets) set} {@linkplain ClimbConstants.Targets#MIN Min}</li>
+   * <li>Publish {@code "Climb"}; {@linkplain #set(ClimbConstants.ClimbTargets) set} {@linkplain ClimbConstants.ClimbTargets#CLIMBED Climbed}</li>
+   * <li>Publish {@code "Climb MAX"}; {@linkplain #set(ClimbConstants.ClimbTargets) set} {@linkplain ClimbConstants.ClimbTargets#MAX Max}</li>
+   * <li>Publish {@code "Climb MIN"}; {@linkplain #set(ClimbConstants.ClimbTargets) set} {@linkplain ClimbConstants.ClimbTargets#MIN Min}</li>
    * <li>Publish {@code "Rehome"}; {@linkplain #home() home()}</li>
    * </ul>
    */
   public ClimbCommands(ClimbSubsystem climb) {
     this.climb = climb;
 
-    climb.publish("Climb", set(ClimbConstants.Targets.CLIMBED));
-    climb.publish("Climb MAX", set(ClimbConstants.Targets.MAX));
-    climb.publish("Climb MIN", set(ClimbConstants.Targets.MIN)); 
+    climb.publish("Climb", set(ClimbConstants.ClimbTargets.CLIMBED));
+    climb.publish("Climb MAX", set(ClimbConstants.ClimbTargets.MAX));
+    climb.publish("Climb MIN", set(ClimbConstants.ClimbTargets.MIN)); 
     climb.publish("Rehome", home());
   }
 
   /**
-   * Passes to {@link ClimbSubsystem#setGoal(ClimbConstants.Targets) climb.setGoal()}.
-   * @param target the target to set the climb to (using {@link ClimbConstants.Targets ClimbConstants})
+   * Passes to {@link ClimbSubsystem#setGoal(ClimbConstants.ClimbTargets) climb.setGoal()}.
+   * @param target the target to set the climb to (using {@link ClimbConstants.ClimbTargets ClimbConstants})
    * @return a command that sets the goal to {@code ClimbConstants.Targets target}
    */
-  public Command set(ClimbConstants.Targets target) {
+  public Command set(ClimbConstants.ClimbTargets target) {
     return climb.runOnce(() -> climb.setGoal(target));
   }
 

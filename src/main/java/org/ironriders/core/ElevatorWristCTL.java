@@ -48,7 +48,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
 
     public enum WristRotation { // Position in degrees
-        HOLD(0), // <- CAD values (need to be negitive)
+        HOLD(0),
         INTAKING(-85),
         L2L3(40),
         L4(0);

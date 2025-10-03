@@ -58,7 +58,7 @@ public class ElevatorWristCTL extends IronSubsystem {
      * angle targets for wrist, in degrees
      */
     public enum WristRotation { // Position in degrees
-        HOLD(40), // <- CAD values (need to be negitive)
+        HOLD(0),
         INTAKING(-85),
         L2L3(40),
         L4(0);
@@ -117,11 +117,8 @@ public class ElevatorWristCTL extends IronSubsystem {
      */
 
     public Command setElevatorWrist(ElevatorWristState state) {
-        logMessage("goes to " + state.toString()); 
-        if (getElevatorHight() < state.elevatorLevel.pos)
-            return Commands.sequence(elevatorCommands.set(state.elevatorLevel),  wristCommands.set(state.wristRotation));
-        else
-            return Commands.sequence(wristCommands.set(state.wristRotation), elevatorCommands.set(state.elevatorLevel));
+        logMessage("goes to " + state.toString());
+        return Commands.sequence(wristCommands.set(WristRotation.HOLD), elevatorCommands.set(state.elevatorLevel),  wristCommands.set(state.wristRotation));
     }
 
     /*

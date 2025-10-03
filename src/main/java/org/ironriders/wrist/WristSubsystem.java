@@ -61,12 +61,13 @@ public class WristSubsystem extends IronSubsystem {
     // Apply profile and PID to determine output level
     periodicSetpoint = movementProfile.calculate(WristConstants.T, periodicSetpoint, goalSetpoint);
 
-    double speed = pidControler.calculate(getCurrentAngle(), periodicSetpoint.position);
-    speed += feedforward.calculate(getCurrentAngle(), periodicSetpoint.velocity);
+    double pidOut = pidControler.calculate(getCurrentAngle(), periodicSetpoint.position);
+    double ffOut = feedforward.calculate(getCurrentAngle(), periodicSetpoint.velocity);
 
-    setMotors(speed);
+    setMotors(pidOut + ffOut);
 
-    publish("Current PID ouput", speed);
+    publish("Current FF output", ffOut);
+    publish("Current PID output", pidOut);
     updateDashboard();
   }
 

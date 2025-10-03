@@ -71,7 +71,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
 
     /**
-     * Combined targets for elevator and wrist, each with a wrist and elevetor state.
+     * Combined targets for elevator and wrist, each with a wrist and elevator state.
      * <ul>
      * <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#HOLD HOLD}: {@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorLevel#DOWN Elevator: Down}, {@linkplain org.ironriders.core.ElevatorWristCTL.WristRotation#HOLD Wrist: Hold}</li>
      * <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#INTAKING INTAKING}: {@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorLevel#DOWN Elevator: Down}, {@linkplain org.ironriders.core.ElevatorWristCTL.WristRotation#INTAKING Wrist: Intaking}</li>
@@ -123,12 +123,12 @@ public class ElevatorWristCTL extends IronSubsystem {
 
     /*
      * This command, in parallel, moves the wrist all the way in and does \a PID
-     * reset, as well as moving the elevator all the way down, rehoming it for good
+     * reset, as well as moving the elevator all the way down, re-homing it for good
      * measure, and then resetting it's PID.
      */
 
     public Command reset() {
-        return Commands.sequence(logMessage("reseting"), wristCommands.stowReset(), elevatorCommands.home());
+        return Commands.sequence(logMessage("resetting"), wristCommands.stowReset(), elevatorCommands.home());
     }
 
 }

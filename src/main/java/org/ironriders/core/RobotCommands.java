@@ -174,6 +174,7 @@ public class RobotCommands {
   }
 
   /**
+   * THIS COMMAND DOES NOT WORK FOR SOME REASON.
    * Sets the rumble on the controller for 0.3 seconds.
    *
    * <p>Does this by setting the {@link

@@ -16,11 +16,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
- * Common base for 4180 subsystems.
+ * Common base for 4180 subsystems (mostly error/warning/debug messages and pushing stuff to the dashboard).
  */
 public abstract class IronSubsystem extends SubsystemBase {
 
-  private final String diagnosticName = this.getClass().getSimpleName().replaceAll("Subsystem$", "");
+  private final String diagnosticName = this.getClass().getSimpleName().replaceAll("Subsystem$", ""); // the dollars here is regex to look for Sybsystem, not part of the name (this isn't an anonymous class)
   private final String dashboardPrefix = "Subsystems/" + diagnosticName + "/";
   private final String messagePrefix = diagnosticName + ": ";
 
@@ -106,40 +106,68 @@ public abstract class IronSubsystem extends SubsystemBase {
     Elastic.sendNotification(new Notification().withTitle(title).withDescription(text));
   }
 
+  /**
+   * Returns a command to print the message out with a timestamp in {@linkplain System.out standard out}
+   * Also sends a notification to elastic with the same message
+   * @param msg the text to be printed
+   * @return a runOnce command with the current time, the subsystem name (that extends this subsystem), and the message
+   */
   public Command logMessage(String msg) {
     putTitleTextNotifcation(getThreadTime() + messagePrefix, msg);
     return Commands.runOnce(() -> System.out.println(getThreadTime() + messagePrefix + msg));
   }
 
+  /**
+   * Get a diagnostic value from SmartDashboard.
+  */
   public double getDiagnostic(String name, double defaultValue) {
     return SmartDashboard.getNumber(name, defaultValue);
   }
 
+  /**
+   * Publish a boolean diagnostic value to SmartDashboard with the prefix `Subsystems/{subsystem name}/`.
+   */
   public void publish(String name, boolean value) {
     SmartDashboard.putBoolean(dashboardPrefix + name, value);
   }
 
+  /**
+   * Publish a double diagnostic value to SmartDashboard with the prefix `Subsystems/{subsystem name}/`.
+   */
   public void publish(String name, double value) {
     SmartDashboard.putNumber(dashboardPrefix + name, value);
   }
-
+  /**
+   * Publish an String diagnostic value to SmartDashboard with the prefix `Subsystems/{subsystem name}/`.
+   */
   public void publish(String name, String value) {
     SmartDashboard.putString(dashboardPrefix + name, value);
   }
-
+  /**
+   * Publish a Sendable (including Commands) diagnostic value to SmartDashboard with the prefix `Subsystems/{subsystem name}/`.
+   * If the value is a Command, it will also be registered with PathPlanner's {@link NamedCommands}.
+   */
   public void publish(String name, Sendable value) {
     SmartDashboard.putData(dashboardPrefix + name, value);
     if (value instanceof Command) {
       NamedCommands.registerCommand(name, (Command) value);
     }
   }
-
+  /**
+   * Reports a String error message to {@link DriverStation#reportError(String, boolean) DriverStation} with the time and subsystem name;
+   * Sends a notification to elastic with level {@link NotificationLevel#ERROR ERROR}. with just the raw message.
+   * @param message The error message to report. 
+   */
   public void reportError(String message) {
     DriverStation.reportError(getThreadTime() + messagePrefix + message, false);
     Elastic.sendNotification(
         new Notification().withLevel(NotificationLevel.ERROR).withTitle("ERROR").withDescription(message));
   }
-
+  /**
+   * Reports a String warning message to {@link DriverStation#reportWarning(String, boolean) DriverStation} with the time and subsystem name;
+   * Sends a notification to {@linkplain org.ironriders.lib.Elastic#sendNotification(Notification) Elastic} with level {@link NotificationLevel#WARNING WARNING} with just the raw message.
+   * @param message The warning message to report. 
+   */
   public void reportWarning(String message) {
     DriverStation.reportWarning(getThreadTime() + messagePrefix + message, false);
     Elastic.sendNotification(

@@ -1,6 +1,6 @@
 package org.ironriders.lib;
 
-/** Utility class to encourage the robot's dangerous math addiction. */
+/* Utility class to encourage the robot's dangerous math addiction. */
 public class RobotUtils {
 
   /**
@@ -29,7 +29,7 @@ public class RobotUtils {
    * Normalizes Added Voltage from Feed Forward to a number between (0.0, 1.0).
    *
    * @param input The additional voltage.
-   * @return The normalized volatge value within the range (0.0, 1.0).
+   * @return The normalized voltage value within the range (0.0, 1.0).
    */
   public static double percentOfMaxVoltage(double voltage, int maxVoltage) {
     return (voltage / maxVoltage);

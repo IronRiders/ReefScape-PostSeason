@@ -19,7 +19,7 @@ import org.ironriders.targeting.TargetingCommands;
  *
  * <p>These commands are those which the driver controls call.
  */
-@SuppressWarnings("unused") // Targeting and climb are unused by high-level commands
+@SuppressWarnings("unused") // Targeting is unused by high-level commands
 public class RobotCommands {
 
   private final DriveCommands driveCommands;
@@ -76,7 +76,7 @@ public class RobotCommands {
   public Command startup() {
     intakeCommands.setOnSuccess(() -> rumbleController());
     climbCommands.set(ClimbTargets.MAX);
-    return elevatorWristCommands.reset(); // moves everything to zero
+    return elevatorWristCommands.reset();
   }
 
   /**

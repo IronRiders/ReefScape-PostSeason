@@ -12,7 +12,7 @@ import org.ironriders.drive.DriveCommands;
 import org.ironriders.drive.DriveConstants;
 import org.ironriders.drive.DriveSubsystem;
 import org.ironriders.intake.IntakeCommands;
-import org.ironriders.intake.IntakeConstants.IntakeState;
+import org.ironriders.intake.IntakeConstants.IntakeSpeeds;
 import org.ironriders.intake.IntakeSubsystem;
 import org.ironriders.lib.RobotUtils;
 import org.ironriders.targeting.TargetingCommands;
@@ -126,25 +126,17 @@ public class RobotContainer {
 
         // DRIVE CONTROLS
         driveSubsystem.setDefaultCommand(robotCommands.driveTeleop(
-                () -> RobotUtils.controlCurve(-primaryController.getLeftY() // This sets the robot's x translation (as
-                                                                            // seen in driveTeleop) to the left
-                                                                            // joystick's y value
-                        * driveSubsystem.controlSpeedMultipler // This is just a multiplier in case we need to lower the
-                                                               // speed, currently not used
-                        * driveSubsystem.getinversionStatus(), // just in case it invers
-                        DriveConstants.TRANSLATION_CONTROL_EXPONENT,
-                        DriveConstants.TRANSLATION_CONTROL_DEADBAND), // the deadband for the controller, not being used
-                                                                      // right now
-                () -> RobotUtils.controlCurve(primaryController.getLeftX() // this sets the robot's y translation (as
-                                                                            // seen in driveTeleop) to the left
-                                                                            // joystick's x value
-                        * driveSubsystem.controlSpeedMultipler // for all these, see getLeftY
+                () -> RobotUtils.controlCurve(-primaryController.getLeftY()
+                        * driveSubsystem.controlSpeedMultipler 
                         * driveSubsystem.getinversionStatus(),
                         DriveConstants.TRANSLATION_CONTROL_EXPONENT,
                         DriveConstants.TRANSLATION_CONTROL_DEADBAND),
-                () -> RobotUtils.controlCurve(-primaryController.getRightX() // this rotates the robot based on the
-                                                                             // right joysticks x value (y value is
-                                                                             // unused)
+                () -> RobotUtils.controlCurve(-primaryController.getLeftX() 
+                        * driveSubsystem.controlSpeedMultipler
+                        * driveSubsystem.getinversionStatus(),
+                        DriveConstants.TRANSLATION_CONTROL_EXPONENT,
+                        DriveConstants.TRANSLATION_CONTROL_DEADBAND),
+                () -> RobotUtils.controlCurve(-primaryController.getRightX()
                         * driveSubsystem.controlSpeedMultipler
                         * driveSubsystem.getinversionStatus(),
                         DriveConstants.ROTATION_CONTROL_EXPONENT,
@@ -164,13 +156,13 @@ public class RobotContainer {
                 primaryController.rightTrigger(triggerThreshold)
                         .onTrue(elevatorWristCommands.setElevatorWrist(
                                 ElevatorWristState.INTAKING))
-                        .onTrue(intakeCommands.set(IntakeState.GRAB))
-                        .onFalse(intakeCommands.set(IntakeState.STOP));
+                        .onTrue(intakeCommands.set(IntakeSpeeds.GRAB))
+                        .onFalse(intakeCommands.set(IntakeSpeeds.STOP));
 
                 // Score coral
                 primaryController.leftTrigger(triggerThreshold)
-                        .onTrue(intakeCommands.set(IntakeState.SCORE))
-                        .onFalse(intakeCommands.set(IntakeState.STOP));
+                        .onTrue(intakeCommands.set(IntakeSpeeds.SCORE))
+                        .onFalse(intakeCommands.set(IntakeSpeeds.STOP));
 
                 // Elevator Down
                 primaryController.rightBumper().onTrue(
@@ -179,8 +171,8 @@ public class RobotContainer {
 
                 // Eject coral
                 primaryController.leftBumper()
-                        .onTrue(intakeCommands.set(IntakeState.EJECT))
-                        .onFalse(intakeCommands.set(IntakeState.STOP));
+                        .onTrue(intakeCommands.set(IntakeSpeeds.EJECT))
+                        .onFalse(intakeCommands.set(IntakeSpeeds.STOP));
 
                 primaryController
                         .button(1) 
@@ -212,8 +204,8 @@ public class RobotContainer {
                         .onFalse(robotCommands.stopIntake());
 
                 primaryController.leftTrigger(triggerThreshold)
-                        .onTrue(intakeCommands.set(IntakeState.SCORE))
-                        .onFalse(intakeCommands.set(IntakeState.STOP));
+                        .onTrue(intakeCommands.set(IntakeSpeeds.SCORE))
+                        .onFalse(intakeCommands.set(IntakeSpeeds.STOP));
 
                 primaryController.leftBumper()
                         .onTrue(driveCommands.setDriveTrainSpeed(0.5))
@@ -253,8 +245,8 @@ public class RobotContainer {
                         .onFalse(robotCommands.stopIntake());
 
                 primaryController.leftTrigger(triggerThreshold)
-                        .onTrue(intakeCommands.set(IntakeState.SCORE))
-                        .onFalse(intakeCommands.set(IntakeState.STOP));
+                        .onTrue(intakeCommands.set(IntakeSpeeds.SCORE))
+                        .onFalse(intakeCommands.set(IntakeSpeeds.STOP));
 
                 primaryController.leftBumper()
                         .onTrue(driveCommands.setDriveTrainSpeed(0.5))

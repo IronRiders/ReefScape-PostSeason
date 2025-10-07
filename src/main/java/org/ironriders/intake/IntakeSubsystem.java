@@ -16,7 +16,7 @@ import static org.ironriders.intake.IntakeConstants.LEFT_SPEED_MUL;
 import static org.ironriders.intake.IntakeConstants.RIGHT_SPEED_MUL;
 import static org.ironriders.intake.IntakeConstants.ROLLER_SPEED_MUL;
 
-import org.ironriders.intake.IntakeConstants.IntakeState;
+import org.ironriders.intake.IntakeConstants.IntakeSpeeds;
 import org.ironriders.lib.IronSubsystem;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -82,7 +82,7 @@ public class IntakeSubsystem extends IronSubsystem {
     publish("Current average", average);
   }
 
-  public void set(IntakeState state) {
+  public void set(IntakeSpeeds state) {
     publish("Intake State", state.toString());
     // logMessage("goes to " + state.toString());
     leftIntake.set(state.speed * outputDifferential(state, LEFT_SPEED_MUL));
@@ -90,8 +90,8 @@ public class IntakeSubsystem extends IronSubsystem {
     rollerIntake.set(state.speed * outputDifferential(state, ROLLER_SPEED_MUL));
   }
 
-  public double outputDifferential(IntakeState state, double controlSpeedMultipler) {
-    if (state.toString().equals(IntakeState.GRAB.toString())) {
+  public double outputDifferential(IntakeSpeeds state, double controlSpeedMultipler) {
+    if (state.toString().equals(IntakeSpeeds.GRAB.toString())) {
       return controlSpeedMultipler;
     }
     return 1;

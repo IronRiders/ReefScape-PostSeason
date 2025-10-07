@@ -10,7 +10,7 @@ import org.ironriders.climb.ClimbConstants.ClimbTargets;
 import org.ironriders.core.ElevatorWristCTL.ElevatorWristState;
 import org.ironriders.drive.DriveCommands;
 import org.ironriders.intake.IntakeCommands;
-import org.ironriders.intake.IntakeConstants.IntakeState;
+import org.ironriders.intake.IntakeConstants.IntakeSpeeds;
 import org.ironriders.targeting.TargetingCommands;
 
 /**
@@ -99,7 +99,7 @@ public class RobotCommands {
 
   private Command scoreAndDown() {
     return Commands.sequence(
-        intakeCommands.set(IntakeState.SCORE),
+        intakeCommands.set(IntakeSpeeds.SCORE),
         elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD));
   }
 
@@ -128,7 +128,7 @@ public class RobotCommands {
    * <ul>
    *   <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState) elevator wrist
    *       state} to {@link ElevatorWristState#INTAKING "INTAKING"}.
-   *   <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to {@link IntakeState#GRAB
+   *   <li>Sets the {@link IntakeCommands#set(IntakeSpeeds) intake state} to {@link IntakeSpeeds#GRAB
    *       "GRAB"}.
    * </ul>
    *
@@ -139,18 +139,18 @@ public class RobotCommands {
   public Command intake() {
     return Commands.parallel(
             elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING),
-            intakeCommands.set(IntakeState.GRAB))
+            intakeCommands.set(IntakeSpeeds.GRAB))
         .unless(() -> intakeCommands.getIntake().beamBreakTriggered());
   }
 
   /**
-   * Command to make the robot eject. Simply sets the {@link IntakeCommands#set(IntakeState) intake
-   * state} to {@link IntakeState#EJECT "eject"}.
+   * Command to make the robot eject. Simply sets the {@link IntakeCommands#set(IntakeSpeeds) intake
+   * state} to {@link IntakeSpeeds#EJECT "eject"}.
    *
    * @return returns the command described above
    */
   public Command eject() {
-    return intakeCommands.set(IntakeState.EJECT);
+    return intakeCommands.set(IntakeSpeeds.EJECT);
   }
 
   /**
@@ -159,7 +159,7 @@ public class RobotCommands {
    * <ul>
    *   <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState) elevator wrist
    *       state} to {@link ElevatorWristState#HOLD "stow"}.
-   *   <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to {@link IntakeState#STOP
+   *   <li>Sets the {@link IntakeCommands#set(IntakeSpeeds) intake state} to {@link IntakeSpeeds#STOP
    *       "stop"}.
    * </ul>
    *
@@ -169,7 +169,7 @@ public class RobotCommands {
     return Commands.parallel(
         elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD),
         intakeCommands
-            .set(IntakeState.STOP)
+            .set(IntakeSpeeds.STOP)
             .unless(() -> intakeCommands.getIntake().beamBreakTriggered()));
   }
 

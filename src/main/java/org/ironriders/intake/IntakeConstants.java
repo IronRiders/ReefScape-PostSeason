@@ -34,7 +34,7 @@ public class IntakeConstants {
 
   public static final double DISCHARGE_TIMEOUT = 2; // these are both in SECONDS
 
-  public enum IntakeState {
+  public enum IntakeSpeeds {
     GRAB(.25),
     SCORE(.30),
     EJECT(-.10),
@@ -42,8 +42,17 @@ public class IntakeConstants {
 
     public final double speed;
 
-    IntakeState(double speed) {
+    IntakeSpeeds(double speed) {
       this.speed = speed;
     }
+  }
+
+  public enum IntakeState {
+    STOPPED,
+    GRABBING,
+    HOLDING,
+    EJECTING,
+    JOGGING,
+    TARGETING;
   }
 }

@@ -36,7 +36,7 @@ public class ClimbCommands {
    *     ClimbConstants})
    * @return a command that sets the goal to {@code ClimbConstants.Targets target}
    */
-  public Command set(ClimbConstants.Targets target) {
+  public Command set(ClimbConstants.ClimbTargets target) {
     return climb.runOnce(() -> climb.setGoal(target));
   }
 

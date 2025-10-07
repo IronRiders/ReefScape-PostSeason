@@ -25,7 +25,7 @@ public class WristSubsystem extends IronSubsystem {
   final TrapezoidProfile movementProfile =
       new TrapezoidProfile(new Constraints(WristConstants.MAX_VEL, WristConstants.MAX_ACC));
 
-  public PIDController pidControler;
+  public PIDController pidController;
 
   private TrapezoidProfile.State goalSetpoint =
       new TrapezoidProfile.State(); // Acts as a finalsetpoint

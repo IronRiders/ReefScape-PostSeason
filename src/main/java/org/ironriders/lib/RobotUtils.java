@@ -43,5 +43,14 @@ public class RobotUtils {
     return in;
   }
 
-  private RobotUtils() {}
+  /*
+   * Checks if @param current is within @param tolerance of @param goal. Will return false if @param tolerance is less than zero.
+   */
+  public static boolean tolerance(double current, double goal, double tolerance) {
+    if (tolerance < 0) {
+      return false;
+    }
+
+    return Math.abs(current - goal) < tolerance;
+  }
 }

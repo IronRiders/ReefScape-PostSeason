@@ -7,9 +7,18 @@ public class ClimbCommands {
   public final ClimbSubsystem climb;
 
   /**
-   * Initalizer.
+   * Publishes commands to set climb to various positions to {@linkplain
+   * edu.wpi.first.wpilibj.smartdashboard.SmartDashboard SmartDashboard};
    *
-   * @param climb the climb subsystem
+   * <ul>
+   *   <li>Publish {@code "Climb"}; {@linkplain #set(ClimbConstants.Targets) set} {@linkplain
+   *       ClimbConstants.Targets#CLIMBED Climbed}
+   *   <li>Publish {@code "Climb MAX"}; {@linkplain #set(ClimbConstants.Targets) set} {@linkplain
+   *       ClimbConstants.Targets#MAX Max}
+   *   <li>Publish {@code "Climb MIN"}; {@linkplain #set(ClimbConstants.Targets) set} {@linkplain
+   *       ClimbConstants.Targets#MIN Min}
+   *   <li>Publish {@code "Rehome"}; {@linkplain #home() home()}
+   * </ul>
    */
   public ClimbCommands(ClimbSubsystem climb) {
     this.climb = climb;
@@ -21,19 +30,20 @@ public class ClimbCommands {
   }
 
   /**
-   * Set where the climber should go.
+   * Passes to {@link ClimbSubsystem#setGoal(ClimbConstants.Targets) climb.setGoal()}.
    *
-   * @param target where
-   * @return Command to do it
+   * @param target the target to set the climb to (using {@link ClimbConstants.Targets
+   *     ClimbConstants})
+   * @return a command that sets the goal to {@code ClimbConstants.Targets target}
    */
-  public Command set(ClimbConstants.ClimbTargets target) {
+  public Command set(ClimbConstants.Targets target) {
     return climb.runOnce(() -> climb.setGoal(target));
   }
 
   /**
-   * Reset the relative encoder to zero.
+   * Passes to {@link ClimbSubsystem#home() climb.home()}.
    *
-   * @return Command to do that
+   * @return a command that homes the climber
    */
   public Command home() {
     return climb.runOnce(() -> climb.home());

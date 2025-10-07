@@ -20,6 +20,10 @@ public class DriveCommands {
 
   private final DriveSubsystem driveSubsystem;
 
+  /**
+   * In addition to constructing a new DriveCommands, it also publishes {@linkplain #pathfindToTarget() Drive to Target} & {@linkplain #invertControls() Invert}
+   * commands to the dashboard.
+   */
   public DriveCommands(DriveSubsystem driveSubsystem) {
     this.driveSubsystem = driveSubsystem;
 
@@ -27,6 +31,13 @@ public class DriveCommands {
     this.driveSubsystem.publish("Invert", Commands.runOnce(() -> GameState.invertControl()));
   }
 
+  /**
+   * 
+   * @param translation
+   * @param rotation
+   * @param fieldRelative
+   * @return a command that does what is described above
+   */
   public Command drive(
       Supplier<Translation2d> translation, DoubleSupplier rotation, BooleanSupplier fieldRelative) {
     return driveSubsystem.runOnce(

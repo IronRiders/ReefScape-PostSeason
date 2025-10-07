@@ -11,6 +11,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import org.ironriders.core.ElevatorWristCtl.WristRotation;
 import org.ironriders.lib.IronSubsystem;
+import org.ironriders.lib.RobotUtils;
 
 /**
  * Subsystem for controlling the wrist, mounted on the elevator, which in turn has the intake
@@ -24,7 +25,7 @@ public class WristSubsystem extends IronSubsystem {
   final TrapezoidProfile movementProfile =
       new TrapezoidProfile(new Constraints(WristConstants.MAX_VEL, WristConstants.MAX_ACC));
 
-  private final PIDController pidController;
+  public PIDController pidControler;
 
   private TrapezoidProfile.State goalSetpoint =
       new TrapezoidProfile.State(); // Acts as a finalsetpoint
@@ -39,6 +40,8 @@ public class WristSubsystem extends IronSubsystem {
   private final WristCommands commands = new WristCommands(this);
 
   private final SparkMaxConfig motorConfig = new SparkMaxConfig();
+
+  // private final ArmFeedforward feedforward = new ArmFeedforward(, , ); TODO
 
   /** Initalizer. */
   public WristSubsystem() {
@@ -108,6 +111,10 @@ public class WristSubsystem extends IronSubsystem {
     periodicSetpoint = stopped;
 
     setMotors(0);
+  }
+
+  public boolean atGoal() {
+    return RobotUtils.tolerance(getCurrentAngle(), goalSetpoint.position, WristConstants.TOLERANCE);
   }
 
   private void setMotors(double speed) {

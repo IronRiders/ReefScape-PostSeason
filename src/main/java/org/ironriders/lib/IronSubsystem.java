@@ -12,7 +12,10 @@ import java.util.concurrent.TimeUnit;
 import org.ironriders.lib.Elastic.Notification;
 import org.ironriders.lib.Elastic.NotificationLevel;
 
-/** Common base for 4180 subsystems. */
+/**
+ * Common base for 4180 subsystems (mostly error/warning/debug messages and pushing stuff to the
+ * dashboard).
+ */
 public abstract class IronSubsystem extends SubsystemBase {
 
   private final String diagnosticName =
@@ -118,45 +121,39 @@ public abstract class IronSubsystem extends SubsystemBase {
     return Commands.runOnce(() -> System.out.println(getThreadTime() + messagePrefix + msg));
   }
 
+  /** Get a diagnostic value from SmartDashboard. */
   public double getDiagnostic(String name, double defaultValue) {
     return SmartDashboard.getNumber(name, defaultValue);
   }
 
   /**
-   * Publish a value to elastic.
-   *
-   * @param name Name
-   * @param value Value
+   * Publish a boolean diagnostic value to SmartDashboard with the prefix `Subsystems/{subsystem
+   * name}/`.
    */
   public void publish(String name, boolean value) {
     SmartDashboard.putBoolean(dashboardPrefix + name, value);
   }
 
   /**
-   * Publish a value to elastic.
-   *
-   * @param name Name
-   * @param value Value
+   * Publish a double diagnostic value to SmartDashboard with the prefix `Subsystems/{subsystem
+   * name}/`.
    */
   public void publish(String name, double value) {
     SmartDashboard.putNumber(dashboardPrefix + name, value);
   }
 
   /**
-   * Publish a value to elastic.
-   *
-   * @param name Name
-   * @param value Value
+   * Publish an String diagnostic value to SmartDashboard with the prefix `Subsystems/{subsystem
+   * name}/`.
    */
   public void publish(String name, String value) {
     SmartDashboard.putString(dashboardPrefix + name, value);
   }
 
   /**
-   * Publish a value to elastic.
-   *
-   * @param name Name
-   * @param value Value
+   * Publish a Sendable (including Commands) diagnostic value to SmartDashboard with the prefix
+   * `Subsystems/{subsystem name}/`. If the value is a Command, it will also be registered with
+   * PathPlanner's {@link NamedCommands}.
    */
   public void publish(String name, Sendable value) {
     SmartDashboard.putData(dashboardPrefix + name, value);
@@ -166,9 +163,11 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   /**
-   * Report an error to elastic.
+   * Reports a String error message to {@link DriverStation#reportError(String, boolean)
+   * DriverStation} with the time and subsystem name; Sends a notification to elastic with level
+   * {@link NotificationLevel#ERROR ERROR}. with just the raw message.
    *
-   * @param message The error to report
+   * @param message The error message to report.
    */
   public void reportError(String message) {
     DriverStation.reportError(getThreadTime() + messagePrefix + message, false);
@@ -180,9 +179,12 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   /**
-   * Report a warning to elastic.
+   * Reports a String warning message to {@link DriverStation#reportWarning(String, boolean)
+   * DriverStation} with the time and subsystem name; Sends a notification to {@linkplain
+   * org.ironriders.lib.Elastic#sendNotification(Notification) Elastic} with level {@link
+   * NotificationLevel#WARNING WARNING} with just the raw message.
    *
-   * @param message The warning to report
+   * @param message The warning message to report.
    */
   public void reportWarning(String message) {
     DriverStation.reportWarning(getThreadTime() + messagePrefix + message, false);

@@ -44,7 +44,14 @@ public class ClimbSubsystem extends IronSubsystem {
 
   private final ClimbCommands commands;
 
-  /** initalize. */
+  /**
+   * {@linkplain com.revrobotics.spark.config.SparkMaxConfig configures} the {@linkplain
+   * ClimbSubsystem#motor climb motor}; {@linkplain
+   * edu.wpi.first.math.controller.PIDController#setTolerance(double) sets} the {@linkplain
+   * ClimbConstants#TOLERANCE tolerance} for the {@linkplain ClimbSubsystem#pid PID controller};
+   * {@linkplain ClimbSubsystem#home() homes} the {@linkplain ClimbSubsystem climber}; constructs
+   * {@link ClimbCommands commands}.
+   */
   public ClimbSubsystem() {
     motorConfig.idleMode(IdleMode.kBrake);
     motorConfig.smartCurrentLimit(ClimbConstants.CURRENT_LIMIT);
@@ -72,7 +79,7 @@ public class ClimbSubsystem extends IronSubsystem {
 
     atGoal = pid.atSetpoint();
 
-    publish("Pid out", speed);
+    publish("PID out", speed);
   }
 
   private void updateDashboard() {
@@ -86,7 +93,14 @@ public class ClimbSubsystem extends IronSubsystem {
     publish("Motor raw angle", motor.getEncoder().getPosition());
   }
 
-  /** Reset all the things. */
+  /**
+   * {@linkplain edu.wpi.first.math.controller.PIDController#reset() Resets} the {@linkplain
+   * ClimbSubsystem#pid PID controller}; sets the {@linkplain ClimbSubsystem#stopped stopped state},
+   * {@linkplain ClimbSubsystem#goalSetpoint goal setpoint}, and {@linkplain
+   * ClimbSubsystem#periodicSetpoint periodic setpoint} to the current position with zero velocity;
+   * {@linkplain com.revrobotics.spark.SparkBase#set(double) sets} the {@linkplain
+   * org.ironriders.climb.ClimbSubsystem#motor motor} to {@linkplain Integer#ZERO 0}.
+   */
   public void reset() {
     pid.reset();
     stopped = new TrapezoidProfile.State(getCurrentAngle(), 0);

@@ -113,6 +113,7 @@ public class WristSubsystem extends IronSubsystem {
     setMotors(0);
   }
 
+  /** Is the wrist at it's goal?. */
   public boolean atGoal() {
     return RobotUtils.tolerance(getCurrentAngle(), goalSetpoint.position, WristConstants.TOLERANCE);
   }

@@ -73,7 +73,7 @@ public class RobotCommands {
   public Command startup() {
     intakeCommands.setOnSuccess(() -> rumbleController());
 
-    return Commands.parallel(elevatorWristCommands.reset(), climbCommands.set(ClimbTargets.MAX));
+    return Commands.parallel(elevatorWristCommands.reset());
   }
 
   /**

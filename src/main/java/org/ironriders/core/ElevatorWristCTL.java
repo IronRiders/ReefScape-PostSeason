@@ -23,6 +23,10 @@ public class ElevatorWristCTL extends IronSubsystem {
     private final String diagnosticName = this.getClass().getSimpleName();
     private final String dashboardPrefix = "Subsystems/" + diagnosticName + "/";
 
+    /**
+     * Publishes commands to set wrist to various positions to SmartDashboard;
+     * registers {@linkplain #reset() Elevator Wrist Reset} with {@linkplain com.pathplanner.lib.auto.NamedCommands#registerCommand(String, Command) PathPlanner}
+     */
     public ElevatorWristCTL() {
         publish("Set to STOW", setElevatorWrist(ElevatorWristState.HOLD));
         publish("Set to INTAKING", setElevatorWrist(ElevatorWristState.INTAKING));
@@ -34,6 +38,9 @@ public class ElevatorWristCTL extends IronSubsystem {
         NamedCommands.registerCommand("Elevator Wrist Reset", (Command) reset());
     }
 
+    /**
+     * position targets for elevator, all in inches
+     */
     public enum ElevatorLevel { // Position in inches
         DOWN(0),
         L2(19.5),
@@ -47,8 +54,11 @@ public class ElevatorWristCTL extends IronSubsystem {
         }
     }
 
+    /**
+     * angle targets for wrist, in degrees
+     */
     public enum WristRotation { // Position in degrees
-        HOLD(40), // <- CAD values (need to be negitive)
+        HOLD(0),
         INTAKING(-85),
         L2L3(40),
         L4(0);
@@ -60,6 +70,16 @@ public class ElevatorWristCTL extends IronSubsystem {
         }
     }
 
+    /**
+     * Combined targets for elevator and wrist, each with a wrist and elevetor state.
+     * <ul>
+     * <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#HOLD HOLD}: {@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorLevel#DOWN Elevator: Down}, {@linkplain org.ironriders.core.ElevatorWristCTL.WristRotation#HOLD Wrist: Hold}</li>
+     * <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#INTAKING INTAKING}: {@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorLevel#DOWN Elevator: Down}, {@linkplain org.ironriders.core.ElevatorWristCTL.WristRotation#INTAKING Wrist: Intaking}</li>
+     * <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#L2 L2}: {@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorLevel#L2 Elevator: L2}, {@linkplain org.ironriders.core.ElevatorWristCTL.WristRotation#L2L3 Wrist: L2/L3}</li>
+     * <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#L3 L3}: {@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorLevel#L3 Elevator: L3}, {@linkplain org.ironriders.core.ElevatorWristCTL.WristRotation#L2L3 Wrist: L2/L3}</li>
+     * <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#L4 L4}: {@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorLevel#L4 Elevator: L4}, {@linkplain org.ironriders.core.ElevatorWristCTL.WristRotation#L4 Wrist: L4}</li>
+     * </ul>
+     */
     public enum ElevatorWristState {
         HOLD(ElevatorLevel.DOWN, WristRotation.HOLD),
         INTAKING(ElevatorLevel.DOWN, WristRotation.INTAKING),
@@ -67,12 +87,12 @@ public class ElevatorWristCTL extends IronSubsystem {
         L3(ElevatorLevel.L3, WristRotation.L2L3),
         L4(ElevatorLevel.L4, WristRotation.L4);
 
-        public final ElevatorLevel eLevel;
-        public final WristRotation wRot;
+        public final ElevatorLevel elevatorLevel;
+        public final WristRotation wristRotation;
 
-        ElevatorWristState(ElevatorLevel eLevel, WristRotation wRot) {
-            this.eLevel = eLevel;
-            this.wRot = wRot;
+        ElevatorWristState(ElevatorLevel elevatorLevel, WristRotation wristRotation) {
+            this.elevatorLevel = elevatorLevel;
+            this.wristRotation = wristRotation;
         }
     }
 
@@ -98,10 +118,7 @@ public class ElevatorWristCTL extends IronSubsystem {
 
     public Command setElevatorWrist(ElevatorWristState state) {
         logMessage("goes to " + state.toString());
-        if (getElevatorHight() < state.eLevel.pos)
-            return Commands.sequence(elevatorCommands.set(state.eLevel),  wristCommands.set(state.wRot));
-        else
-            return Commands.sequence(wristCommands.set(state.wRot), elevatorCommands.set(state.eLevel));
+        return Commands.sequence(wristCommands.set(WristRotation.HOLD), elevatorCommands.set(state.elevatorLevel),  wristCommands.set(state.wristRotation));
     }
 
     /*

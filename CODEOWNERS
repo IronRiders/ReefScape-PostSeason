@@ -1,3 +1,4 @@
 *gradle* @IronRiders/student-leaders
 /.github @IronRiders/student-leaders
+/deploy/swerve @IronRiders/student-leaders
 CODEOWNERS @IronRiders/student-leaders

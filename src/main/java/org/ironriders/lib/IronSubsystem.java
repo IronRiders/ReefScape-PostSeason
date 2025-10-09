@@ -13,13 +13,20 @@ import org.ironriders.lib.Elastic.Notification;
 import org.ironriders.lib.Elastic.NotificationLevel;
 
 /**
- * Common base for 4180 subsystems (mostly error/warning/debug messages and pushing stuff to the
- * dashboard).
+ * Common base for 4180 subsystems (mostly error/warning/debug messages and
+ * pushing stuff to the dashboard).
  */
 public abstract class IronSubsystem extends SubsystemBase {
 
-  private final String diagnosticName =
-      this.getClass().getSimpleName().replaceAll("Subsystem$", "");
+  private final String diagnosticName = this.getClass().getSimpleName().replaceAll("Subsystem$", ""); // the dollar sign
+                                                                                                      // here is regex
+                                                                                                      // to look for
+                                                                                                      // Subsystem, not
+                                                                                                      // part of the
+                                                                                                      // name (this
+                                                                                                      // isn't an
+                                                                                                      // anonymous
+                                                                                                      // class)
   private final String dashboardPrefix = "Subsystems/" + diagnosticName + "/";
   private final String messagePrefix = diagnosticName + ": ";
 
@@ -31,10 +38,8 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   private String getThreadTime() {
-    String str =
-        Objects.toString(
-            TimeUnit.MILLISECONDS.convert(System.nanoTime() - startupTime, TimeUnit.NANOSECONDS)
-                / 1000d,
+    String str = Objects
+        .toString(TimeUnit.MILLISECONDS.convert(System.nanoTime() - startupTime, TimeUnit.NANOSECONDS) / 1000d,
             "Error, could not get VM time!");
 
     return "[" + str + "] ";
@@ -50,11 +55,13 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   /**
-   * Send a elstaic notification with level WARNING. This will also apend your title to "warning in
-   * (your subsystem): and set that as the title". You should be careful to put as little
-   * information in the title as possible so it doesn't overflow. This notification will last 10
-   * seconds
-   *
+   * Send a elstaic notification with level WARNING.
+   * This will also apend your title to "warning in (your subsystem): and set that
+   * as the title".
+   * You should be careful to put as little information in the title as possible
+   * so it doesn't overflow.
+   * This notification will last 10 seconds
+   * 
    * @param notif The elastic notification to send.
    */
   public void notifyWarning(Notification notif) {
@@ -67,11 +74,13 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   /**
-   * Send a elstaic notification with level info. This will also apend your title to "Message from
-   * (your subsystem): and set that as the title". You should be careful to put as little
-   * information in the title as possible so it doesn't overflow. This notification will last 5
-   * seconds
-   *
+   * Send a elstaic notification with level info.
+   * This will also apend your title to "Message from (your subsystem): and set
+   * that as the title".
+   * You should be careful to put as little information in the title as possible
+   * so it doesn't overflow.
+   * This notification will last 5 seconds
+   * 
    * @param notif The elastic notification to send.
    */
   public void notify(Notification notif) {
@@ -84,11 +93,13 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   /**
-   * Send a elstaic notification with level ERROR. This will also apend your title to "ERROR in
-   * (your subsystem): and set that as the title". You should be careful to put as little
-   * information in the title as possible so it doesn't overflow. This notification will last 30
-   * seconds
-   *
+   * Send a elstaic notification with level ERROR.
+   * This will also apend your title to "ERROR in (your subsystem): and set that
+   * as the title".
+   * You should be careful to put as little information in the title as possible
+   * so it doesn't overflow.
+   * This notification will last 30 seconds
+   * 
    * @param notif The elastic notification to send.
    */
   public void notifyError(Notification notif) {
@@ -111,10 +122,13 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   /**
-   * display a message in elastic.
-   *
-   * @param msg the message
-   * @return a command to do that
+   * Returns a command to print the message out with a timestamp in
+   * {@linkplain System.out standard out}
+   * Also sends a notification to elastic with the same message
+   * 
+   * @param msg the text to be printed
+   * @return a runOnce command with the current time, the subsystem name (that
+   *         extends this subsystem), and the message
    */
   public Command logMessage(String msg) {
     putTitleTextNotifcation(getThreadTime() + messagePrefix, msg);
@@ -127,33 +141,34 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   /**
-   * Publish a boolean diagnostic value to SmartDashboard with the prefix `Subsystems/{subsystem
-   * name}/`.
+   * Publish a boolean diagnostic value to SmartDashboard with the prefix
+   * `Subsystems/{subsystem name}/`.
    */
   public void publish(String name, boolean value) {
     SmartDashboard.putBoolean(dashboardPrefix + name, value);
   }
 
   /**
-   * Publish a double diagnostic value to SmartDashboard with the prefix `Subsystems/{subsystem
-   * name}/`.
+   * Publish a double diagnostic value to SmartDashboard with the prefix
+   * `Subsystems/{subsystem name}/`.
    */
   public void publish(String name, double value) {
     SmartDashboard.putNumber(dashboardPrefix + name, value);
   }
 
   /**
-   * Publish an String diagnostic value to SmartDashboard with the prefix `Subsystems/{subsystem
-   * name}/`.
+   * Publish an String diagnostic value to SmartDashboard with the prefix
+   * `Subsystems/{subsystem name}/`.
    */
   public void publish(String name, String value) {
     SmartDashboard.putString(dashboardPrefix + name, value);
   }
 
   /**
-   * Publish a Sendable (including Commands) diagnostic value to SmartDashboard with the prefix
-   * `Subsystems/{subsystem name}/`. If the value is a Command, it will also be registered with
-   * PathPlanner's {@link NamedCommands}.
+   * Publish a Sendable (including Commands) diagnostic value to SmartDashboard
+   * with the prefix `Subsystems/{subsystem name}/`.
+   * If the value is a Command, it will also be registered with PathPlanner's
+   * {@link NamedCommands}.
    */
   public void publish(String name, Sendable value) {
     SmartDashboard.putData(dashboardPrefix + name, value);
@@ -163,10 +178,12 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   /**
-   * Reports a String error message to {@link DriverStation#reportError(String, boolean)
-   * DriverStation} with the time and subsystem name; Sends a notification to elastic with level
-   * {@link NotificationLevel#ERROR ERROR}. with just the raw message.
-   *
+   * Reports a String error message to
+   * {@link DriverStation#reportError(String, boolean) DriverStation} with the
+   * time and subsystem name;
+   * Sends a notification to elastic with level {@link NotificationLevel#ERROR
+   * ERROR}. with just the raw message.
+   * 
    * @param message The error message to report.
    */
   public void reportError(String message) {
@@ -179,11 +196,14 @@ public abstract class IronSubsystem extends SubsystemBase {
   }
 
   /**
-   * Reports a String warning message to {@link DriverStation#reportWarning(String, boolean)
-   * DriverStation} with the time and subsystem name; Sends a notification to {@linkplain
-   * org.ironriders.lib.Elastic#sendNotification(Notification) Elastic} with level {@link
-   * NotificationLevel#WARNING WARNING} with just the raw message.
-   *
+   * Reports a String warning message to
+   * {@link DriverStation#reportWarning(String, boolean) DriverStation} with the
+   * time and subsystem name;
+   * Sends a notification to
+   * {@linkplain org.ironriders.lib.Elastic#sendNotification(Notification)
+   * Elastic} with level {@link NotificationLevel#WARNING WARNING} with just the
+   * raw message.
+   * 
    * @param message The warning message to report.
    */
   public void reportWarning(String message) {

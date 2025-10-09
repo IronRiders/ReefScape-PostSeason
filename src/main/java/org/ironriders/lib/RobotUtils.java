@@ -1,22 +1,17 @@
 package org.ironriders.lib;
 
-/**
- * Utility class to encourage the robot's dangerous math addiction.
- */
+/* Utility class to encourage the robot's dangerous math addiction. */
 public class RobotUtils {
 
   /**
-   * Applies a control curve (currently just an exponential function)
-   * Only works with input values from 0 to 1 because 1^x = 1.
+   * Applies a control curve (currently just an exponential function) Only works with input values
+   * from 0 to 1 because 1^x = 1.
    *
-   * @param input    The value to put into the curve (0.0 - 1.0 ONLY)
+   * @param input The value to put into the curve (0.0 - 1.0 ONLY)
    * @param exponent The exponent value.
    * @return The end result of the curve.
    */
-  public static double controlCurve(
-      double input,
-      double exponent,
-      double deadband) {
+  public static double controlCurve(double input, double exponent, double deadband) {
     return Math.pow(input, exponent);
   }
 
@@ -34,7 +29,7 @@ public class RobotUtils {
    * Normalizes Added Voltage from Feed Forward to a number between (0.0, 1.0).
    *
    * @param input The additional voltage.
-   * @return The normalized volatge value within the range (0.0, 1.0).
+   * @return The normalized voltage value within the range (0.0, 1.0).
    */
   public static double percentOfMaxVoltage(double voltage, int maxVoltage) {
     return (voltage / maxVoltage);
@@ -48,5 +43,16 @@ public class RobotUtils {
       in = min;
     }
     return in;
+  }
+
+  /*
+   * Checks if @param current is within @param tolerance of @param goal. Will return false if @param tolerance is less than zero.
+   */
+  public static boolean tolerance(double current, double goal, double tolerance) {
+    if (tolerance < 0) {
+      return false;
+    }
+
+    return Math.abs(current - goal) < tolerance;
   }
 }

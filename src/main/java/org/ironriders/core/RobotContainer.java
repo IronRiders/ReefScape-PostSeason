@@ -119,67 +119,25 @@ public class RobotContainer {
         robotCommands.driveTeleop(
             () ->
                 RobotUtils.controlCurve(
-                    -primaryController.getLeftY() // This
-                        // sets
-                        // the
-                        // robot's
-                        // x
-                        // translation
-                        // (as
-                        // seen
-                        // in
-                        // driveTeleop)
-                        // to
-                        // the
-                        // left
-                        // joystick's
-                        // y
-                        // value
-                        * driveSubsystem.controlSpeedMultipler // This is
-                        // just a
-                        // multiplier
-                        // in
-                        // case we
-                        // need to
-                        // lower the
-                        // speed,
-                        // currently
-                        // not used
-                        * driveSubsystem.getinversionStatus(), // just in
-                    // case it
-                    // invers
+                    -primaryController.getLeftY() // This sets the robot's x translation (as
+                        // seen in driveTeleop) to the left
+                        // joystick's y value
+                        * driveSubsystem
+                            .controlSpeedMultipler // This is just a multiplier in case we need to
+                                                   // lower the
+                        // speed, currently not used
+                        * driveSubsystem.getinversionStatus(), // just in case it invers
                     DriveConstants.TRANSLATION_CONTROL_EXPONENT,
-                    DriveConstants.TRANSLATION_CONTROL_DEADBAND), // the
-            // deadband
-            // for
-            // the
-            // controller,
-            // not
-            // being
-            // used
-            // right
-            // now
+                    DriveConstants
+                        .TRANSLATION_CONTROL_DEADBAND), // the deadband for the controller, not
+                                                        // being used
+            // right now
             () ->
                 RobotUtils.controlCurve(
-                    -primaryController.getLeftX() // this
-                        // sets
-                        // the
-                        // robot's
-                        // y
-                        // translation
-                        // (as
-                        // seen
-                        // in
-                        // driveTeleop)
-                        // to
-                        // the
-                        // left
-                        // joystick's
-                        // x
-                        // value
-                        * driveSubsystem.controlSpeedMultipler // for all
-                        // these, see
-                        // getLeftY
+                    -primaryController.getLeftX() // this sets the robot's y translation (as
+                        // seen in driveTeleop) to the left
+                        // joystick's x value
+                        * driveSubsystem.controlSpeedMultipler // for all these, see getLeftY
                         * driveSubsystem.getinversionStatus(),
                     DriveConstants.TRANSLATION_CONTROL_EXPONENT,
                     DriveConstants.TRANSLATION_CONTROL_DEADBAND),
@@ -276,13 +234,13 @@ public class RobotContainer {
             .onTrue(driveCommands.setDriveTrainSpeed(1.5))
             .onFalse(driveCommands.setDriveTrainSpeed(1));
 
-        primaryController
-            .a()
-            .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD));
-        primaryController.b().onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.L2));
+        primaryController.a().onTrue(robotCommands.elevatorWristSet(ElevatorWristState.HOLD));
+        primaryController.b().onTrue(robotCommands.elevatorWristSet(ElevatorWristState.L2));
 
-        primaryController.x().onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.L3));
-        primaryController.y().onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.L4));
+        primaryController.x().onTrue(robotCommands.elevatorWristSet(ElevatorWristState.L3));
+
+        primaryController.y().onTrue(robotCommands.elevatorWristSet(ElevatorWristState.L4));
+
         break;
 
       case SECONDARY_DRIVER_WITH_BOOST:

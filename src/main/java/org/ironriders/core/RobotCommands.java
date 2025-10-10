@@ -117,13 +117,12 @@ public class RobotCommands {
    * @return Command to do that
    */
   public Command prepareScoreLevel(ElevatorWristState level) {
-    return elevatorWristCommands.setElevatorWrist(level);
+    return Commands.sequence(elevatorWristSet(level));
   }
 
   private Command scoreAndDown() {
     return Commands.sequence(
-        intakeCommands.set(IntakeState.SCORE),
-        elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD));
+        intakeCommands.set(IntakeState.SCORE), elevatorWristSet(ElevatorWristState.HOLD));
   }
 
   /**
@@ -155,8 +154,7 @@ public class RobotCommands {
    */
   public Command intake() {
     return Commands.parallel(
-            elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING),
-            intakeCommands.set(IntakeState.GRAB))
+            elevatorWristSet(ElevatorWristState.INTAKING), intakeCommands.set(IntakeState.GRAB))
         .unless(() -> intakeCommands.getIntake().beamBreakTriggered());
   }
 
@@ -184,10 +182,20 @@ public class RobotCommands {
    */
   public Command stopIntake() {
     return Commands.parallel(
-        elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD),
+        elevatorWristSet(ElevatorWristState.HOLD),
         intakeCommands
             .set(IntakeState.STOP)
             .unless(() -> intakeCommands.getIntake().beamBreakTriggered()));
+  }
+
+  public Command elevatorWristSet(ElevatorWristState state) {
+    switch (state) {
+      case L4:
+        return Commands.sequence(
+            elevatorWristCommands.setElevatorWrist(state), intakeCommands.boost());
+      default:
+        return elevatorWristCommands.setElevatorWrist(state);
+    }
   }
 
   /**

@@ -203,18 +203,6 @@ public class IntakeSubsystem extends IronSubsystem {
     return 1;
   }
 
-  public void setMotorsNoDiff(double speed) {
-    leftIntake.set(speed);
-    rightIntake.set(speed);
-    rollerIntake.set(speed);
-  }
-
-  public void setMotorsNoDiff(double speed) {
-    leftIntake.set(speed);
-    rightIntake.set(speed);
-    rollerIntake.set(speed);
-  }
-
   /**
    * Gets the position of the motors minus the position they where in on the leading edge of @see
    * shouldPidControl. this effectively gets the position "homed" for the PID controller.

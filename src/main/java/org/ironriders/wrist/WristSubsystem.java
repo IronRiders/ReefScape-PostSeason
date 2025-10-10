@@ -35,7 +35,8 @@ public class WristSubsystem extends IronSubsystem {
     private final WristCommands commands = new WristCommands(this);
 
     private final SparkMaxConfig motorConfig = new SparkMaxConfig();
-    //private final ArmFeedforward feedforward = new ArmFeedforward(, , ); TODO
+    // private final ArmFeedforward feedforward = new ArmFeedforward(, , ); TODO add
+    // ff
 
     public WristSubsystem() {
         motorConfig

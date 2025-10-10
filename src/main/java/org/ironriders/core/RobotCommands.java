@@ -176,6 +176,16 @@ public class RobotCommands {
         intakeCommands.set(IntakeState.STOP).unless(() -> intakeCommands.getIntake().beamBreakTriggered()));
   }
 
+  public Command elevatorWristSet(ElevatorWristState state) {
+    switch (state) {
+      case L4:
+        return Commands.sequence(elevatorWristCommands.setElevatorWrist(state),
+            intakeCommands.boost());
+      default:
+        return elevatorWristCommands.setElevatorWrist(state);
+    }
+  }
+
   /**
    * Sets the rumble on the controller for 0.3 seconds.
    * 

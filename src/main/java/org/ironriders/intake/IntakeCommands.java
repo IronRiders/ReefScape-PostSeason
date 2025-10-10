@@ -5,6 +5,7 @@ import static org.ironriders.intake.IntakeConstants.DISCHARGE_TIMEOUT;
 import org.ironriders.intake.IntakeConstants.IntakeState;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 public class IntakeCommands {
 
@@ -38,6 +39,11 @@ public class IntakeCommands {
       default:
         return command.finallyDo(() -> intake.set(IntakeState.STOP));
     }
+  }
+
+  public Command boost() {
+    return Commands.sequence(Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.EJECT.speed)),
+        Commands.waitSeconds(0.1), Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.STOP.speed)));
   }
 
   public Command reset() {

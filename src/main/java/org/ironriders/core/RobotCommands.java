@@ -62,9 +62,9 @@ public class RobotCommands {
     this.controller = controller;
     // TODO: More named commands, implement good autos
 
-    NamedCommands.registerCommand("ElevatorWrist L2", elevatorWristCommands.setElevatorWrist(ElevatorWristState.L2));
-    NamedCommands.registerCommand("ElevatorWrist L3", elevatorWristCommands.setElevatorWrist(ElevatorWristState.L3));
-    NamedCommands.registerCommand("ElevatorWrist L4", elevatorWristCommands.setElevatorWrist(ElevatorWristState.L4));
+    NamedCommands.registerCommand("ElevatorWrist L2", elevatorWristSet(ElevatorWristState.L2));
+    NamedCommands.registerCommand("ElevatorWrist L3", elevatorWristSet(ElevatorWristState.L3));
+    NamedCommands.registerCommand("ElevatorWrist L4", elevatorWristSet(ElevatorWristState.L4));
 
     NamedCommands.registerCommand("Prepare Score L4", prepareScoreLevel(ElevatorWristState.L4));
     NamedCommands.registerCommand("Prepare Score L3", prepareScoreLevel(ElevatorWristState.L3));
@@ -104,12 +104,12 @@ public class RobotCommands {
   }
 
   public Command prepareScoreLevel(ElevatorWristState level) {
-    return Commands.sequence(elevatorWristCommands.setElevatorWrist(level));
+    return Commands.sequence(elevatorWristSet(level));
   }
 
   private Command scoreAndDown() {
     return Commands.sequence(intakeCommands.set(IntakeState.SCORE),
-        elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD));
+        elevatorWristSet(ElevatorWristState.HOLD));
   }
 
   /**
@@ -143,7 +143,7 @@ public class RobotCommands {
    */
   public Command intake() {
     return Commands.parallel(
-        elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING),
+        elevatorWristSet(ElevatorWristState.INTAKING),
         intakeCommands.set(IntakeState.GRAB)).unless(() -> intakeCommands.getIntake().beamBreakTriggered());
   }
 
@@ -172,7 +172,7 @@ public class RobotCommands {
    * @return returns the command described above
    */
   public Command stopIntake() {
-    return Commands.parallel(elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD),
+    return Commands.parallel(elevatorWristSet(ElevatorWristState.HOLD),
         intakeCommands.set(IntakeState.STOP).unless(() -> intakeCommands.getIntake().beamBreakTriggered()));
   }
 

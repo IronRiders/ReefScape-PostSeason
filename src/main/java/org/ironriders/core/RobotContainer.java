@@ -124,13 +124,13 @@ public class RobotContainer {
                         // joystick's y value
                         * driveSubsystem
                             .controlSpeedMultipler // This is just a multiplier in case we need to
-                                                   // lower the
+                        // lower the
                         // speed, currently not used
                         * driveSubsystem.getinversionStatus(), // just in case it invers
                     DriveConstants.TRANSLATION_CONTROL_EXPONENT,
                     DriveConstants
                         .TRANSLATION_CONTROL_DEADBAND), // the deadband for the controller, not
-                                                        // being used
+            // being used
             // right now
             () ->
                 RobotUtils.controlCurve(

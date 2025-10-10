@@ -19,13 +19,15 @@ public class IntakeConstants {
   public static final double RIGHT_SPEED_MUL = 1;
   public static final double ROLLER_SPEED_MUL = 1;
 
+  public static final double BOOST_TIME = 0.1;
+
   // TODO Tune These
   public static final int INTAKE_STATOR_CURRENT = 30; // Stator Current Torque and Acceleration
   public static final int INTAKE_SUPPLY_CURRENT = 40; // Supply Current Speed + (a little Torque). If Supply
                                                             // Current Lower Time is <= 0 then this will be the Supply
                                                             // Current
   public static final int INTAKE_SUPPLY_CURRENT_LOWER_LIMIT = 30; // Supply Current if SupplyCurrentLowerTime is
-                                                                        // >0 and applys after
+                                                                        // >0 and applies after
   public static final int INTAKE_SUPPLY_CURRENT_LOWER_TIME = 1; // In Seconds. This determines how long Supply
                                                                       // Current is applied and then limit is lowered to
                                                                       // SupplyCurrentLowerLimit
@@ -37,6 +39,7 @@ public class IntakeConstants {
   public enum IntakeState {
     GRAB(.25),
     SCORE(.30),
+    BOOST(.30), // This is so that changes to the score speed won't effect the boost
     EJECT(-.10),
     STOP(0.00);
 

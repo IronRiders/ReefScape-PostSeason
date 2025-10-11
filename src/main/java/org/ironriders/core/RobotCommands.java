@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 @SuppressWarnings("unused") // Targeting and climb are unused by high-level commands
 public class RobotCommands {
-
+  private ElevatorWristState lastState = ElevatorWristState.HOLD;
   private final DriveCommands driveCommands;
   private final TargetingCommands targetingCommands;
   private final IntakeCommands intakeCommands;
@@ -177,13 +177,24 @@ public class RobotCommands {
   }
 
   public Command elevatorWristSet(ElevatorWristState state) {
+    Command targetCommand;
+
     switch (state) {
       case L4:
-        return Commands.sequence(elevatorWristCommands.setElevatorWrist(state),
+        targetCommand = Commands.parallel(elevatorWristCommands.setElevatorWrist(state),
             intakeCommands.boost());
       default:
-        return elevatorWristCommands.setElevatorWrist(state);
+        targetCommand = elevatorWristCommands.setElevatorWrist(state);
     }
+
+    if (lastState == ElevatorWristState.L4 && state != ElevatorWristState.L4) {
+      targetCommand = Commands.parallel(elevatorWristCommands.setElevatorWrist(state),
+          intakeCommands.unboost());
+    }
+
+    lastState = state;
+
+    return targetCommand;
   }
 
   /**

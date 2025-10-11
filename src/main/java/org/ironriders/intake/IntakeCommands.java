@@ -47,6 +47,11 @@ public class IntakeCommands {
         Commands.waitSeconds(BOOST_TIME), Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.STOP.speed)));
   }
 
+  public Command unboost() {
+    return Commands.sequence(Commands.runOnce(() -> intake.setMotorsNoDiff(-IntakeState.BOOST.speed)),
+        Commands.waitSeconds(BOOST_TIME / 1.4), Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.STOP.speed)));
+  }
+
   public Command reset() {
     return intake.runOnce(() -> intake.set(IntakeState.STOP));
   }

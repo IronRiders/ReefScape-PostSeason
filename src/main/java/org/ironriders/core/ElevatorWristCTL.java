@@ -2,7 +2,6 @@ package org.ironriders.core;
 
 import org.ironriders.elevator.ElevatorCommands;
 import org.ironriders.elevator.ElevatorSubsystem;
-import org.ironriders.intake.IntakeCommands;
 import org.ironriders.lib.IronSubsystem;
 import org.ironriders.wrist.WristCommands;
 import org.ironriders.wrist.WristSubsystem;

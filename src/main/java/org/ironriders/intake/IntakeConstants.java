@@ -20,6 +20,8 @@ public class IntakeConstants {
   public static final double ROLLER_SPEED_MUL = 1;
 
   public static final double BOOST_TIME = 0.1;
+  public static final double UNBOOST_TIME = 0.1 / 1.4;
+
 
   // TODO Tune These
   public static final int INTAKE_STATOR_CURRENT = 30; // Stator Current Torque and Acceleration

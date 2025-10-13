@@ -22,6 +22,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 /**
@@ -124,7 +125,6 @@ public class ElevatorSubsystem extends IronSubsystem {
 
     // Only do PID if homed
     if (isHomed) {
-
       double pidOutput = pidController.calculate(
           getHeight(),
           periodicSetpoint.position);

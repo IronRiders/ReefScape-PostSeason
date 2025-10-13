@@ -30,6 +30,9 @@ public class IntakeConstants {
                                                                       // Current is applied and then limit is lowered to
                                                                       // SupplyCurrentLowerLimit
 
+
+  public static final double BOOST_TIME = 0.1;
+  
   public static final int INTAKE_BEAMBREAK = 0;
 
   public static final double DISCHARGE_TIMEOUT = 2; // these are both in SECONDS

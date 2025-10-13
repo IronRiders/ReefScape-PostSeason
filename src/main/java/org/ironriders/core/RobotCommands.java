@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 @SuppressWarnings("unused") // Targeting and climb are unused by high-level commands
 public class RobotCommands {
-
+  private boolean hasL4Boost = false;
   private final DriveCommands driveCommands;
   private final TargetingCommands targetingCommands;
   private final IntakeCommands intakeCommands;
@@ -142,6 +142,7 @@ public class RobotCommands {
    * @return returns the command described above
    */
   public Command intake() {
+    hasL4Boost = false;
     return Commands.parallel(
         elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING),
         intakeCommands.set(IntakeState.GRAB)).unless(() -> intakeCommands.getIntake().beamBreakTriggered());
@@ -155,6 +156,7 @@ public class RobotCommands {
    * @return returns the command described above
    */
   public Command eject() {
+    hasL4Boost = false;
     return intakeCommands.set(IntakeState.EJECT);
   }
 
@@ -174,6 +176,20 @@ public class RobotCommands {
   public Command stopIntake() {
     return Commands.parallel(elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD),
         intakeCommands.set(IntakeState.STOP).unless(() -> intakeCommands.getIntake().beamBreakTriggered()));
+  }
+
+  public Command elevatorWristSet(ElevatorWristState state) {
+    switch (state) {
+      case L4:
+        if (hasL4Boost) {
+          return elevatorWristCommands.setElevatorWrist(state);
+        }
+        hasL4Boost = true;
+        return Commands.parallel(elevatorWristCommands.setElevatorWrist(state),
+            intakeCommands.boost());
+      default:
+        return elevatorWristCommands.setElevatorWrist(state);
+    }
   }
 
   /**

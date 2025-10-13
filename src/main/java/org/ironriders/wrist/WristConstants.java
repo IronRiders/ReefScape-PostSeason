@@ -7,14 +7,14 @@ public class WristConstants {
 
     // TODO: Need to tune
     public static final double P = 0.023; // proportion
-    public static final double I = 0.002;  // integral
+    public static final double I = 0.0001;  // integral
     public static final double D = 0.0;  // derivative
     public static final double T = 0.02; // time to next step
 
     public static final double TOLERANCE = 1;
 
-    public static final double MAX_ACC = 90;
-    public static final double MAX_VEL = 200;
+    public static final double MAX_ACC = 200;
+    public static final double MAX_VEL = 300;
 
     public static final double ENCODER_SCALE = 1;
     public static final double CAD_POSITION_OFFSET = 50; // Adjustment for odd alignment in the CAD

@@ -40,6 +40,16 @@ public class IntakeCommands {
     }
   }
 
+  public Command boost() {
+    return Commands.sequence(Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.BOOST.speed)),
+        Commands.waitSeconds(BOOST_TIME), Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.STOP.speed)));
+  }
+
+  //public Command unboost() {
+  //  return Commands.sequence(Commands.runOnce(() -> intake.setMotorsNoDiff(-IntakeState.BOOST.speed)),
+  //      Commands.waitSeconds(UNBOOST_TIME), Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.STOP.speed)));
+  //}
+
   public Command reset() {
     return intake.runOnce(() -> intake.set(IntakeState.STOP));
   }

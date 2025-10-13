@@ -37,6 +37,7 @@ public class IntakeConstants {
   public enum IntakeState {
     GRAB(.25),
     SCORE(.30),
+    BOOST(-.10), // This is so that changes to the eject speed won't effect the boost
     EJECT(-.10),
     STOP(0.00);
 

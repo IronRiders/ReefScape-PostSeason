@@ -225,21 +225,20 @@ public class RobotContainer {
 
                 primaryController
                         .a()
-                        .onTrue(elevatorWristCommands.setElevatorWrist(
-                                ElevatorWristState.HOLD));
+                        .onTrue(robotCommands.elevatorWristSet(ElevatorWristState.HOLD));
                 primaryController
                         .b()
-                        .onTrue(elevatorWristCommands.setElevatorWrist(
-                                ElevatorWristState.L2));
+                        .onTrue(robotCommands.elevatorWristSet(ElevatorWristState.L2));
+
 
                 primaryController
                         .x()
-                        .onTrue(elevatorWristCommands.setElevatorWrist(
-                                ElevatorWristState.L3));
+                        .onTrue(robotCommands.elevatorWristSet(ElevatorWristState.L3));
+
                 primaryController
                         .y()
-                        .onTrue(elevatorWristCommands.setElevatorWrist(
-                                ElevatorWristState.L4));
+                        .onTrue(robotCommands.elevatorWristSet(ElevatorWristState.L4));
+
                 break;
 
             case SECONDARY_DRIVER_WITH_BOOST:

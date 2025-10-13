@@ -1,5 +1,6 @@
 package org.ironriders.intake;
 
+import static org.ironriders.intake.IntakeConstants.BOOST_TIME;
 import static org.ironriders.intake.IntakeConstants.DISCHARGE_TIMEOUT;
 
 import org.ironriders.intake.IntakeConstants.IntakeState;
@@ -45,11 +46,6 @@ public class IntakeCommands {
     return Commands.sequence(Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.BOOST.speed)),
         Commands.waitSeconds(IntakeConstants.BOOST_TIME), Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.STOP.speed)));
   }
-
-  //public Command unboost() {
-  //  return Commands.sequence(Commands.runOnce(() -> intake.setMotorsNoDiff(-IntakeState.BOOST.speed)),
-  //      Commands.waitSeconds(UNBOOST_TIME), Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.STOP.speed)));
-  //}
 
   public Command reset() {
     return intake.runOnce(() -> intake.set(IntakeState.STOP));

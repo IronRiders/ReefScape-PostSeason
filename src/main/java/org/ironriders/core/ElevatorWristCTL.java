@@ -63,7 +63,7 @@ public class ElevatorWristCTL extends IronSubsystem {
   /**
    * angle targets for wrist, in degrees
    */
-  public enum WristRotation { // Position in degrees
+  public enum WristRotation { // Position in degrees (zero is straight up)
     HOLD(0),
     INTAKING(-85),
     L2L3(40),
@@ -153,7 +153,7 @@ public class ElevatorWristCTL extends IronSubsystem {
   }
 
   /*
-   * This command, in parallel, moves the wrist all the way in and does \a PID
+   * This command, in parallel, moves the wrist all the way in and does a PID
    * reset, as well as moving the elevator all the way down, rehoming it for good
    * measure, and then resetting it's PID.
    */

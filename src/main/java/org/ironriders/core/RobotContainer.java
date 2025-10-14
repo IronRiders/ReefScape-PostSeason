@@ -129,24 +129,20 @@ public class RobotContainer {
                 () -> RobotUtils.controlCurve(-primaryController.getLeftY() // This sets the robot's x translation (as
                                                                             // seen in driveTeleop) to the left
                                                                             // joystick's y value
-                        * driveSubsystem.controlSpeedMultipler // This is just a multiplier in case we need to lower the
-                                                               // speed, currently not used
-                        * driveSubsystem.getInversionStatus(), // just in case it invers
+                        * driveSubsystem.controlSpeedMultipler,
                         DriveConstants.TRANSLATION_CONTROL_EXPONENT,
                         DriveConstants.TRANSLATION_CONTROL_DEADBAND), // the deadband for the controller, not being used
                                                                       // right now
                 () -> RobotUtils.controlCurve(-primaryController.getLeftX() // this sets the robot's y translation (as
                                                                             // seen in driveTeleop) to the left
                                                                             // joystick's x value
-                        * driveSubsystem.controlSpeedMultipler // for all these, see getLeftY
-                        * driveSubsystem.getInversionStatus(),
+                        * driveSubsystem.controlSpeedMultipler, // for all these, see getLeftY
                         DriveConstants.TRANSLATION_CONTROL_EXPONENT,
                         DriveConstants.TRANSLATION_CONTROL_DEADBAND),
                 () -> RobotUtils.controlCurve(-primaryController.getRightX() // this rotates the robot based on the
                                                                              // right joysticks x value (y value is
                                                                              // unused)
-                        * driveSubsystem.controlSpeedMultipler
-                        * driveSubsystem.getInversionStatus(),
+                        * driveSubsystem.controlSpeedMultipler,
                         DriveConstants.ROTATION_CONTROL_EXPONENT,
                         DriveConstants.ROTATION_CONTROL_DEADBAND)));
 

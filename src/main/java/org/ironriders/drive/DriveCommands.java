@@ -113,6 +113,10 @@ public class DriveCommands {
     });
   }
 
+  public void resetRotation() {
+    driveSubsystem.resetRotation();
+  }
+
   public Command pathfindToPose(Pose2d targetPose) {
     return driveSubsystem.defer(() -> {
       driveSubsystem.pathfindCommand = AutoBuilder.pathfindToPose(

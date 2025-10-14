@@ -1,6 +1,5 @@
 package org.ironriders.intake;
 
-import static org.ironriders.intake.IntakeConstants.BOOST_TIME;
 import static org.ironriders.intake.IntakeConstants.DISCHARGE_TIMEOUT;
 
 import org.ironriders.intake.IntakeConstants.IntakeState;

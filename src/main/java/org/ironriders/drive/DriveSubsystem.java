@@ -110,7 +110,7 @@ public class DriveSubsystem extends IronSubsystem {
       Translation2d translation,
       double rotation,
       boolean fieldRelative) {
-    swerveDrive.drive(translation.times(invertStatus ? -1 : 1), rotation, fieldRelative, false);
+    swerveDrive.drive(translation.times(invertStatus ? -1 : 1), rotation * (invertStatus ? -1 : 1), fieldRelative, false);
   }
 
   /** Fetch the DriveCommands instance */

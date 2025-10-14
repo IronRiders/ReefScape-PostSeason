@@ -18,10 +18,10 @@ public class ClimbCommands {
   public ClimbCommands(ClimbSubsystem climb) {
     this.climb = climb;
 
-    climb.publish("Climb", set(ClimbConstants.Targets.CLIMBED));
-    climb.publish("Climb MAX", set(ClimbConstants.Targets.MAX));
-    climb.publish("Climb MIN", set(ClimbConstants.Targets.MIN)); 
-    climb.publish("Rehome", home());
+    climb.debugPublish("Climb", set(ClimbConstants.Targets.CLIMBED));
+    climb.debugPublish("Climb MAX", set(ClimbConstants.Targets.MAX));
+    climb.debugPublish("Climb MIN", set(ClimbConstants.Targets.MIN)); 
+    climb.debugPublish("Rehome", home());
   }
 
   /**

@@ -131,7 +131,7 @@ public class RobotContainer {
                                                                             // joystick's y value
                         * driveSubsystem.controlSpeedMultipler // This is just a multiplier in case we need to lower the
                                                                // speed, currently not used
-                        * driveSubsystem.getinversionStatus(), // just in case it invers
+                        * driveSubsystem.getInversionStatus(), // just in case it invers
                         DriveConstants.TRANSLATION_CONTROL_EXPONENT,
                         DriveConstants.TRANSLATION_CONTROL_DEADBAND), // the deadband for the controller, not being used
                                                                       // right now
@@ -139,14 +139,14 @@ public class RobotContainer {
                                                                             // seen in driveTeleop) to the left
                                                                             // joystick's x value
                         * driveSubsystem.controlSpeedMultipler // for all these, see getLeftY
-                        * driveSubsystem.getinversionStatus(),
+                        * driveSubsystem.getInversionStatus(),
                         DriveConstants.TRANSLATION_CONTROL_EXPONENT,
                         DriveConstants.TRANSLATION_CONTROL_DEADBAND),
                 () -> RobotUtils.controlCurve(-primaryController.getRightX() // this rotates the robot based on the
                                                                              // right joysticks x value (y value is
                                                                              // unused)
                         * driveSubsystem.controlSpeedMultipler
-                        * driveSubsystem.getinversionStatus(),
+                        * driveSubsystem.getInversionStatus(),
                         DriveConstants.ROTATION_CONTROL_EXPONENT,
                         DriveConstants.ROTATION_CONTROL_DEADBAND)));
 

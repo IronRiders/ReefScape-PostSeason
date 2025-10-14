@@ -11,21 +11,21 @@ public class TargetingCommands {
   public TargetingCommands(TargetingSubsystem targetingSubsystem) {
     this.targetingSubsystem = targetingSubsystem;
 
-    this.targetingSubsystem.publish("Nearest", targetNearest());
+    this.targetingSubsystem.debugPublish("Nearest", targetNearest());
 
-    this.targetingSubsystem.publish(
+    this.targetingSubsystem.debugPublish(
         "Coral Station",
         targetNearest(ElementType.STATION));
 
-    this.targetingSubsystem.publish("Reef", targetNearest(ElementType.REEF));
-    this.targetingSubsystem.publish(
+    this.targetingSubsystem.debugPublish("Reef", targetNearest(ElementType.REEF));
+    this.targetingSubsystem.debugPublish(
         "Reef Left Pole",
         targetReefPole(Side.Left));
-    this.targetingSubsystem.publish(
+    this.targetingSubsystem.debugPublish(
         "Reef Right Pole",
         targetReefPole(Side.Right));
 
-    this.targetingSubsystem.publish(
+    this.targetingSubsystem.debugPublish(
         "Processor",
         targetNearest(ElementType.PROCESSOR));
   }

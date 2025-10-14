@@ -82,19 +82,19 @@ public class ClimbSubsystem extends IronSubsystem {
 
     atGoal = pid.atSetpoint();
 
-    publish("PID out", speed);
+    debugPublish("PID out", speed);
 
   }
 
   private void updateDashboard() {
-    publish("Goal State", currentTarget.toString());
-    publish("Goal Position", goalSetpoint.position);
-    publish("Motor Current", motor.getOutputCurrent());
+    debugPublish("Goal State", currentTarget.toString());
+    debugPublish("Goal Position", goalSetpoint.position);
+    debugPublish("Motor Current", motor.getOutputCurrent());
 
-    publish("Current Position", getCurrentAngle());
-    publish("PID", pid);
-    publish("at Goal?", atGoal);
-    publish("Motor raw angle", motor.getEncoder().getPosition());
+    debugPublish("Current Position", getCurrentAngle());
+    debugPublish("PID", pid);
+    debugPublish("at Goal?", atGoal);
+    debugPublish("Motor raw angle", motor.getEncoder().getPosition());
   }
 
   /**

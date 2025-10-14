@@ -70,17 +70,17 @@ public class WristSubsystem extends IronSubsystem {
         double speed = pidControler.calculate(getCurrentAngle(), periodicSetpoint.position);
         setMotors(speed);
 
-        publish("Current PID ouput", speed);
+        debugPublish("Current PID ouput", speed);
         updateDashboard();
     }
 
     public void updateDashboard() {
-        publish("Current target", targetRotation.toString());
-        publish("Current goal pos", goalSetpoint.position);
-        publish("Current angle", getCurrentAngle());
-        publish("Current angle raw", primaryMotor.getAbsoluteEncoder().getPosition());
-        publish("At goal?", isAtPosition());
-        publish("Wrist PID", pidControler);
+        debugPublish("Current target", targetRotation.toString());
+        debugPublish("Current goal pos", goalSetpoint.position);
+        debugPublish("Current angle", getCurrentAngle());
+        debugPublish("Current angle raw", primaryMotor.getAbsoluteEncoder().getPosition());
+        debugPublish("At goal?", isAtPosition());
+        debugPublish("Wrist PID", pidControler);
     }
 
     public double getCurrentAngle() {

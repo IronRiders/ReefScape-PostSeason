@@ -18,10 +18,10 @@ public class IntakeCommands {
   public IntakeCommands(IntakeSubsystem intake) {
     this.intake = intake;
 
-    intake.publish("Intake Grab", set(IntakeState.GRAB));
-    intake.publish("Intake Score", set(IntakeState.SCORE));
-    intake.publish("Intake Eject", set(IntakeState.EJECT));
-    intake.publish("Intake Stop", set(IntakeState.STOP));
+    intake.debugPublish("Intake Grab", set(IntakeState.GRAB));
+    intake.debugPublish("Intake Score", set(IntakeState.SCORE));
+    intake.debugPublish("Intake Eject", set(IntakeState.EJECT));
+    intake.debugPublish("Intake Stop", set(IntakeState.STOP));
   }
 
   public Command set(IntakeConstants.IntakeState state) {

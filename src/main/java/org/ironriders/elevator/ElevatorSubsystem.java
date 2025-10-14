@@ -148,26 +148,30 @@ public class ElevatorSubsystem extends IronSubsystem {
   }
 
   private void UpdateDashboard() {
-    publish("Homed", isHomed);
-    publish("Goal State", currentTarget.toString());
-    publish("PID", pidController);
-    publish("Goal Position", goalSetpoint.position);
-    publish("Real Pos", getHeight());
+    // -- Debugging --
+    debugPublish("Homed", isHomed);
+    debugPublish("Goal State", currentTarget.toString());
+    debugPublish("PID", pidController);
+    debugPublish("Goal Position", goalSetpoint.position);
+    debugPublish("Real Pos", getHeight());
     if (isHomed)
-      publish("At Goal?", isAtPosition());
+      debugPublish("At Goal?", isAtPosition());
     else
-      publish("At Goal?", "N/A; Not Homed!");
+      debugPublish("At Goal?", "N/A; Not Homed!");
 
-    publish(
+    debugPublish(
         "Forward Limit Switch",
         primaryMotor.getForwardLimitSwitch().isPressed());
-    publish(
+    debugPublish(
         "Reverse Limit Switch",
         primaryMotor.getReverseLimitSwitch().isPressed());
 
-    publish("Is at goal?", isAtPosition());
-    publish("Primary Encoder", primaryMotor.getEncoder().getPosition());
-    publish("Follower Encoder", followerMotor.getEncoder().getPosition());
+    debugPublish("Is at goal?", isAtPosition());
+    debugPublish("Primary Encoder", primaryMotor.getEncoder().getPosition());
+    debugPublish("Follower Encoder", followerMotor.getEncoder().getPosition());
+
+    // -- Competition Info --
+    publish("Homed?", isHomed);
   }
 
   public void setGoal(ElevatorLevel level) {

@@ -54,7 +54,7 @@ public abstract class IronSubsystem extends SubsystemBase {
    * 
    * @param notif The elastic notification to send.
    */
-  public void putNotifcation(Notification notif) {
+  public void putNotification(Notification notif) {
     Elastic.sendNotification(notif);
   }
 
@@ -74,7 +74,7 @@ public abstract class IronSubsystem extends SubsystemBase {
     title = "Warning in " + messagePrefix + ":" + title;
     notif.setTitle(title);
     notif.setDisplayTimeSeconds(10);
-    putNotifcation(notif);
+    putNotification(notif);
   }
 
   /**
@@ -93,7 +93,7 @@ public abstract class IronSubsystem extends SubsystemBase {
     title = "Message from " + messagePrefix + ":" + title;
     notif.setTitle(title);
     notif.setDisplayTimeSeconds(5);
-    putNotifcation(notif);
+    putNotification(notif);
   }
 
   /**
@@ -112,7 +112,7 @@ public abstract class IronSubsystem extends SubsystemBase {
     title = "ERROR in " + messagePrefix + ":" + title;
     notif.setTitle(title);
     notif.setDisplayTimeSeconds(30);
-    putNotifcation(notif);
+    putNotification(notif);
   }
 
   public void putTitleTextNotifcation(String title, String text) {
@@ -139,6 +139,48 @@ public abstract class IronSubsystem extends SubsystemBase {
   public double getDiagnostic(String name, double defaultValue) {
     return SmartDashboard.getNumber(name, defaultValue);
   }
+
+  /**
+   * DEBUGGING ONLY
+   * Publish a boolean diagnostic value to SmartDashboard with the prefix
+   * `debug/Subsystems/{subsystem name}/`.
+   */
+  public void debugPublish(String name, boolean value) {
+    SmartDashboard.putBoolean("debug/" + dashboardPrefix + name, value);
+  }
+
+  /**
+   * DEBUGGING ONLY
+   * Publish a double diagnostic value to SmartDashboard with the prefix
+   * `debug/Subsystems/{subsystem name}/`.
+   */
+  public void debugPublish(String name, double value) {
+    SmartDashboard.putNumber("debug/" + dashboardPrefix + name, value);
+  }
+
+  /**
+   * DEBUGGING ONLY
+   * Publish an String diagnostic value to SmartDashboard with the prefix
+   * `debug/Subsystems/{subsystem name}/`.
+   */
+  public void debugPublish(String name, String value) {
+    SmartDashboard.putString("debug/" + dashboardPrefix + name, value);
+  }
+
+  /**
+   * DEBUGGING ONLY
+   * Publish a Sendable (including Commands) diagnostic value to SmartDashboard
+   * with the prefix `debug/Subsystems/{subsystem name}/`.
+   * If the value is a Command, it will also be registered with PathPlanner's
+   * {@link NamedCommands}.
+   */
+  public void debugPublish(String name, Sendable value) {
+    SmartDashboard.putData("debug/" + dashboardPrefix + name, value);
+    if (value instanceof Command) {
+      NamedCommands.registerCommand(name, (Command) value);
+    }
+  }
+
 
   /**
    * Publish a boolean diagnostic value to SmartDashboard with the prefix

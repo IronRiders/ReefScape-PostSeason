@@ -39,7 +39,7 @@ public class WristSubsystem extends IronSubsystem {
 
   // private final ArmFeedforward feedforward = new ArmFeedforward(, , ); TODO add
   // ff
-
+  /** Initalizer. */
   public WristSubsystem() {
     motorConfig
         .smartCurrentLimit(30) // Can go to 40
@@ -68,6 +68,7 @@ public class WristSubsystem extends IronSubsystem {
     updateDashboard();
   }
 
+  /** Push all values to elastic. */
   public void updateDashboard() {
     debugPublish("Current target", targetRotation.toString());
     debugPublish("Current goal pos", goalSetpoint.position);
@@ -87,10 +88,12 @@ public class WristSubsystem extends IronSubsystem {
      */
   }
 
+  /** Is the wrist in position?. */
   public boolean isAtPosition() {
     return pidControler.atSetpoint();
   }
 
+  /** Reset wrist as if rebooted. */
   public void reset() {
     logMessage("resetting");
 
@@ -104,10 +107,12 @@ public class WristSubsystem extends IronSubsystem {
     setMotors(0);
   }
 
+  /** Is the wrist at it's goal?. */
   public boolean atGoal() {
     return RobotUtils.tolerance(getCurrentAngle(), goalSetpoint.position, WristConstants.TOLERANCE);
   }
 
+  /** Set both wrist motors. */
   private void setMotors(double speed) {
     primaryMotor.set(speed);
     secondaryMotor.set(-speed);

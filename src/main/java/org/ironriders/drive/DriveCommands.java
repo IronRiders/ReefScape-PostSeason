@@ -79,8 +79,7 @@ public class DriveCommands {
             .times(DriveConstants.SWERVE_DRIVE_MAX_SPEED)
             .times(invert),
         () -> inputRotation.getAsDouble() *
-            DriveConstants.SWERVE_DRIVE_MAX_SPEED *
-            invert,
+            DriveConstants.SWERVE_DRIVE_MAX_SPEED,
         () -> fieldRelative);
   }
 

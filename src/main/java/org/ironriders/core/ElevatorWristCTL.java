@@ -58,7 +58,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
   }
 
-  /** angle targets for wrist, in degrees */
+  /** angle targets for wrist, in degrees. */
   public enum WristRotation { // Position in degrees (zero is straight up)
     HOLD(0),
     INTAKING(-85),

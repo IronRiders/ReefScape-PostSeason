@@ -159,7 +159,9 @@ public class Vision {
      * @return An optional int, empty if there are no targets visible.
      */
     public OptionalInt getClosestVisible() {
-      if (!latestResult.hasTargets()) return OptionalInt.empty();
+      if (!latestResult.hasTargets()) {
+        return OptionalInt.empty();
+      }
 
       Iterator<PhotonTrackedTarget> iterator = latestResult.getTargets().iterator();
       PhotonTrackedTarget closest = iterator.next();
@@ -188,7 +190,9 @@ public class Vision {
         }
       }
       // trash past 30% ambiguity
-      if (minAmbiguity >= AMBIGUITY_TOLERANCE) return Optional.empty();
+      if (minAmbiguity >= AMBIGUITY_TOLERANCE) {
+        return Optional.empty();
+      }
 
       double minDistance = DISTANCE_TOLERANCE;
       // find closest distance between all targets
@@ -201,10 +205,11 @@ public class Vision {
         if (dist < minDistance) {
           minDistance = dist; // Linter doesn't allow one liner if statements
         }
-        ;
       }
       // trash past tolerance
-      if (minDistance >= DISTANCE_TOLERANCE) return Optional.empty();
+      if (minDistance >= DISTANCE_TOLERANCE) {
+        return Optional.empty();
+      }
 
       // trash if estimate is too far from the believed current pose
       Transform2d differenceTransform = pose.estimatedPose.toPose2d().minus(swerveDrive.getPose());

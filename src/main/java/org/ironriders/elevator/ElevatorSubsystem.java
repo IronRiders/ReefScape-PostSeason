@@ -134,8 +134,11 @@ public class ElevatorSubsystem extends IronSubsystem {
     debugPublish("PID", pidController);
     debugPublish("Goal Position", goalSetpoint.position);
     debugPublish("Real Pos", getHeight());
-    if (isHomed) debugPublish("At Goal?", isAtPosition());
-    else debugPublish("At Goal?", "N/A; Not Homed!");
+    if (isHomed) {
+      debugPublish("At Goal?", isAtPosition());
+    } else {
+      debugPublish("At Goal?", "N/A; Not Homed!");
+    }
 
     debugPublish("Forward Limit Switch", primaryMotor.getForwardLimitSwitch().isPressed());
     debugPublish("Reverse Limit Switch", primaryMotor.getReverseLimitSwitch().isPressed());

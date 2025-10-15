@@ -303,6 +303,8 @@ public class RobotContainer {
   }
 
   /**
+   * Get command configured in auto chooser.
+   *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {

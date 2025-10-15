@@ -118,6 +118,7 @@ public class WristSubsystem extends IronSubsystem {
     secondaryMotor.set(-speed);
   }
 
+  /** Set the wrist goal state. */
   protected void setGoal(WristRotation rotation) {
     goalSetpoint = new TrapezoidProfile.State(rotation.pos, 0);
     targetRotation = rotation;

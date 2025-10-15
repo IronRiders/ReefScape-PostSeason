@@ -26,7 +26,9 @@ public class FieldUtils {
   public static boolean isValidReefTag(int id) {
     for (int i :
         DriverStation.getAlliance().get() == Alliance.Blue ? REEF_TAG_IDS_RED : REEF_TAG_IDS_BLUE) {
-      if (i == id) return true;
+      if (i == id) {
+        return true;
+      }
     }
     return false;
   }

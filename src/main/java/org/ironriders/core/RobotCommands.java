@@ -36,8 +36,6 @@ public class RobotCommands {
    *
    * @param driveCommands DriveCommands instance
    * @param targetingCommands TargetingCommands instance
-   * @param elevatorCommands ElevatorCommands instance
-   * @param coralWristCommands CoralWristCommands instance
    * @param coralIntakeCommands CoralIntakeCommands instance
    * @param climbCommands ClimbCommands instance
    * @param controller GenericHID controller (joystick/gamepad) instance

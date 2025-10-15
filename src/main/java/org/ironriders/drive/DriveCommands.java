@@ -54,7 +54,9 @@ public class DriveCommands {
       DoubleSupplier inputTranslationY,
       DoubleSupplier inputRotation,
       boolean fieldRelative) {
-    if (DriverStation.isAutonomous()) return Commands.none();
+    if (DriverStation.isAutonomous()) {
+      return Commands.none();
+    }
 
     double invert =
         DriverStation.getAlliance().isEmpty()

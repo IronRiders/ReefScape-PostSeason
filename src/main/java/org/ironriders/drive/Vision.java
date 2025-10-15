@@ -90,7 +90,9 @@ public class Vision {
    */
   public VisionCamera getCamera(String name) throws RuntimeException {
     for (VisionCamera v : cams) {
-      if (v.photonCamera.getName().equals(name)) return v;
+      if (v.photonCamera.getName().equals(name)) {
+        return v;
+      }
     }
     throw new RuntimeException("Camera with name '" + name + "' not found");
   }
@@ -137,7 +139,9 @@ public class Vision {
       // find most recent result
       latestResult = results.get(0);
       for (PhotonPipelineResult r : results) {
-        if (r.getTimestampSeconds() > latestResult.getTimestampSeconds()) latestResult = r;
+        if (r.getTimestampSeconds() > latestResult.getTimestampSeconds()) {
+          latestResult = r; // Linter doesn't allow one liner if statements
+        }
       }
 
       Optional<EstimatedRobotPose> optional = estimator.update(latestResult);
@@ -179,7 +183,9 @@ public class Vision {
       double minAmbiguity = 1;
       // find best ambiguity between all targets
       for (PhotonTrackedTarget t : pose.targetsUsed) {
-        if (t.poseAmbiguity != -1 && t.poseAmbiguity < minAmbiguity) minAmbiguity = t.poseAmbiguity;
+        if (t.poseAmbiguity != -1 && t.poseAmbiguity < minAmbiguity) {
+          minAmbiguity = t.poseAmbiguity; // Linter doesn't allow one liner if statements
+        }
       }
       // trash past 30% ambiguity
       if (minAmbiguity >= AMBIGUITY_TOLERANCE) return Optional.empty();
@@ -192,7 +198,10 @@ public class Vision {
                 Math.pow(t.bestCameraToTarget.getX(), 2)
                     + Math.pow(t.bestCameraToTarget.getY(), 2));
 
-        if (dist < minDistance) minDistance = dist;
+        if (dist < minDistance) {
+          minDistance = dist; // Linter doesn't allow one liner if statements
+        }
+        ;
       }
       // trash past tolerance
       if (minDistance >= DISTANCE_TOLERANCE) return Optional.empty();

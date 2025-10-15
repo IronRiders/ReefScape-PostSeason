@@ -44,7 +44,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     SmartDashboard.putString(dashboardPrefix + "Current State", currentState.toString());
   }
 
-  /** position targets for elevator, all in inches */
+  /** position targets for elevator, all in inches. */
   public enum ElevatorLevel { // Position in inches
     DOWN(0),
     L2(19.5),

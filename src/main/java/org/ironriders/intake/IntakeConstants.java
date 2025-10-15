@@ -9,9 +9,11 @@ public class IntakeConstants {
   public static final int INTAKE_MOTOR_LEFT = 15;
   public static final int INTAKE_MOTOR_TOP = 16;
 
-  public static final InvertedValue INTAKE_MOTOR_LEFT_INVERSION = InvertedValue.CounterClockwise_Positive;
+  public static final InvertedValue INTAKE_MOTOR_LEFT_INVERSION =
+      InvertedValue.CounterClockwise_Positive;
   public static final InvertedValue INTAKE_MOTOR_RIGHT_INVERSION = InvertedValue.Clockwise_Positive;
-  public static final InvertedValue INTAKE_MOTOR_ROLLER_INVERSION = InvertedValue.CounterClockwise_Positive;
+  public static final InvertedValue INTAKE_MOTOR_ROLLER_INVERSION =
+      InvertedValue.CounterClockwise_Positive;
 
   public static final NeutralModeValue INTAKE_NEUTRAL_MODE = NeutralModeValue.Brake;
 
@@ -23,14 +25,17 @@ public class IntakeConstants {
 
   // TODO Tune These
   public static final int INTAKE_STATOR_CURRENT = 30; // Stator Current Torque and Acceleration
-  public static final int INTAKE_SUPPLY_CURRENT = 40; // Supply Current Speed + (a little Torque). If Supply
-                                                      // Current Lower Time is <= 0 then this will be the Supply
+  public static final int INTAKE_SUPPLY_CURRENT =
+      40; // Supply Current Speed + (a little Torque). If Supply
+  // Current Lower Time is <= 0 then this will be the Supply
   // Current
-  public static final int INTAKE_SUPPLY_CURRENT_LOWER_LIMIT = 30; // Supply Current if SupplyCurrentLowerTime is
-                                                                  // >0 and applies after
-  public static final int INTAKE_SUPPLY_CURRENT_LOWER_TIME = 1; // In Seconds. This determines how long Supply
-                                                                // Current is applied and then limit is lowered to
-                                                                // SupplyCurrentLowerLimit
+  public static final int INTAKE_SUPPLY_CURRENT_LOWER_LIMIT =
+      30; // Supply Current if SupplyCurrentLowerTime is
+  // >0 and applies after
+  public static final int INTAKE_SUPPLY_CURRENT_LOWER_TIME =
+      1; // In Seconds. This determines how long Supply
+  // Current is applied and then limit is lowered to
+  // SupplyCurrentLowerLimit
 
   public static final int INTAKE_BEAMBREAK = 0;
 

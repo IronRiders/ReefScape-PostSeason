@@ -9,7 +9,7 @@ public class ElevatorConstants {
 
   public static final double P = 0.35; // proportion
   public static final double I = 0.03; // integral
-  public static final double D = 0.001;// derivative
+  public static final double D = 0.001; // derivative
   public static final double T = 0.02; // time to next step
 
   public static final double MAX_VEL = 50;
@@ -25,5 +25,6 @@ public class ElevatorConstants {
   public static final double GEAR_RATIO = 0.05;
   public static final double SPROCKET_DIAMETER = 1.7567;
   public static final int NUMBER_OF_STAGES = 2;
-  public static final double INCHES_PER_ROTATION = GEAR_RATIO * SPROCKET_DIAMETER * Math.PI * NUMBER_OF_STAGES;
+  public static final double INCHES_PER_ROTATION =
+      GEAR_RATIO * SPROCKET_DIAMETER * Math.PI * NUMBER_OF_STAGES;
 }

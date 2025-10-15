@@ -7,17 +7,17 @@ public class ClimbCommands {
   public final ClimbSubsystem climb;
 
   /**
-   * Publishes commands to set climb to various positions to
-   * {@linkplain edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
-   * SmartDashboard};
+   * Publishes commands to set climb to various positions to {@linkplain
+   * edu.wpi.first.wpilibj.smartdashboard.SmartDashboard SmartDashboard};
+   *
    * <ul>
-   * <li>Publish {@code "Climb"}; {@linkplain #set(ClimbConstants.Targets) set}
-   * {@linkplain ClimbConstants.Targets#CLIMBED Climbed}</li>
-   * <li>Publish {@code "Climb MAX"}; {@linkplain #set(ClimbConstants.Targets)
-   * set} {@linkplain ClimbConstants.Targets#MAX Max}</li>
-   * <li>Publish {@code "Climb MIN"}; {@linkplain #set(ClimbConstants.Targets)
-   * set} {@linkplain ClimbConstants.Targets#MIN Min}</li>
-   * <li>Publish {@code "Rehome"}; {@linkplain #home() home()}</li>
+   *   <li>Publish {@code "Climb"}; {@linkplain #set(ClimbConstants.Targets) set} {@linkplain
+   *       ClimbConstants.Targets#CLIMBED Climbed}
+   *   <li>Publish {@code "Climb MAX"}; {@linkplain #set(ClimbConstants.Targets) set} {@linkplain
+   *       ClimbConstants.Targets#MAX Max}
+   *   <li>Publish {@code "Climb MIN"}; {@linkplain #set(ClimbConstants.Targets) set} {@linkplain
+   *       ClimbConstants.Targets#MIN Min}
+   *   <li>Publish {@code "Rehome"}; {@linkplain #home() home()}
    * </ul>
    */
   public ClimbCommands(ClimbSubsystem climb) {
@@ -30,11 +30,10 @@ public class ClimbCommands {
   }
 
   /**
-   * Passes to {@link ClimbSubsystem#setGoal(ClimbConstants.Targets)
-   * climb.setGoal()}.
-   * 
-   * @param target the target to set the climb to (using
-   *               {@link ClimbConstants.Targets ClimbConstants})
+   * Passes to {@link ClimbSubsystem#setGoal(ClimbConstants.Targets) climb.setGoal()}.
+   *
+   * @param target the target to set the climb to (using {@link ClimbConstants.Targets
+   *     ClimbConstants})
    * @return a command that sets the goal to {@code ClimbConstants.Targets target}
    */
   public Command set(ClimbConstants.Targets target) {
@@ -43,7 +42,7 @@ public class ClimbCommands {
 
   /**
    * Passes to {@link ClimbSubsystem#home() climb.home()}.
-   * 
+   *
    * @return a command that homes the climber
    */
   public Command home() {

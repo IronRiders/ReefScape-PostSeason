@@ -24,16 +24,20 @@ public class DriveCommands {
   private final DriveSubsystem driveSubsystem;
 
   /**
-   * In addition to constructing a new DriveCommands, it also publishes {@linkplain #pathfindToTarget() Drive to Target} & {@linkplain #invertControls() Invert}
+   * In addition to constructing a new DriveCommands, it also publishes
+   * {@linkplain #pathfindToTarget() Drive to Target} &
+   * {@linkplain #invertControls() Invert}
    * commands to the dashboard.
    */
   public DriveCommands(DriveSubsystem driveSubsystem) {
     this.driveSubsystem = driveSubsystem;
 
-    this.driveSubsystem.publish("Drive to Target", pathfindToTarget());
-    this.driveSubsystem.publish(
+    this.driveSubsystem.debugPublish("Drive to Target", pathfindToTarget());
+    this.driveSubsystem.debugPublish(
         "Invert",
         Commands.runOnce(() -> GameState.invertControl()));
+    this.driveSubsystem.publish("Invert Controls", Commands.runOnce(() -> driveSubsystem.switchInvertControl()));
+
   }
 
   /**
@@ -75,8 +79,7 @@ public class DriveCommands {
             .times(DriveConstants.SWERVE_DRIVE_MAX_SPEED)
             .times(invert),
         () -> inputRotation.getAsDouble() *
-            DriveConstants.SWERVE_DRIVE_MAX_SPEED *
-            invert,
+            DriveConstants.SWERVE_DRIVE_MAX_SPEED,
         () -> fieldRelative);
   }
 
@@ -107,6 +110,10 @@ public class DriveCommands {
                   .getDistance(startPosition) > distance)
           .schedule();
     });
+  }
+
+  public void resetRotation() {
+    driveSubsystem.resetRotation();
   }
 
   public Command pathfindToPose(Pose2d targetPose) {

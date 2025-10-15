@@ -2,8 +2,9 @@ package org.ironriders.core;
 
 import org.ironriders.elevator.ElevatorCommands;
 import org.ironriders.elevator.ElevatorSubsystem;
-import org.ironriders.intake.IntakeCommands;
+import org.ironriders.lib.Elastic;
 import org.ironriders.lib.IronSubsystem;
+import org.ironriders.lib.Elastic.NotificationLevel;
 import org.ironriders.wrist.WristCommands;
 import org.ironriders.wrist.WristSubsystem;
 
@@ -15,6 +16,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 // This class contains all the state for the moving the elevator and wrist together. You should not call the wrist or elevator commands independently
 public class ElevatorWristCTL extends IronSubsystem {
+  private ElevatorWristState currentState = ElevatorWristState.HOLD;
+
   private final WristSubsystem wristSubsystem = new WristSubsystem();
   private final WristCommands wristCommands = wristSubsystem.getCommands();
 
@@ -31,14 +34,16 @@ public class ElevatorWristCTL extends IronSubsystem {
    * PathPlanner}
    */
   public ElevatorWristCTL() {
-    publish("Set to STOW", setElevatorWrist(ElevatorWristState.HOLD));
-    publish("Set to INTAKING", setElevatorWrist(ElevatorWristState.INTAKING));
-    publish("Set to L2", setElevatorWrist(ElevatorWristState.L2));
-    publish("Set to L3", setElevatorWrist(ElevatorWristState.L3));
-    publish("Set to L4", setElevatorWrist(ElevatorWristState.L4));
+    debugPublish("Set to STOW", setElevatorWrist(ElevatorWristState.HOLD));
+    debugPublish("Set to INTAKING", setElevatorWrist(ElevatorWristState.INTAKING));
+    debugPublish("Set to L2", setElevatorWrist(ElevatorWristState.L2));
+    debugPublish("Set to L3", setElevatorWrist(ElevatorWristState.L3));
+    debugPublish("Set to L4", setElevatorWrist(ElevatorWristState.L4));
 
-    SmartDashboard.putData(dashboardPrefix + "Reset", reset());
+    SmartDashboard.putData("debug/" + dashboardPrefix + "Reset", reset());
     NamedCommands.registerCommand("Elevator Wrist Reset", (Command) reset());
+
+    SmartDashboard.putString(dashboardPrefix + "Current State", currentState.toString());
   }
 
   /**
@@ -60,7 +65,7 @@ public class ElevatorWristCTL extends IronSubsystem {
   /**
    * angle targets for wrist, in degrees
    */
-  public enum WristRotation { // Position in degrees
+  public enum WristRotation { // Position in degrees (zero is straight up)
     HOLD(0),
     INTAKING(-85),
     L2L3(40),
@@ -143,17 +148,22 @@ public class ElevatorWristCTL extends IronSubsystem {
 
   public Command setElevatorWrist(ElevatorWristState state) {
     logMessage("goes to " + state.toString());
+    currentState = state;
+    notify(new Elastic.Notification(NotificationLevel.INFO, "set to:", state.toString()));
+    SmartDashboard.putString(dashboardPrefix + "Current State", currentState.toString());
     return Commands.sequence(wristCommands.set(WristRotation.HOLD), elevatorCommands.set(state.elevatorLevel),
         wristCommands.set(state.wristRotation));
   }
 
   /*
-   * This command, in parallel, moves the wrist all the way in and does \a PID
+   * This command, in parallel, moves the wrist all the way in and does a PID
    * reset, as well as moving the elevator all the way down, rehoming it for good
    * measure, and then resetting it's PID.
    */
 
   public Command reset() {
+    currentState = ElevatorWristState.HOLD;
+    SmartDashboard.putString(dashboardPrefix + "Current State", currentState.toString());
     return Commands.sequence(logMessage("reseting"), wristCommands.stowReset(), elevatorCommands.home());
   }
 

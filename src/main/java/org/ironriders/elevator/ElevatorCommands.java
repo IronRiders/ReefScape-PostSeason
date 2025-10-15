@@ -12,7 +12,8 @@ public class ElevatorCommands {
   public ElevatorCommands(ElevatorSubsystem elevator) {
     this.elevatorSubsystem = elevator;
 
-    elevator.publish("Rehome", home());
+    elevator.debugPublish("Rehome", home());
+    elevator.publish("Force Home", home());
   }
 
   /**

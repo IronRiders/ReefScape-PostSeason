@@ -5,14 +5,154 @@
     {
       "name": "Teleoperated",
       "grid_layout": {
-        "layouts": [],
+        "layouts": [
+          {
+            "title": "Climber Camera",
+            "x": 640.0,
+            "y": 0.0,
+            "width": 512.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "USB Camera 0",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 256.0,
+                "type": "Camera Stream",
+                "properties": {
+                  "topic": "/CameraPublisher/USB Camera 0",
+                  "period": 0.06,
+                  "rotation_turns": 0
+                }
+              }
+            ]
+          },
+          {
+            "title": "Elevator",
+            "x": 0.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Force Home",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Subsystems/Elevator/Force Home",
+                  "period": 0.06,
+                  "show_type": false
+                }
+              },
+              {
+                "title": "Homed?",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Subsystems/Elevator/Homed?",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              }
+            ]
+          },
+          {
+            "title": "Drive",
+            "x": 256.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Invert Controls",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Subsystems/Drive/Invert Controls",
+                  "period": 0.06,
+                  "show_type": false
+                }
+              },
+              {
+                "title": "Inverted?",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Subsystems/Drive/Inverted?",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              }
+            ]
+          },
+          {
+            "title": "ElevatorWristCTL",
+            "x": 768.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Current State",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Subsystems/ElevatorWristCTL/Current State",
+                  "period": 0.06,
+                  "data_type": "string",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          }
+        ],
         "containers": [
           {
             "title": "Field",
-            "x": 800.0,
+            "x": 0.0,
             "y": 0.0,
-            "width": 608.0,
-            "height": 352.0,
+            "width": 640.0,
+            "height": 384.0,
             "type": "Field",
             "properties": {
               "topic": "/SmartDashboard/Field",
@@ -25,6 +165,47 @@
               "field_rotation": 0.0,
               "robot_color": 4294198070,
               "trajectory_color": 4294967295
+            }
+          },
+          {
+            "title": "Pigeon 2 (v6) [9]",
+            "x": 1152.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Gyro",
+            "properties": {
+              "topic": "/SmartDashboard/Pigeon 2 (v6) [9]",
+              "period": 0.06,
+              "counter_clockwise_positive": false
+            }
+          },
+          {
+            "title": "Reset Gyro",
+            "x": 1152.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/RobotCommands/Reset Gyro",
+              "period": 0.06,
+              "show_type": false
+            }
+          },
+          {
+            "title": "swerve",
+            "x": 512.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "YAGSL Swerve Drive",
+            "properties": {
+              "topic": "/SmartDashboard/swerve",
+              "period": 0.06,
+              "show_robot_rotation": true,
+              "show_desired_states": true,
+              "angle_offset": 0.0
             }
           }
         ]

@@ -1,6 +1,5 @@
 package org.ironriders.intake;
 
-import static org.ironriders.intake.IntakeConstants.BOOST_TIME;
 import static org.ironriders.intake.IntakeConstants.DISCHARGE_TIMEOUT;
 
 import org.ironriders.intake.IntakeConstants.IntakeState;
@@ -18,10 +17,10 @@ public class IntakeCommands {
   public IntakeCommands(IntakeSubsystem intake) {
     this.intake = intake;
 
-    intake.publish("Intake Grab", set(IntakeState.GRAB));
-    intake.publish("Intake Score", set(IntakeState.SCORE));
-    intake.publish("Intake Eject", set(IntakeState.EJECT));
-    intake.publish("Intake Stop", set(IntakeState.STOP));
+    intake.debugPublish("Intake Grab", set(IntakeState.GRAB));
+    intake.debugPublish("Intake Score", set(IntakeState.SCORE));
+    intake.debugPublish("Intake Eject", set(IntakeState.EJECT));
+    intake.debugPublish("Intake Stop", set(IntakeState.STOP));
   }
 
   public Command set(IntakeConstants.IntakeState state) {
@@ -44,7 +43,7 @@ public class IntakeCommands {
 
   public Command boost() {
     return Commands.sequence(Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.BOOST.speed)),
-        Commands.waitSeconds(BOOST_TIME), Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.STOP.speed)));
+        Commands.waitSeconds(IntakeConstants.BOOST_TIME), Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.STOP.speed)));
   }
 
   public Command reset() {

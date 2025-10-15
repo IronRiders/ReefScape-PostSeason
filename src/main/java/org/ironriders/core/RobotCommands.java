@@ -11,9 +11,11 @@ import org.ironriders.intake.IntakeConstants.IntakeState;
 import org.ironriders.targeting.TargetingCommands;
 import org.ironriders.wrist.WristSubsystem;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -27,7 +29,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 @SuppressWarnings("unused") // Targeting and climb are unused by high-level commands
 public class RobotCommands {
-
+  private boolean hasL4Boost = false;
   private final DriveCommands driveCommands;
   private final TargetingCommands targetingCommands;
   private final IntakeCommands intakeCommands;
@@ -74,6 +76,7 @@ public class RobotCommands {
     NamedCommands.registerCommand("Intake", intake());
     NamedCommands.registerCommand("Score", scoreAndDown());
 
+    SmartDashboard.putData("RobotCommands/Reset Gyro",  resetGyroAngle());
   }
 
   /**
@@ -142,6 +145,7 @@ public class RobotCommands {
    * @return returns the command described above
    */
   public Command intake() {
+    hasL4Boost = false;
     return Commands.parallel(
         elevatorWristSet(ElevatorWristState.INTAKING),
         intakeCommands.set(IntakeState.GRAB)).unless(() -> intakeCommands.getIntake().beamBreakTriggered());
@@ -155,7 +159,19 @@ public class RobotCommands {
    * @return returns the command described above
    */
   public Command eject() {
+    hasL4Boost = false;
     return intakeCommands.set(IntakeState.EJECT);
+  }
+
+  public Command resetGyroAngle() {
+    return Commands.runOnce(() -> resetPigeon());
+  }
+
+  public void resetPigeon() {
+    driveCommands.resetRotation();
+    Pigeon2 pigeon2 = new Pigeon2(9);
+    pigeon2.reset();
+    pigeon2.close();
   }
 
   /**
@@ -179,7 +195,11 @@ public class RobotCommands {
   public Command elevatorWristSet(ElevatorWristState state) {
     switch (state) {
       case L4:
-        return Commands.sequence(elevatorWristCommands.setElevatorWrist(state),
+        if (hasL4Boost) {
+          return elevatorWristCommands.setElevatorWrist(state);
+        }
+        hasL4Boost = true;
+        return Commands.parallel(elevatorWristCommands.setElevatorWrist(state),
             intakeCommands.boost());
       default:
         return elevatorWristCommands.setElevatorWrist(state);

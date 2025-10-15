@@ -25,13 +25,14 @@ public class IntakeConstants {
   public static final int INTAKE_STATOR_CURRENT = 30; // Stator Current Torque and Acceleration
   public static final int INTAKE_SUPPLY_CURRENT = 40; // Supply Current Speed + (a little Torque). If Supply
                                                             // Current Lower Time is <= 0 then this will be the Supply
-                                                            // Current
+// Current
   public static final int INTAKE_SUPPLY_CURRENT_LOWER_LIMIT = 30; // Supply Current if SupplyCurrentLowerTime is
                                                                         // >0 and applies after
   public static final int INTAKE_SUPPLY_CURRENT_LOWER_TIME = 1; // In Seconds. This determines how long Supply
                                                                       // Current is applied and then limit is lowered to
                                                                       // SupplyCurrentLowerLimit
 
+  
   public static final int INTAKE_BEAMBREAK = 0;
 
   public static final double DISCHARGE_TIMEOUT = 2; // these are both in SECONDS
@@ -39,7 +40,7 @@ public class IntakeConstants {
   public enum IntakeState {
     GRAB(.25),
     SCORE(.30),
-    BOOST(.30), // This is so that changes to the score speed won't effect the boost
+    BOOST(-.10), // This is so that changes to the eject speed won't effect the boost
     EJECT(-.10),
     STOP(0.00);
 

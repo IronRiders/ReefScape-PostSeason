@@ -73,7 +73,8 @@ public class RobotContainer {
 
     private final CommandXboxController primaryController = new CommandXboxController(
             DriveConstants.PRIMARY_CONTROLLER_PORT);
-    private final CommandGenericHID secondaryController = new CommandJoystick(DriveConstants.KEYPAD_CONTROLLER_PORT);
+    private final CommandGenericHID secondaryController = new CommandJoystick(
+            DriveConstants.KEYPAD_CONTROLLER_PORT);
 
     public final RobotCommands robotCommands = new RobotCommands(driveCommands, targetingCommands, intakeCommands,
             elevatorWristCommands, climbCommands, primaryController.getHID());
@@ -126,31 +127,36 @@ public class RobotContainer {
 
         // DRIVE CONTROLS
         driveSubsystem.setDefaultCommand(robotCommands.driveTeleop(
-                () -> RobotUtils.controlCurve(-primaryController.getLeftY() // This sets the robot's x translation (as
-                                                                            // seen in driveTeleop) to the left
+                () -> RobotUtils.controlCurve(-primaryController.getLeftY() // This sets the robot's x
+                                                                            // translation (as
+                                                                            // seen in driveTeleop) to
+                                                                            // the left
                                                                             // joystick's y value
-                        * driveSubsystem.controlSpeedMultipler // This is just a multiplier in case we need to lower the
-                                                               // speed, currently not used
-                        * driveSubsystem.getInversionStatus(), // just in case it invers
+                        * driveSubsystem.controlSpeedMultipler,
                         DriveConstants.TRANSLATION_CONTROL_EXPONENT,
-                        DriveConstants.TRANSLATION_CONTROL_DEADBAND), // the deadband for the controller, not being used
+                        DriveConstants.TRANSLATION_CONTROL_DEADBAND), // the deadband for the
+                                                                      // controller, not being
+                                                                      // used
                                                                       // right now
-                () -> RobotUtils.controlCurve(-primaryController.getLeftX() // this sets the robot's y translation (as
-                                                                            // seen in driveTeleop) to the left
+                () -> RobotUtils.controlCurve(-primaryController.getLeftX() // this sets the robot's y
+                                                                            // translation (as
+                                                                            // seen in driveTeleop) to
+                                                                            // the left
                                                                             // joystick's x value
-                        * driveSubsystem.controlSpeedMultipler // for all these, see getLeftY
-                        * driveSubsystem.getInversionStatus(),
+                        * driveSubsystem.controlSpeedMultipler, // for all these, see getLeftY
                         DriveConstants.TRANSLATION_CONTROL_EXPONENT,
                         DriveConstants.TRANSLATION_CONTROL_DEADBAND),
-                () -> RobotUtils.controlCurve(-primaryController.getRightX() // this rotates the robot based on the
-                                                                             // right joysticks x value (y value is
+                () -> RobotUtils.controlCurve(-primaryController.getRightX() // this rotates the robot
+                                                                             // based on the
+                                                                             // right joysticks x value
+                                                                             // (y value is
                                                                              // unused)
-                        * driveSubsystem.controlSpeedMultipler
-                        * driveSubsystem.getInversionStatus(),
+                        * driveSubsystem.controlSpeedMultipler,
                         DriveConstants.ROTATION_CONTROL_EXPONENT,
                         DriveConstants.ROTATION_CONTROL_DEADBAND)));
 
-        switch (buttonConfiguration) { // configures buttons based on selected config. see the buttonConfiguration to
+        switch (buttonConfiguration) { // configures buttons based on selected config. see the
+                                       // buttonConfiguration to
                                        // know the currently active configuration
             // currently, 'PRIMARY_DRIVER_WITH_BOOST' is the 'normal' configuration, when in
             // doubt use this one. // (see
@@ -189,7 +195,8 @@ public class RobotContainer {
                         .onTrue(elevatorWristCommands.setElevatorWrist(
                                 ElevatorWristState.L2));
                 primaryController
-                        .button(2) // works for L1 as well (see the above link for button configuration
+                        .button(2) // works for L1 as well (see the above link for button
+                                   // configuration
                                    // information)
                         .onTrue(elevatorWristCommands.setElevatorWrist(
                                 ElevatorWristState.L2));
@@ -203,10 +210,14 @@ public class RobotContainer {
                 break;
 
             case PRIMARY_DRIVER_WITH_BOOST:
-                for (var angle = 0; angle < 360; angle += 45) {
-                    primaryController.pov(angle).onTrue(
-                            driveCommands.jog(-angle));
-                }
+                primaryController.povRight()
+                        .onTrue(driveCommands.jog(-90));
+
+                primaryController.povLeft()
+                        .onTrue(driveCommands.jog(90));
+
+                primaryController.povUp()
+                        .onTrue(intakeCommands.boost());
 
                 // Intake and then go down
                 primaryController.rightTrigger(triggerThreshold)
@@ -293,14 +304,14 @@ public class RobotContainer {
         } // TODO: figure out what driveteam wants to do with this.
 
         secondaryController
-                .button(14) // TODO decide on buttons for these commands
-                .whileTrue(climbCommands.set(ClimbConstants.Targets.CLIMBED));
+                .button(16) // TODO decide on buttons for these commands
+                .onTrue(climbCommands.set(ClimbConstants.Targets.CLIMBED));
         secondaryController
                 .button(15) // TODO decide on buttons for these commands
-                .whileTrue(climbCommands.set(ClimbConstants.Targets.MIN));
+                .onTrue(climbCommands.set(ClimbConstants.Targets.MIN));
         secondaryController
-                .button(16) // TODO decide on buttons for these commands
-                .whileTrue(climbCommands.set(ClimbConstants.Targets.MAX));
+                .button(14) // TODO decide on buttons for these commands
+                .onTrue(climbCommands.set(ClimbConstants.Targets.MAX));
     }
 
     /**

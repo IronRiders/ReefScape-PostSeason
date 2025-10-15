@@ -79,8 +79,7 @@ public class DriveCommands {
             .times(DriveConstants.SWERVE_DRIVE_MAX_SPEED)
             .times(invert),
         () -> inputRotation.getAsDouble() *
-            DriveConstants.SWERVE_DRIVE_MAX_SPEED *
-            invert,
+            DriveConstants.SWERVE_DRIVE_MAX_SPEED,
         () -> fieldRelative);
   }
 
@@ -111,6 +110,10 @@ public class DriveCommands {
                   .getDistance(startPosition) > distance)
           .schedule();
     });
+  }
+
+  public void resetRotation() {
+    driveSubsystem.resetRotation();
   }
 
   public Command pathfindToPose(Pose2d targetPose) {

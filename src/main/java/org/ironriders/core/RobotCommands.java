@@ -168,6 +168,7 @@ public class RobotCommands {
   }
 
   public void resetPigeon() {
+    driveCommands.resetRotation();
     Pigeon2 pigeon2 = new Pigeon2(9);
     pigeon2.reset();
     pigeon2.close();

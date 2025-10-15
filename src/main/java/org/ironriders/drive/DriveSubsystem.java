@@ -11,6 +11,7 @@ import org.ironriders.lib.GameState;
 import org.ironriders.lib.IronSubsystem;
 import org.ironriders.lib.RobotUtils;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 
@@ -20,6 +21,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
@@ -117,6 +119,15 @@ public class DriveSubsystem extends IronSubsystem {
   /** Fetch the DriveCommands instance */
   public DriveCommands getCommands() {
     return commands;
+  }
+
+  public Command resetRotation() {
+    Pigeon2 pigeon2 = new Pigeon2(9);
+    Translation2d oldTranslation = swerveDrive.getPose().getTranslation();
+    Command command = Commands.runOnce(() -> swerveDrive.resetOdometry(
+        new Pose2d(oldTranslation, new Rotation2d(pigeon2.getYaw().getValueAsDouble() * (Math.PI / 180)))));
+    pigeon2.close();
+    return command;
   }
 
   /** Fetch the SwerveDrive instance */

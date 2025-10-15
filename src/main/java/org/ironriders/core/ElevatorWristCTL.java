@@ -2,7 +2,9 @@ package org.ironriders.core;
 
 import org.ironriders.elevator.ElevatorCommands;
 import org.ironriders.elevator.ElevatorSubsystem;
+import org.ironriders.lib.Elastic;
 import org.ironriders.lib.IronSubsystem;
+import org.ironriders.lib.Elastic.NotificationLevel;
 import org.ironriders.wrist.WristCommands;
 import org.ironriders.wrist.WristSubsystem;
 
@@ -147,6 +149,7 @@ public class ElevatorWristCTL extends IronSubsystem {
   public Command setElevatorWrist(ElevatorWristState state) {
     logMessage("goes to " + state.toString());
     currentState = state;
+    notify(new Elastic.Notification(NotificationLevel.INFO, "set to:", state.toString()));
     SmartDashboard.putString(dashboardPrefix + "Current State", currentState.toString());
     return Commands.sequence(wristCommands.set(WristRotation.HOLD), elevatorCommands.set(state.elevatorLevel),
         wristCommands.set(state.wristRotation));

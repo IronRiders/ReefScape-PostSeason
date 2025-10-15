@@ -76,7 +76,7 @@ public class RobotCommands {
     NamedCommands.registerCommand("Intake", intake());
     NamedCommands.registerCommand("Score", scoreAndDown());
 
-    SmartDashboard.putData("RobotCommands/Reset Gyro",  resetGyroAngle());
+    SmartDashboard.putData("RobotCommands/Reset Gyro", resetGyroAngle());
   }
 
   /**

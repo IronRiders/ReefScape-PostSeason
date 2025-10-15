@@ -24,15 +24,14 @@ public class IntakeConstants {
   // TODO Tune These
   public static final int INTAKE_STATOR_CURRENT = 30; // Stator Current Torque and Acceleration
   public static final int INTAKE_SUPPLY_CURRENT = 40; // Supply Current Speed + (a little Torque). If Supply
-                                                            // Current Lower Time is <= 0 then this will be the Supply
-// Current
+                                                      // Current Lower Time is <= 0 then this will be the Supply
+  // Current
   public static final int INTAKE_SUPPLY_CURRENT_LOWER_LIMIT = 30; // Supply Current if SupplyCurrentLowerTime is
-                                                                        // >0 and applies after
+                                                                  // >0 and applies after
   public static final int INTAKE_SUPPLY_CURRENT_LOWER_TIME = 1; // In Seconds. This determines how long Supply
-                                                                      // Current is applied and then limit is lowered to
-                                                                      // SupplyCurrentLowerLimit
+                                                                // Current is applied and then limit is lowered to
+                                                                // SupplyCurrentLowerLimit
 
-  
   public static final int INTAKE_BEAMBREAK = 0;
 
   public static final double DISCHARGE_TIMEOUT = 2; // these are both in SECONDS

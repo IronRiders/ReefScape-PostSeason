@@ -128,10 +128,11 @@ public class ElevatorSubsystem extends IronSubsystem {
       double pidOutput = pidController.calculate(
           getHeight(),
           periodicSetpoint.position);
-          // It's now recommended you remove the velocity one. Not sure why but it was causing a warning
-      double ff = feedforward.calculate( 
+      // It's now recommended you remove the velocity one. Not sure why but it was
+      // causing a warning
+      double ff = feedforward.calculate(
           periodicSetpoint.position);
-          
+
       primaryMotor.set(pidOutput + ff);
     } else {
       if (bottomLimitSwitch.isPressed()) {
@@ -140,7 +141,7 @@ public class ElevatorSubsystem extends IronSubsystem {
         return;
       }
 
-      //logMessage("trying to home!"); // this will spam alot, debuging only
+      // logMessage("trying to home!"); // this will spam alot, debuging only
       primaryMotor.set(-ElevatorConstants.HOME_SPEED);
     }
 

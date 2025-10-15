@@ -7,8 +7,8 @@ public class WristConstants {
 
     // TODO: Need to tune
     public static final double P = 0.023; // proportion
-    public static final double I = 0.0001;  // integral
-    public static final double D = 0.0;  // derivative
+    public static final double I = 0.0001; // integral
+    public static final double D = 0.0; // derivative
     public static final double T = 0.02; // time to next step
 
     public static final double TOLERANCE = 1;
@@ -18,6 +18,7 @@ public class WristConstants {
 
     public static final double ENCODER_SCALE = 1;
     public static final double CAD_POSITION_OFFSET = 50; // Adjustment for odd alignment in the CAD
-    public static final double ENCODER_OFFSET = 0.935; // Rotations for the absolute encoder to get to zero when in FULLY stowed
+    public static final double ENCODER_OFFSET = 0.935; // Rotations for the absolute encoder to get to zero when in
+                                                       // FULLY stowed
     // The Arm should be inside the elevator at the start
 }

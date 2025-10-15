@@ -181,7 +181,6 @@ public abstract class IronSubsystem extends SubsystemBase {
     }
   }
 
-
   /**
    * Publish a boolean diagnostic value to SmartDashboard with the prefix
    * `Subsystems/{subsystem name}/`.

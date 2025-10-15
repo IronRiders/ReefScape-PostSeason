@@ -153,7 +153,9 @@ public class RobotContainer {
         switch (buttonConfiguration) { // configures buttons based on selected config. see the buttonConfiguration to
                                        // know the currently active configuration
             // currently, 'PRIMARY_DRIVER_WITH_BOOST' is the 'normal' configuration, when in
-            // doubt use this one. // (see https://europe1.discourse-cdn.com/unity/original/3X/5/8/58e7b2a50ec35ea142ae9c4d27c9df2d372cd1f3.jpeg for button numbers)
+            // doubt use this one. // (see
+            // https://europe1.discourse-cdn.com/unity/original/3X/5/8/58e7b2a50ec35ea142ae9c4d27c9df2d372cd1f3.jpeg
+            // for button numbers)
             case PRIMARY_DRIVER:
                 for (var angle = 0; angle < 360; angle += 45) {
                     primaryController.pov(angle).onTrue(
@@ -183,7 +185,7 @@ public class RobotContainer {
                         .onFalse(intakeCommands.set(IntakeState.STOP));
 
                 primaryController
-                        .button(1) 
+                        .button(1)
                         .onTrue(elevatorWristCommands.setElevatorWrist(
                                 ElevatorWristState.L2));
                 primaryController
@@ -229,7 +231,6 @@ public class RobotContainer {
                 primaryController
                         .b()
                         .onTrue(robotCommands.elevatorWristSet(ElevatorWristState.L2));
-
 
                 primaryController
                         .x()
@@ -289,7 +290,7 @@ public class RobotContainer {
                 break;
             default:
                 throw new Error("Invalid buttonmap type!");
-        } //TODO: figure out what driveteam wants to do with this.
+        } // TODO: figure out what driveteam wants to do with this.
 
         secondaryController
                 .button(14) // TODO decide on buttons for these commands

@@ -47,7 +47,13 @@ public class ClimbSubsystem extends IronSubsystem {
   private final ClimbCommands commands;
 
   /**
-   * {@linkplain com.revrobotics.spark.config.SparkMaxConfig configures} the {@linkplain ClimbSubsystem#motor climb motor}; {@linkplain edu.wpi.first.math.controller.PIDController#setTolerance(double) sets} the {@linkplain ClimbConstants#TOLERANCE tolerance} for the {@linkplain ClimbSubsystem#pid PID controller}; {@linkplain ClimbSubsystem#home() homes} the {@linkplain ClimbSubsystem climber}; constructs {@link ClimbCommands commands}.
+   * {@linkplain com.revrobotics.spark.config.SparkMaxConfig configures} the
+   * {@linkplain ClimbSubsystem#motor climb motor};
+   * {@linkplain edu.wpi.first.math.controller.PIDController#setTolerance(double)
+   * sets} the {@linkplain ClimbConstants#TOLERANCE tolerance} for the
+   * {@linkplain ClimbSubsystem#pid PID controller};
+   * {@linkplain ClimbSubsystem#home() homes} the {@linkplain ClimbSubsystem
+   * climber}; constructs {@link ClimbCommands commands}.
    */
   public ClimbSubsystem() {
     motorConfig.idleMode(IdleMode.kBrake);
@@ -68,7 +74,7 @@ public class ClimbSubsystem extends IronSubsystem {
   @Override
   public void periodic() {
     updateDashboard();
-    
+
     var currentDegrees = getCurrentAngle();
 
     // Apply profile and PID to determine output level
@@ -98,11 +104,19 @@ public class ClimbSubsystem extends IronSubsystem {
   }
 
   /**
-   * {@linkplain edu.wpi.first.math.controller.PIDController#reset() Resets} the {@linkplain ClimbSubsystem#pid PID controller}; sets the {@linkplain ClimbSubsystem#stopped stopped state}, {@linkplain ClimbSubsystem#goalSetpoint goal setpoint}, and {@linkplain ClimbSubsystem#periodicSetpoint periodic setpoint} to the current position with zero velocity; {@linkplain com.revrobotics.spark.SparkBase#set(double) sets} the {@linkplain org.ironriders.climb.ClimbSubsystem#motor motor} to {@linkplain Integer#ZERO 0}.
+   * {@linkplain edu.wpi.first.math.controller.PIDController#reset() Resets} the
+   * {@linkplain ClimbSubsystem#pid PID controller}; sets the
+   * {@linkplain ClimbSubsystem#stopped stopped state},
+   * {@linkplain ClimbSubsystem#goalSetpoint goal setpoint}, and
+   * {@linkplain ClimbSubsystem#periodicSetpoint periodic setpoint} to the current
+   * position with zero velocity;
+   * {@linkplain com.revrobotics.spark.SparkBase#set(double) sets} the
+   * {@linkplain org.ironriders.climb.ClimbSubsystem#motor motor} to
+   * {@linkplain Integer#ZERO 0}.
    */
   public void reset() {
     pid.reset();
-    stopped =  new TrapezoidProfile.State(getCurrentAngle(), 0);
+    stopped = new TrapezoidProfile.State(getCurrentAngle(), 0);
     goalSetpoint = stopped;
     periodicSetpoint = stopped;
 
@@ -111,7 +125,9 @@ public class ClimbSubsystem extends IronSubsystem {
   }
 
   /**
-   * Homes the climber unless the climber is not at {@linkplain ClimbConstants.Targets#MIN MIN} (to prevent damage to the climber).
+   * Homes the climber unless the climber is not at
+   * {@linkplain ClimbConstants.Targets#MIN MIN} (to prevent damage to the
+   * climber).
    */
   public void home() {
     if (currentTarget != Targets.MIN) { // The climber is not all the way down, resetting it's encoder would cause it to

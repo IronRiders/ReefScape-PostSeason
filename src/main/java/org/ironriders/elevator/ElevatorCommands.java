@@ -27,7 +27,7 @@ public class ElevatorCommands {
     return new Command() {
       public void initialize() {
         elevatorSubsystem.setGoal(level);
-        
+
       }
 
       public boolean isFinished() {

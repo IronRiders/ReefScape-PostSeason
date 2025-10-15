@@ -130,8 +130,8 @@ public class RobotCommands {
   public Command intake() {
     hasL4Boost = false;
     return Commands.parallel(
-            elevatorWristSet(ElevatorWristState.INTAKING), intakeCommands.set(IntakeState.GRAB))
-        .unless(() -> intakeCommands.getIntake().beamBreakTriggered());
+        elevatorWristSet(ElevatorWristState.INTAKING), intakeCommands.set(IntakeState.GRAB));
+    // .unless(() -> intakeCommands.getIntake().beamBreakTriggered());
   }
 
   /**
@@ -170,10 +170,8 @@ public class RobotCommands {
    */
   public Command stopIntake() {
     return Commands.parallel(
-        elevatorWristSet(ElevatorWristState.HOLD),
-        intakeCommands
-            .set(IntakeState.STOP)
-            .unless(() -> intakeCommands.getIntake().beamBreakTriggered()));
+        elevatorWristSet(ElevatorWristState.HOLD), intakeCommands.set(IntakeState.STOP));
+    // .unless(() -> intakeCommands.getIntake().beamBreakTriggered()));
   }
 
   public Command elevatorWristSet(ElevatorWristState state) {

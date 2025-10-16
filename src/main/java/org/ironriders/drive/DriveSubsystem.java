@@ -110,11 +110,9 @@ public class DriveSubsystem extends IronSubsystem {
    * @param fieldRelative If not field relative, the robot will move relative to its own rotation.
    */
   public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
+    int invertMultiplier = invertStatus ? -1 : 1;
     swerveDrive.drive(
-        translation.times(invertStatus ? -1 : 1),
-        rotation * (invertStatus ? -1 : 1),
-        fieldRelative,
-        false);
+        translation.times(invertMultiplier), rotation * invertMultiplier, fieldRelative, false);
   }
 
   /** Fetch the DriveCommands instance */

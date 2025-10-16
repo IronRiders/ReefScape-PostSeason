@@ -115,9 +115,8 @@ public class ClimbSubsystem extends IronSubsystem {
    * prevent damage to the climber).
    */
   public void home() {
-    if (currentTarget
-        != Targets
-            .MIN) { // The climber is not all the way down, resetting it's encoder would cause it to
+    if (currentTarget != Targets.MIN) {
+      // The climber is not all the way down, resetting it's encoder would cause it to
       // go boom.
       logMessage("aborting home, climber state is not MIN!");
       return;

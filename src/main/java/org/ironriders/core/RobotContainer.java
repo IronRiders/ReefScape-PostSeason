@@ -102,14 +102,6 @@ public class RobotContainer {
   private void configureBindings() {
     DriverStation.silenceJoystickConnectionWarning(true);
 
-    /*
-     * 0 is the primary driver focused, 1 is bumper
-     * boosts with
-     * primary focus, 2 is secondary driver elevator
-     * with boosts
-     * bumpers
-     */
-
     // This configures what control scheme the controller will use.
     // Changing this before the match will change the control layout for the driver
     // this may be useful if different drivers prefer different configurations.

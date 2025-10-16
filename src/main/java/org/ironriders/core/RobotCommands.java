@@ -177,7 +177,7 @@ public class RobotCommands {
   public Command elevatorWristSet(ElevatorWristState state) {
     switch (state) {
       case L4:
-        if (hasL4Boost) {
+        if (hasL4Boost) { // If we have already moved the coral up don't do it again
           return elevatorWristCommands.setElevatorWrist(state);
         }
         hasL4Boost = true;

@@ -38,8 +38,7 @@ public class IntakeCommands {
     }
   }
 
-  public Command 
-  boost() {
+  public Command boost() {
     return Commands.sequence(
         Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.BOOST.speed)),
         Commands.waitSeconds(IntakeConstants.BOOST_TIME),

@@ -13,8 +13,8 @@ public class WristConstants {
 
   public static final double TOLERANCE = 1;
 
-  public static final double MAX_ACC = 200;
-  public static final double MAX_VEL = 300;
+  public static final double MAX_ACC = 250;
+  public static final double MAX_VEL = 350;
 
   public static final double ENCODER_SCALE = 1;
   public static final double CAD_POSITION_OFFSET = 50; // Adjustment for odd alignment in the CAD

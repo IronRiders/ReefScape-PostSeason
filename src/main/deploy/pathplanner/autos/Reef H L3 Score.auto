@@ -17,26 +17,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Set to L3"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Score"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 4.0
+                  "name": "ElevatorWrist L3"
                 }
               }
             ]
@@ -45,7 +26,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake Stop"
+            "name": "Score"
           }
         }
       ]

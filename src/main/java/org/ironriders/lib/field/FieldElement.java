@@ -1,25 +1,22 @@
 package org.ironriders.lib.field;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj.DriverStation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.wpilibj.DriverStation;
-
 /**
  * Representation of an element on the field.
  *
- * Includes pose, function, and various utility routines for retrieving.
+ * <p>Includes pose, function, and various utility routines for retrieving.
  */
 public class FieldElement {
 
-  /**
-   * The type of elements on the field.
-   */
+  /** The type of elements on the field. */
   public enum ElementType {
     STATION,
     REEF,
@@ -27,9 +24,7 @@ public class FieldElement {
     BARGE,
   }
 
-  /**
-   * Generic (alliance-independent) element identifiers.
-   */
+  /** Generic (alliance-independent) element identifiers. */
   public enum Position {
     LEFT_STATION(0, ElementType.STATION),
     RIGHT_STATION(1, ElementType.STATION),
@@ -56,16 +51,14 @@ public class FieldElement {
   public final Pose3d pose;
   public final String name;
 
-  private static int[] BLUE_TAGS = { 13, 12, 18, 19, 20, 21, 22, 17, 16, 14 };
+  private static int[] BLUE_TAGS = {13, 12, 18, 19, 20, 21, 22, 17, 16, 14};
 
-  private static int[] RED_TAGS = { 1, 2, 7, 6, 11, 10, 9, 8, 3, 5 };
+  private static int[] RED_TAGS = {1, 2, 7, 6, 11, 10, 9, 8, 3, 5};
 
-  private static List<FieldElement> BLUE_ELEMENTS = loadElements(
-      DriverStation.Alliance.Blue,
-      BLUE_TAGS);
-  private static List<FieldElement> RED_ELEMENTS = loadElements(
-      DriverStation.Alliance.Red,
-      RED_TAGS);
+  private static List<FieldElement> BLUE_ELEMENTS =
+      loadElements(DriverStation.Alliance.Blue, BLUE_TAGS);
+  private static List<FieldElement> RED_ELEMENTS =
+      loadElements(DriverStation.Alliance.Red, RED_TAGS);
 
   private FieldElement(Position element, Pose3d pose) {
     this.position = element;
@@ -74,11 +67,8 @@ public class FieldElement {
     this.pose = pose;
   }
 
-  /**
-   * Retrieve all elements for an alliance.
-   */
-  public static Collection<FieldElement> of(
-      Optional<DriverStation.Alliance> alliance) {
+  /** Retrieve all elements for an alliance. */
+  public static Collection<FieldElement> of(Optional<DriverStation.Alliance> alliance) {
     if (alliance.isEmpty()) {
       return new ArrayList<FieldElement>();
     }
@@ -90,9 +80,7 @@ public class FieldElement {
     return BLUE_ELEMENTS;
   }
 
-  /**
-   * Retrieve a specific alliance element.
-   */
+  /** Retrieve a specific alliance element. */
   public static Optional<FieldElement> of(Position element) {
     for (var allianceElement : of(DriverStation.getAlliance())) {
       if (allianceElement.position == element) {
@@ -102,41 +90,32 @@ public class FieldElement {
     return Optional.empty();
   }
 
-  /**
-   * Retrieve the closest alliance element of a desired type.
-   */
-  public static Optional<FieldElement> nearestTo(
-      Pose2d pose,
-      ElementType type) {
+  /** Retrieve the closest alliance element of a desired type. */
+  public static Optional<FieldElement> nearestTo(Pose2d pose, ElementType type) {
     return findNearest(pose, Optional.of(type));
   }
 
-  /**
-   * Find a special alliance element.
-   */
+  /** Find a special alliance element. */
   public static Optional<FieldElement> nearestTo(Pose2d pose) {
     return findNearest(pose, Optional.empty());
   }
 
-  private static List<FieldElement> loadElements(
-      DriverStation.Alliance alliance,
-      int[] tags) {
+  private static List<FieldElement> loadElements(DriverStation.Alliance alliance, int[] tags) {
     return Stream.of(Position.values())
-        .map(element -> {
-          var pose = FieldUtils.FIELD_LAYOUT.getTagPose(tags[element.id]);
-          if (pose.isEmpty()) {
-            Optional.empty();
-          }
-          return Optional.of(new FieldElement(element, pose.get()));
-        })
+        .map(
+            element -> {
+              var pose = FieldUtils.FIELD_LAYOUT.getTagPose(tags[element.id]);
+              if (pose.isEmpty()) {
+                Optional.empty();
+              }
+              return Optional.of(new FieldElement(element, pose.get()));
+            })
         .filter(Optional::isPresent)
         .map(Optional::get)
         .toList();
   }
 
-  private static Optional<FieldElement> findNearest(
-      Pose2d pose,
-      Optional<ElementType> type) {
+  private static Optional<FieldElement> findNearest(Pose2d pose, Optional<ElementType> type) {
     double distance = -1;
     Optional<FieldElement> found = Optional.empty();
 
@@ -145,9 +124,8 @@ public class FieldElement {
         continue;
       }
 
-      double thisDistance = pose
-          .getTranslation()
-          .getDistance(element.pose.toPose2d().getTranslation());
+      double thisDistance =
+          pose.getTranslation().getDistance(element.pose.toPose2d().getTranslation());
       if (found.isEmpty() || distance > thisDistance) {
         distance = thisDistance;
         found = Optional.of(element);

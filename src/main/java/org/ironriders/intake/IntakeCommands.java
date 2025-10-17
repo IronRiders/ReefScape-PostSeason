@@ -2,10 +2,9 @@ package org.ironriders.intake;
 
 import static org.ironriders.intake.IntakeConstants.DISCHARGE_TIMEOUT;
 
-import org.ironriders.intake.IntakeConstants.IntakeState;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import org.ironriders.intake.IntakeConstants.IntakeState;
 
 public class IntakeCommands {
 
@@ -24,27 +23,35 @@ public class IntakeCommands {
   }
 
   public Command set(IntakeConstants.IntakeState state) {
-    Command command = intake.run(() -> intake.set(state));
+    Command command = intake.runOnce(() -> intake.set(state));
 
     switch (state) {
       case GRAB:
-        return command
-            .until(() -> intake.hasHighCurrent())
-            .finallyDo(() -> intake.set(IntakeState.STOP));
-
+        return command;
       case EJECT:
-        return command
-            .withTimeout(DISCHARGE_TIMEOUT)
-            .finallyDo(() -> intake.set(IntakeState.STOP));
+        return command.withTimeout(DISCHARGE_TIMEOUT).finallyDo(() -> intake.set(IntakeState.STOP));
+      case SCORE:
+        return command;
+      case STOP:
+        command.cancel(); // fall through
       default:
         return command.finallyDo(() -> intake.set(IntakeState.STOP));
     }
   }
 
   public Command boost() {
-    return Commands.sequence(Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.BOOST.speed)),
-        Commands.waitSeconds(IntakeConstants.BOOST_TIME), Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.STOP.speed)));
+    return Commands.sequence(
+        Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.BOOST.speed)),
+        Commands.waitSeconds(IntakeConstants.BOOST_TIME),
+        Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.STOP.speed)));
   }
+
+  public Command unboost() {
+    return Commands.sequence(
+        Commands.runOnce(() -> intake.setMotorsNoDiff(-IntakeState.BOOST.speed)),
+        Commands.waitSeconds(IntakeConstants.UNBOOST_TIME),
+        Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.STOP.speed)));
+  } 
 
   public Command reset() {
     return intake.runOnce(() -> intake.set(IntakeState.STOP));

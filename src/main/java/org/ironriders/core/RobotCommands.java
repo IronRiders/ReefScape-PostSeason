@@ -15,14 +15,16 @@ import org.ironriders.intake.IntakeConstants.IntakeState;
 import org.ironriders.targeting.TargetingCommands;
 
 /**
- * These commands require more complex logic and are not directly tied to a subsystem. They
- * generally interface w/ multiple subsystems via their commands and are higher-level.
+ * These commands require more complex logic and are not directly tied to a
+ * subsystem. They
+ * generally interface w/ multiple subsystems via their commands and are
+ * higher-level.
  *
- * <p>These commands are those which the driver controls call.
+ * <p>
+ * These commands are those which the driver controls call.
  */
 @SuppressWarnings("unused") // Targeting and climb are unused by high-level commands
 public class RobotCommands {
-  private boolean hasL4Boost = false;
   private final DriveCommands driveCommands;
   private final TargetingCommands targetingCommands;
   private final IntakeCommands intakeCommands;
@@ -34,11 +36,11 @@ public class RobotCommands {
   /**
    * Creates final variables for all command classes.
    *
-   * @param driveCommands DriveCommands instance
-   * @param targetingCommands TargetingCommands instance
+   * @param driveCommands       DriveCommands instance
+   * @param targetingCommands   TargetingCommands instance
    * @param coralIntakeCommands CoralIntakeCommands instance
-   * @param climbCommands ClimbCommands instance
-   * @param controller GenericHID controller (joystick/gamepad) instance
+   * @param climbCommands       ClimbCommands instance
+   * @param controller          GenericHID controller (joystick/gamepad) instance
    */
   public RobotCommands(
       DriveCommands driveCommands,
@@ -65,7 +67,7 @@ public class RobotCommands {
 
     NamedCommands.registerCommand("Intake Eject", eject());
     NamedCommands.registerCommand("Intake", intake());
-    NamedCommands.registerCommand("Score", scoreAndDown());
+    NamedCommands.registerCommand("Score", score());
 
     SmartDashboard.putData("RobotCommands/Reset Gyro", resetGyroAngle());
   }
@@ -82,7 +84,7 @@ public class RobotCommands {
    *
    * @param inputTranslationX DoubleSupplier, value from 0-1.
    * @param inputTranslationY DoubleSupplier, value from 0-1.
-   * @param inputRotation DoubleSupplier, value from 0-1.
+   * @param inputRotation     DoubleSupplier, value from 0-1.
    */
   public Command driveTeleop(
       DoubleSupplier inputTranslationX,
@@ -95,19 +97,22 @@ public class RobotCommands {
     return Commands.sequence(elevatorWristSet(level));
   }
 
-  private Command scoreAndDown() {
-    return Commands.sequence(
-        intakeCommands.set(IntakeState.SCORE), elevatorWristSet(ElevatorWristState.HOLD));
+  private Command score() {
+    return intakeCommands.set(IntakeState.SCORE);
   }
 
   /**
-   * Small translation that is robot-centered rather than field-centered. For example, moving a
-   * little 30 degrees will move 30 degrees relative to the front of the robot, rather than relative
+   * Small translation that is robot-centered rather than field-centered. For
+   * example, moving a
+   * little 30 degrees will move 30 degrees relative to the front of the robot,
+   * rather than relative
    * to the field.
    *
-   * @param robotRelativeAngleDegrees The angle to move, in degrees relative to where the robot is
-   *     facing
-   * @return Returns command object that calls the {@link DriveCommands#jog(double)} method
+   * @param robotRelativeAngleDegrees The angle to move, in degrees relative to
+   *                                  where the robot is
+   *                                  facing
+   * @return Returns command object that calls the
+   *         {@link DriveCommands#jog(double)} method
    */
   public Command jog(double robotRelativeAngleDegrees) {
     return driveCommands.jog(robotRelativeAngleDegrees);
@@ -117,10 +122,12 @@ public class RobotCommands {
    * Command to make the robot intake. Runs two commands in parallel:
    *
    * <ul>
-   *   <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState) elevator wrist
-   *       state} to {@link ElevatorWristState#INTAKING "INTAKING"}.
-   *   <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to {@link IntakeState#GRAB
-   *       "GRAB"}.
+   * <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState)
+   * elevator wrist
+   * state} to {@link ElevatorWristState#INTAKING "INTAKING"}.
+   * <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to
+   * {@link IntakeState#GRAB
+   * "GRAB"}.
    * </ul>
    *
    * <br>
@@ -128,20 +135,19 @@ public class RobotCommands {
    * @return returns the command described above
    */
   public Command intake() {
-    hasL4Boost = false;
     return Commands.parallel(
         elevatorWristSet(ElevatorWristState.INTAKING), intakeCommands.set(IntakeState.GRAB));
     // .unless(() -> intakeCommands.getIntake().beamBreakTriggered());
   }
 
   /**
-   * Command to make the robot eject. Simply sets the {@link IntakeCommands#set(IntakeState) intake
+   * Command to make the robot eject. Simply sets the
+   * {@link IntakeCommands#set(IntakeState) intake
    * state} to {@link IntakeState#EJECT "eject"}.
    *
    * @return returns the command described above
    */
   public Command eject() {
-    hasL4Boost = false;
     return intakeCommands.set(IntakeState.EJECT);
   }
 
@@ -157,13 +163,16 @@ public class RobotCommands {
   }
 
   /**
-   * Command to stop the intake and stow the elevator wrist. Does the following in parallel:
+   * Command to stop the intake and stow the elevator wrist. Does the following in
+   * parallel:
    *
    * <ul>
-   *   <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState) elevator wrist
-   *       state} to {@link ElevatorWristState#HOLD "stow"}.
-   *   <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to {@link IntakeState#STOP
-   *       "stop"}.
+   * <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState)
+   * elevator wrist
+   * state} to {@link ElevatorWristState#HOLD "stow"}.
+   * <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to
+   * {@link IntakeState#STOP
+   * "stop"}.
    * </ul>
    *
    * @return returns the command described above
@@ -177,12 +186,8 @@ public class RobotCommands {
   public Command elevatorWristSet(ElevatorWristState state) {
     switch (state) {
       case L4:
-        if (hasL4Boost) { // If we have already moved the coral up don't do it again
-          return elevatorWristCommands.setElevatorWrist(state);
-        }
-        hasL4Boost = true;
-        return Commands.parallel(
-            elevatorWristCommands.setElevatorWrist(state), intakeCommands.boost());
+        return Commands.parallel(elevatorWristCommands.setElevatorWrist(state), intakeCommands.boost());
+
       default:
         return elevatorWristCommands.setElevatorWrist(state);
     }
@@ -191,19 +196,22 @@ public class RobotCommands {
   /**
    * Sets the rumble on the controller for 0.3 seconds.
    *
-   * <p>Does this by setting the {@link
+   * <p>
+   * Does this by setting the {@link
    * edu.wpi.first.wpilibj.GenericHID#setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType, double)
    * GenericHID setRumble()} method to {@link
-   * edu.wpi.first.wpilibj.GenericHID.RumbleType#kBothRumble kBothRumble}. This makes all motors on
+   * edu.wpi.first.wpilibj.GenericHID.RumbleType#kBothRumble kBothRumble}. This
+   * makes all motors on
    * a controller rumble.
    *
-   * @return A command that does what is described above for 0.3 seconds, then returns rumble to 0.
+   * @return A command that does what is described above for 0.3 seconds, then
+   *         returns rumble to 0.
    */
   public Command rumbleController() {
     return Commands.sequence(
-            Commands.runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 1)),
-            Commands.waitSeconds(0.3),
-            Commands.runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 0)))
+        Commands.runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 1)),
+        Commands.waitSeconds(0.3),
+        Commands.runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 0)))
         .handleInterrupt(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 0));
   }
 }

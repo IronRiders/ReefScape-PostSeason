@@ -33,6 +33,8 @@ public class IntakeCommands {
 
       case EJECT:
         return command.withTimeout(DISCHARGE_TIMEOUT).finallyDo(() -> intake.set(IntakeState.STOP));
+      case SCORE:
+        return command.withTimeout(DISCHARGE_TIMEOUT).finallyDo(() -> intake.set(IntakeState.STOP));
       default:
         return command.finallyDo(() -> intake.set(IntakeState.STOP));
     }

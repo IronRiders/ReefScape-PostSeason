@@ -20,7 +20,7 @@ public class ClimbConstants {
 
   public enum Targets {
     MIN(0),
-    MAX(-580), // max position upward
+    MAX(-640), // max position upward
     CLIMBED(-60);
 
     public final double pos;

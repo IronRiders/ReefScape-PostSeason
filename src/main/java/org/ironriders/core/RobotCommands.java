@@ -61,10 +61,6 @@ public class RobotCommands {
     NamedCommands.registerCommand("ElevatorWrist L3", elevatorWristSet(ElevatorWristState.L3));
     NamedCommands.registerCommand("ElevatorWrist L4", elevatorWristSet(ElevatorWristState.L4));
 
-    NamedCommands.registerCommand("Prepare Score L4", prepareScoreLevel(ElevatorWristState.L4));
-    NamedCommands.registerCommand("Prepare Score L3", prepareScoreLevel(ElevatorWristState.L3));
-    NamedCommands.registerCommand("Prepare Score L2", prepareScoreLevel(ElevatorWristState.L2));
-
     NamedCommands.registerCommand("Intake Eject", eject());
     NamedCommands.registerCommand("Intake", intake());
     NamedCommands.registerCommand("Score", intakeCommands.set(IntakeState.SCORE));
@@ -91,10 +87,6 @@ public class RobotCommands {
       DoubleSupplier inputTranslationY,
       DoubleSupplier inputRotation) {
     return driveCommands.driveTeleop(inputTranslationX, inputTranslationY, inputRotation, true);
-  }
-
-  public Command prepareScoreLevel(ElevatorWristState level) {
-    return Commands.sequence(elevatorWristSet(level));
   }
 
   /**

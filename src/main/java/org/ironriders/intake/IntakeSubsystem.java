@@ -109,7 +109,7 @@ public class IntakeSubsystem extends IronSubsystem {
   }
 
   public boolean beamBreakTriggered() {
-    return !beamBreak.get();
+    return false;
   }
 
   public IntakeCommands getCommands() {

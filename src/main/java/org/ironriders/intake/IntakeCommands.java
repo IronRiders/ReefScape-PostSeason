@@ -27,14 +27,13 @@ public class IntakeCommands {
 
     switch (state) {
       case GRAB:
-        return command
-            .until(() -> intake.hasHighCurrent())
-            .finallyDo(() -> intake.set(IntakeState.STOP));
-
+        return command;
       case EJECT:
         return command.withTimeout(DISCHARGE_TIMEOUT).finallyDo(() -> intake.set(IntakeState.STOP));
       case SCORE:
         return command.withTimeout(DISCHARGE_TIMEOUT).finallyDo(() -> intake.set(IntakeState.STOP));
+      case STOP:
+        command.cancel();
       default:
         return command.finallyDo(() -> intake.set(IntakeState.STOP));
     }

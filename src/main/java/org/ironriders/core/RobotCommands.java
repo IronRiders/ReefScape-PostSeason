@@ -132,7 +132,7 @@ public class RobotCommands {
    */
   public Command intake() {
     return Commands.parallel(
-        elevatorWristSet(ElevatorWristState.INTAKING), intakeCommands.set(IntakeState.GRAB));
+        elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING), intakeCommands.set(IntakeState.GRAB));
     // .unless(() -> intakeCommands.getIntake().beamBreakTriggered());
   }
 
@@ -174,8 +174,8 @@ public class RobotCommands {
    * @return returns the command described above
    */
   public Command stopIntake() {
-    return Commands.parallel(
-        elevatorWristSet(ElevatorWristState.HOLD), intakeCommands.set(IntakeState.STOP));
+    return Commands.sequence(
+        elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD), intakeCommands.set(IntakeState.STOP));
     // .unless(() -> intakeCommands.getIntake().beamBreakTriggered()));
   }
 

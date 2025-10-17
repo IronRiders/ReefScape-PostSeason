@@ -33,7 +33,7 @@ public class IntakeCommands {
       case SCORE:
         return command.withTimeout(DISCHARGE_TIMEOUT).finallyDo(() -> intake.set(IntakeState.STOP));
       case STOP:
-        command.cancel();
+        command.cancel(); // fall through
       default:
         return command.finallyDo(() -> intake.set(IntakeState.STOP));
     }
@@ -45,6 +45,13 @@ public class IntakeCommands {
         Commands.waitSeconds(IntakeConstants.BOOST_TIME),
         Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.STOP.speed)));
   }
+
+  public Command unboost() {
+    return Commands.sequence(
+        Commands.runOnce(() -> intake.setMotorsNoDiff(-IntakeState.BOOST.speed)),
+        Commands.waitSeconds(IntakeConstants.UNBOOST_TIME),
+        Commands.runOnce(() -> intake.setMotorsNoDiff(IntakeState.STOP.speed)));
+  } 
 
   public Command reset() {
     return intake.runOnce(() -> intake.set(IntakeState.STOP));

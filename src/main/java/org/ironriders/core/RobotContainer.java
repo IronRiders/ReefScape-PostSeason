@@ -205,6 +205,8 @@ public class RobotContainer {
         primaryController.povLeft().onTrue(driveCommands.jog(90));
 
         primaryController.povUp().onTrue(intakeCommands.boost());
+        primaryController.povDown().onTrue(intakeCommands.unboost());
+
 
         // Intake and then go down
         primaryController

@@ -152,10 +152,10 @@ public class RobotCommands {
   }
 
   public void resetPigeon() {
-    driveCommands.resetRotation();
     Pigeon2 pigeon2 = new Pigeon2(9);
     pigeon2.reset();
     pigeon2.close();
+    driveCommands.resetRotation();
   }
 
   /**
@@ -174,7 +174,7 @@ public class RobotCommands {
    * @return returns the command described above
    */
   public Command stopIntake() {
-    return Commands.sequence(
+    return Commands.parallel(
         elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD), intakeCommands.set(IntakeState.STOP));
     // .unless(() -> intakeCommands.getIntake().beamBreakTriggered()));
   }

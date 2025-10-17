@@ -67,7 +67,7 @@ public class RobotCommands {
 
     NamedCommands.registerCommand("Intake Eject", eject());
     NamedCommands.registerCommand("Intake", intake());
-    NamedCommands.registerCommand("Score", score());
+    NamedCommands.registerCommand("Score", intakeCommands.set(IntakeState.SCORE));
 
     SmartDashboard.putData("RobotCommands/Reset Gyro", resetGyroAngle());
   }
@@ -95,10 +95,6 @@ public class RobotCommands {
 
   public Command prepareScoreLevel(ElevatorWristState level) {
     return Commands.sequence(elevatorWristSet(level));
-  }
-
-  private Command score() {
-    return intakeCommands.set(IntakeState.SCORE);
   }
 
   /**

@@ -123,11 +123,10 @@ public class DriveSubsystem extends IronSubsystem {
 
   public void resetRotation() {
     Pigeon2 pigeon2 = new Pigeon2(9);
-    Translation2d oldTranslation = swerveDrive.getPose().getTranslation();
     swerveDrive.resetOdometry(
         new Pose2d(
-            oldTranslation,
-            new Rotation2d(pigeon2.getAngle() * (Math.PI / 180f))));
+            swerveDrive.getPose().getTranslation(),
+            new Rotation2d(pigeon2.getYaw(true).waitForUpdate(1).getValueAsDouble() * (Math.PI / 180f))));
     pigeon2.close();
   }
 

@@ -73,7 +73,7 @@ public class IntakeSubsystem extends IronSubsystem {
   public void periodic() {
     debugPublish("Left Velocity", leftIntake.getVelocity().getValue().in(Units.DegreesPerSecond));
     debugPublish("Right Velocity", rightIntake.getVelocity().getValue().in(Units.DegreesPerSecond));
-    debugPublish("Beam Break Triggered", hasHighCurrent());
+    debugPublish("Beam Break Triggered", beamBreakTriggered());
     average =
         (leftIntake.getTorqueCurrent().getValueAsDouble()
                 + rightIntake.getTorqueCurrent().getValueAsDouble())

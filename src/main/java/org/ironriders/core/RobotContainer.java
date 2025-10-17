@@ -217,7 +217,7 @@ public class RobotContainer {
 
         primaryController
             .leftTrigger(triggerThreshold)
-            .onTrue(intakeCommands.set(IntakeState.SCORE))
+            .whileTrue(intakeCommands.set(IntakeState.SCORE))
             .onFalse(intakeCommands.set(IntakeState.STOP));
 
         primaryController

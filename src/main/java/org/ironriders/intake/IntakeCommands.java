@@ -23,7 +23,7 @@ public class IntakeCommands {
   }
 
   public Command set(IntakeConstants.IntakeState state) {
-    Command command = intake.run(() -> intake.set(state));
+    Command command = intake.runOnce(() -> intake.set(state));
 
     switch (state) {
       case GRAB:

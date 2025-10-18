@@ -16,16 +16,14 @@ import static org.ironriders.intake.IntakeConstants.LEFT_SPEED_MUL;
 import static org.ironriders.intake.IntakeConstants.RIGHT_SPEED_MUL;
 import static org.ironriders.intake.IntakeConstants.ROLLER_SPEED_MUL;
 
-import org.ironriders.intake.IntakeConstants.IntakeState;
-import org.ironriders.lib.IronSubsystem;
-
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
+import org.ironriders.intake.IntakeConstants.IntakeState;
+import org.ironriders.lib.IronSubsystem;
 
 public class IntakeSubsystem extends IronSubsystem {
 
@@ -37,8 +35,7 @@ public class IntakeSubsystem extends IronSubsystem {
 
   private double average = 0;
 
-  private final DigitalInput beamBreak = new DigitalInput(
-    INTAKE_BEAMBREAK);
+  private final DigitalInput beamBreak = new DigitalInput(INTAKE_BEAMBREAK);
 
   public IntakeSubsystem() {
     TalonFXConfiguration mainConfig = new TalonFXConfiguration();
@@ -51,39 +48,41 @@ public class IntakeSubsystem extends IronSubsystem {
                 .withSupplyCurrentLimit(INTAKE_SUPPLY_CURRENT)
                 .withSupplyCurrentLowerLimit(INTAKE_SUPPLY_CURRENT_LOWER_LIMIT)
                 .withSupplyCurrentLowerTime(INTAKE_SUPPLY_CURRENT_LOWER_TIME))
-        .withMotorOutput(
-            new MotorOutputConfigs()
-                .withNeutralMode(INTAKE_NEUTRAL_MODE));
+        .withMotorOutput(new MotorOutputConfigs().withNeutralMode(INTAKE_NEUTRAL_MODE));
 
     // TODO: This is ugly as hell
     leftIntake.getConfigurator().apply(mainConfig);
-    leftIntake.getConfigurator().apply(new MotorOutputConfigs().withInverted(INTAKE_MOTOR_LEFT_INVERSION));
+    leftIntake
+        .getConfigurator()
+        .apply(new MotorOutputConfigs().withInverted(INTAKE_MOTOR_LEFT_INVERSION));
 
     rightIntake.getConfigurator().apply(mainConfig);
-    rightIntake.getConfigurator().apply(new MotorOutputConfigs().withInverted(INTAKE_MOTOR_RIGHT_INVERSION));
+    rightIntake
+        .getConfigurator()
+        .apply(new MotorOutputConfigs().withInverted(INTAKE_MOTOR_RIGHT_INVERSION));
 
     rollerIntake.getConfigurator().apply(mainConfig);
-    rollerIntake.getConfigurator().apply(new MotorOutputConfigs().withInverted(INTAKE_MOTOR_ROLLER_INVERSION));
+    rollerIntake
+        .getConfigurator()
+        .apply(new MotorOutputConfigs().withInverted(INTAKE_MOTOR_ROLLER_INVERSION));
 
     commands = new IntakeCommands(this);
   }
 
   @Override
   public void periodic() {
-    publish(
-        "Left Velocity",
-        leftIntake.getVelocity().getValue().in(Units.DegreesPerSecond));
-    publish(
-        "Right Velocity",
-        rightIntake.getVelocity().getValue().in(Units.DegreesPerSecond));
-    publish("Beam Break Triggered", hasHighCurrent());
-    average = (leftIntake.getTorqueCurrent().getValueAsDouble() + rightIntake.getTorqueCurrent().getValueAsDouble())
-        / 2f;
-    publish("Current average", average);
+    debugPublish("Left Velocity", leftIntake.getVelocity().getValue().in(Units.DegreesPerSecond));
+    debugPublish("Right Velocity", rightIntake.getVelocity().getValue().in(Units.DegreesPerSecond));
+    debugPublish("Beam Break Triggered", beamBreakTriggered());
+    average =
+        (leftIntake.getTorqueCurrent().getValueAsDouble()
+                + rightIntake.getTorqueCurrent().getValueAsDouble())
+            / 2f;
+    debugPublish("Current average", average);
   }
 
   public void set(IntakeState state) {
-    publish("Intake State", state.toString());
+    debugPublish("Intake State", state.toString());
     // logMessage("goes to " + state.toString());
     leftIntake.set(state.speed * outputDifferential(state, LEFT_SPEED_MUL));
     rightIntake.set(state.speed * outputDifferential(state, RIGHT_SPEED_MUL));
@@ -105,11 +104,12 @@ public class IntakeSubsystem extends IronSubsystem {
 
   public boolean hasHighCurrent() {
     return false;
-    // return average > 12 && !beamBreak.get(); disabled because beam break made it hard to intake
+    // return average > 12 && !beamBreak.get(); disabled because beam break made it
+    // hard to intake
   }
 
   public boolean beamBreakTriggered() {
-    return !beamBreak.get();
+    return false;
   }
 
   public IntakeCommands getCommands() {

@@ -1,20 +1,20 @@
 package org.ironriders.core;
 
+import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import org.ironriders.elevator.ElevatorCommands;
 import org.ironriders.elevator.ElevatorSubsystem;
-import org.ironriders.intake.IntakeCommands;
 import org.ironriders.lib.IronSubsystem;
 import org.ironriders.wrist.WristCommands;
 import org.ironriders.wrist.WristSubsystem;
 
-import com.pathplanner.lib.auto.NamedCommands;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-
-// This class contains all the state for the moving the elevator and wrist together. You should not call the wrist or elevator commands independently
+// This class contains all the state for the moving the elevator and wrist together. You should not
+// call the wrist or elevator commands independently
 public class ElevatorWristCTL extends IronSubsystem {
+  private ElevatorWristState currentState = ElevatorWristState.HOLD;
+
   private final WristSubsystem wristSubsystem = new WristSubsystem();
   private final WristCommands wristCommands = wristSubsystem.getCommands();
 
@@ -25,25 +25,24 @@ public class ElevatorWristCTL extends IronSubsystem {
   private final String dashboardPrefix = "Subsystems/" + diagnosticName + "/";
 
   /**
-   * Publishes commands to set wrist to various positions to SmartDashboard;
-   * registers {@linkplain #reset() Elevator Wrist Reset} with
-   * {@linkplain com.pathplanner.lib.auto.NamedCommands#registerCommand(String, Command)
-   * PathPlanner}
+   * Publishes commands to set wrist to various positions to SmartDashboard; registers {@linkplain
+   * #reset() Elevator Wrist Reset} with {@linkplain
+   * com.pathplanner.lib.auto.NamedCommands#registerCommand(String, Command) PathPlanner}
    */
   public ElevatorWristCTL() {
-    publish("Set to STOW", setElevatorWrist(ElevatorWristState.HOLD));
-    publish("Set to INTAKING", setElevatorWrist(ElevatorWristState.INTAKING));
-    publish("Set to L2", setElevatorWrist(ElevatorWristState.L2));
-    publish("Set to L3", setElevatorWrist(ElevatorWristState.L3));
-    publish("Set to L4", setElevatorWrist(ElevatorWristState.L4));
+    debugPublish("Set to STOW", setElevatorWrist(ElevatorWristState.HOLD));
+    debugPublish("Set to INTAKING", setElevatorWrist(ElevatorWristState.INTAKING));
+    debugPublish("Set to L2", setElevatorWrist(ElevatorWristState.L2));
+    debugPublish("Set to L3", setElevatorWrist(ElevatorWristState.L3));
+    debugPublish("Set to L4", setElevatorWrist(ElevatorWristState.L4));
 
-    SmartDashboard.putData(dashboardPrefix + "Reset", reset());
+    SmartDashboard.putData("debug/" + dashboardPrefix + "Reset", reset());
     NamedCommands.registerCommand("Elevator Wrist Reset", (Command) reset());
+
+    SmartDashboard.putString(dashboardPrefix + "Current State", currentState.toString());
   }
 
-  /**
-   * position targets for elevator, all in inches
-   */
+  /** position targets for elevator, all in inches. */
   public enum ElevatorLevel { // Position in inches
     DOWN(0),
     L2(19.5),
@@ -57,10 +56,8 @@ public class ElevatorWristCTL extends IronSubsystem {
     }
   }
 
-  /**
-   * angle targets for wrist, in degrees
-   */
-  public enum WristRotation { // Position in degrees
+  /** angle targets for wrist, in degrees. */
+  public enum WristRotation { // Position in degrees (zero is straight up)
     HOLD(0),
     INTAKING(-85),
     L2L3(40),
@@ -74,35 +71,24 @@ public class ElevatorWristCTL extends IronSubsystem {
   }
 
   /**
-   * Combined targets for elevator and wrist, each with a wrist and elevetor
-   * state.
+   * Combined targets for elevator and wrist, each with a wrist and elevetor state.
+   *
    * <ul>
-   * <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#HOLD
-   * HOLD}: {@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorLevel#DOWN
-   * Elevator: Down},
-   * {@linkplain org.ironriders.core.ElevatorWristCTL.WristRotation#HOLD Wrist:
-   * Hold}</li>
-   * <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#INTAKING
-   * INTAKING}:
-   * {@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorLevel#DOWN Elevator:
-   * Down},
-   * {@linkplain org.ironriders.core.ElevatorWristCTL.WristRotation#INTAKING
-   * Wrist: Intaking}</li>
-   * <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#L2
-   * L2}: {@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorLevel#L2
-   * Elevator: L2},
-   * {@linkplain org.ironriders.core.ElevatorWristCTL.WristRotation#L2L3 Wrist:
-   * L2/L3}</li>
-   * <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#L3
-   * L3}: {@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorLevel#L3
-   * Elevator: L3},
-   * {@linkplain org.ironriders.core.ElevatorWristCTL.WristRotation#L2L3 Wrist:
-   * L2/L3}</li>
-   * <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#L4
-   * L4}: {@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorLevel#L4
-   * Elevator: L4},
-   * {@linkplain org.ironriders.core.ElevatorWristCTL.WristRotation#L4 Wrist:
-   * L4}</li>
+   *   <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#HOLD HOLD}:
+   *       {@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorLevel#DOWN Elevator: Down},
+   *       {@linkplain org.ironriders.core.ElevatorWristCTL.WristRotation#HOLD Wrist: Hold}
+   *   <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#INTAKING INTAKING}:
+   *       {@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorLevel#DOWN Elevator: Down},
+   *       {@linkplain org.ironriders.core.ElevatorWristCTL.WristRotation#INTAKING Wrist: Intaking}
+   *   <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#L2 L2}: {@linkplain
+   *       org.ironriders.core.ElevatorWristCTL.ElevatorLevel#L2 Elevator: L2}, {@linkplain
+   *       org.ironriders.core.ElevatorWristCTL.WristRotation#L2L3 Wrist: L2/L3}
+   *   <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#L3 L3}: {@linkplain
+   *       org.ironriders.core.ElevatorWristCTL.ElevatorLevel#L3 Elevator: L3}, {@linkplain
+   *       org.ironriders.core.ElevatorWristCTL.WristRotation#L2L3 Wrist: L2/L3}
+   *   <li>{@linkplain org.ironriders.core.ElevatorWristCTL.ElevatorWristState#L4 L4}: {@linkplain
+   *       org.ironriders.core.ElevatorWristCTL.ElevatorLevel#L4 Elevator: L4}, {@linkplain
+   *       org.ironriders.core.ElevatorWristCTL.WristRotation#L4 Wrist: L4}
    * </ul>
    */
   public enum ElevatorWristState {
@@ -142,19 +128,22 @@ public class ElevatorWristCTL extends IronSubsystem {
    */
 
   public Command setElevatorWrist(ElevatorWristState state) {
-    logMessage("goes to " + state.toString());
-    return Commands.sequence(wristCommands.set(WristRotation.HOLD), elevatorCommands.set(state.elevatorLevel),
+    return Commands.sequence(
+        wristCommands.set(WristRotation.HOLD),
+        elevatorCommands.set(state.elevatorLevel),
         wristCommands.set(state.wristRotation));
   }
 
   /*
-   * This command, in parallel, moves the wrist all the way in and does \a PID
+   * This command, in parallel, moves the wrist all the way in and does a PID
    * reset, as well as moving the elevator all the way down, rehoming it for good
    * measure, and then resetting it's PID.
    */
 
   public Command reset() {
-    return Commands.sequence(logMessage("reseting"), wristCommands.stowReset(), elevatorCommands.home());
+    currentState = ElevatorWristState.HOLD;
+    SmartDashboard.putString(dashboardPrefix + "Current State", currentState.toString());
+    return Commands.sequence(
+        logMessage("reseting"), wristCommands.stowReset(), elevatorCommands.home());
   }
-
 }

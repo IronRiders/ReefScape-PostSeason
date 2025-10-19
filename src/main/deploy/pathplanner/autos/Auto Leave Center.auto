@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "Path Leave Center"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "leave start blue",
+  "folder": null,
   "choreoAuto": false
 }

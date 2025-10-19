@@ -44,19 +44,6 @@
             },
             "children": [
               {
-                "title": "Force Home",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/Subsystems/Elevator/Force Home",
-                  "period": 0.06,
-                  "show_type": false
-                }
-              },
-              {
                 "title": "Homed?",
                 "x": 0.0,
                 "y": 0.0,
@@ -71,6 +58,19 @@
                   "false_color": 4294198070,
                   "true_icon": "None",
                   "false_icon": "None"
+                }
+              },
+              {
+                "title": "Force Home",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Subsystems/Elevator/Force Home",
+                  "period": 0.06,
+                  "show_type": false
                 }
               }
             ]
@@ -202,7 +202,7 @@
             "title": "Auto Select",
             "x": 1024.0,
             "y": 384.0,
-            "width": 128.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "ComboBox Chooser",
             "properties": {

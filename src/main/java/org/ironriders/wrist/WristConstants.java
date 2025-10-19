@@ -7,7 +7,7 @@ public class WristConstants {
 
   // TODO: Need to tune
   public static final double P = 0.020; // proportion
-  public static final double I = 0.0; // integral
+  public static final double I = 0.002; // integral
   public static final double D = 0.0; // derivative
   public static final double T = 0.02; // time to next step
 

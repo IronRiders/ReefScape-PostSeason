@@ -26,9 +26,9 @@ public class IntakeConstants {
 
 
   // TODO Tune These
-  public static final int INTAKE_STATOR_CURRENT = 30; // Stator Current Torque and Acceleration
+  public static final int INTAKE_STATOR_CURRENT = 50; // Stator Current Torque and Acceleration
   public static final int INTAKE_SUPPLY_CURRENT =
-      40; // Supply Current Speed + (a little Torque). If Supply
+      80; // Supply Current Speed + (a little Torque). If Supply
   // Current Lower Time is <= 0 then this will be the Supply
   // Current
   public static final int INTAKE_SUPPLY_CURRENT_LOWER_LIMIT =

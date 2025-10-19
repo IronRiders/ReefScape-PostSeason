@@ -47,7 +47,7 @@ public class ElevatorWristCTL extends IronSubsystem {
     DOWN(0),
     L2(19.5),
     L3(36.5),
-    L4(53.25);
+    L4(53);
 
     public final double pos;
 

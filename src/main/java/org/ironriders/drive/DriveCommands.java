@@ -19,6 +19,7 @@ import org.ironriders.lib.GameState;
 public class DriveCommands {
 
   private final DriveSubsystem driveSubsystem;
+
   public DriveCommands(DriveSubsystem driveSubsystem) {
     this.driveSubsystem = driveSubsystem;
 
@@ -27,10 +28,12 @@ public class DriveCommands {
     this.driveSubsystem.publish(
         "Invert Drive", Commands.runOnce(() -> driveSubsystem.switchDrive()));
     this.driveSubsystem.publish(
-          "Invert Rotation", Commands.runOnce(() -> driveSubsystem.switchRotation()));
+        "Invert Rotation", Commands.runOnce(() -> driveSubsystem.switchRotation()));
   }
 
   /**
+   * j
+   *
    * @param translation
    * @param rotation
    * @param fieldRelative

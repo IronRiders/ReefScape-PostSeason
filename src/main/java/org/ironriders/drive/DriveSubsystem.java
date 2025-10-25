@@ -24,10 +24,8 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 /**
- * The DriveSubsystem encompasses everything that the Swerve Drive needs to
- * function. It keeps track
- * of the robot's position and angle, and uses the controller input to figure
- * out how the individual
+ * The DriveSubsystem encompasses everything that the Swerve Drive needs to function. It keeps track
+ * of the robot's position and angle, and uses the controller input to figure out how the individual
  * modules need to turn and be angled.
  */
 public class DriveSubsystem extends IronSubsystem {
@@ -44,9 +42,11 @@ public class DriveSubsystem extends IronSubsystem {
 
   public DriveSubsystem() throws RuntimeException {
     try {
-      swerveDrive = new SwerveParser(SWERVE_JSON_DIRECTORY) // YAGSL reads from the deploy/swerve directory
-          .createSwerveDrive(SWERVE_DRIVE_MAX_SPEED);
-    } catch (IOException e) { // instancing SwerveDrive can throw an error, so we need to catch that.
+      swerveDrive =
+          new SwerveParser(SWERVE_JSON_DIRECTORY) // YAGSL reads from the deploy/swerve directory
+              .createSwerveDrive(SWERVE_DRIVE_MAX_SPEED);
+    } catch (
+        IOException e) { // instancing SwerveDrive can throw an error, so we need to catch that.
       throw new RuntimeException("Error configuring swerve drive", e);
     }
 
@@ -67,14 +67,15 @@ public class DriveSubsystem extends IronSubsystem {
         swerveDrive::getPose,
         swerveDrive::resetOdometry,
         swerveDrive::getRobotVelocity,
-        (speeds, feedforwards) -> swerveDrive.setChassisSpeeds(
-            new ChassisSpeeds(
-                -speeds.vxMetersPerSecond,
-                -speeds.vyMetersPerSecond,
-                RobotUtils.clamp(
-                    -SWERVE_MAXIMUM_ANGULAR_VELOCITY,
-                    SWERVE_MAXIMUM_ANGULAR_VELOCITY,
-                    -speeds.omegaRadiansPerSecond))),
+        (speeds, feedforwards) ->
+            swerveDrive.setChassisSpeeds(
+                new ChassisSpeeds(
+                    -speeds.vxMetersPerSecond,
+                    -speeds.vyMetersPerSecond,
+                    RobotUtils.clamp(
+                        -SWERVE_MAXIMUM_ANGULAR_VELOCITY,
+                        SWERVE_MAXIMUM_ANGULAR_VELOCITY,
+                        -speeds.omegaRadiansPerSecond))),
         DriveConstants.HOLONOMIC_CONFIG,
         robotConfig,
         () -> {
@@ -93,24 +94,26 @@ public class DriveSubsystem extends IronSubsystem {
   @Override
   public void periodic() {
     // Report info to driver + update pose w/ vision
-    publish("vision updated ok",vision.updatePose());
+    publish("vision updated ok", vision.updatePose());
     publish("vision has pose", vision.hasPose);
-    publish("inversion status", invertStatus);
+    publish("Drive Inverted?", driveInvert);
+    publish("Rotation Inverted?", rotationInvert);
   }
 
   /**
-   * Vrrrrooooooooom brrrrrrrrr BRRRRRR wheeee BRRR brrrr VRRRRROOOOOOM ZOOOOOOM
-   * ZOOOOM WAHOOOOOOOOO
+   * Vrrrrooooooooom brrrrrrrrr BRRRRRR wheeee BRRR brrrr VRRRRROOOOOOM ZOOOOOOM ZOOOOM WAHOOOOOOOOO
    * WAHAHAHHA (Drives given a desired translation and rotation.)
    *
-   * @param translation   Desired translation in meters per second.
-   * @param rotation      Desired rotation in radians per second.
-   * @param fieldRelative If not field relative, the robot will move relative to
-   *                      its own rotation.
+   * @param translation Desired translation in meters per second.
+   * @param rotation Desired rotation in radians per second.
+   * @param fieldRelative If not field relative, the robot will move relative to its own rotation.
    */
   public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
     swerveDrive.drive(
-        translation.times(driveInvert ? -1 : 1), rotation * (rotationInvert ? -1 : 1), fieldRelative, false);
+        translation.times(driveInvert ? -1 : 1),
+        rotation * (rotationInvert ? -1 : 1),
+        fieldRelative,
+        false);
   }
 
   /** Fetch the DriveCommands instance */
@@ -123,7 +126,8 @@ public class DriveSubsystem extends IronSubsystem {
     swerveDrive.resetOdometry(
         new Pose2d(
             swerveDrive.getPose().getTranslation(),
-            new Rotation2d(pigeon2.getYaw(true).waitForUpdate(1).getValueAsDouble() * (Math.PI / 180f))));
+            new Rotation2d(
+                pigeon2.getYaw(true).waitForUpdate(1).getValueAsDouble() * (Math.PI / 180f))));
     pigeon2.close();
   }
 
@@ -147,7 +151,8 @@ public class DriveSubsystem extends IronSubsystem {
 
   public void switchRotation() {
     rotationInvert = !rotationInvert;
-  }  
+  }
+
   public void switchDrive() {
     driveInvert = !driveInvert;
   }

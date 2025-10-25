@@ -1,6 +1,6 @@
 // LimelightHelpers v1.11 (REQUIRES LLOS 2025.0 OR LATER)
 
-package org.ironriders;
+package org;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;

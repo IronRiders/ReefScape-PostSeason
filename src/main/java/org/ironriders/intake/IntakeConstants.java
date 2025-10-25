@@ -17,7 +17,7 @@ public class IntakeConstants {
 
   public static final NeutralModeValue INTAKE_NEUTRAL_MODE = NeutralModeValue.Brake;
 
-  public static final double LEFT_SPEED_MUL = 3;
+  public static final double LEFT_SPEED_MUL = 2;
   public static final double RIGHT_SPEED_MUL = 1;
   public static final double ROLLER_SPEED_MUL = 1;
 
@@ -26,9 +26,9 @@ public class IntakeConstants {
 
 
   // TODO Tune These
-  public static final int INTAKE_STATOR_CURRENT = 30; // Stator Current Torque and Acceleration
+  public static final int INTAKE_STATOR_CURRENT = 50; // Stator Current Torque and Acceleration
   public static final int INTAKE_SUPPLY_CURRENT =
-      40; // Supply Current Speed + (a little Torque). If Supply
+      80; // Supply Current Speed + (a little Torque). If Supply
   // Current Lower Time is <= 0 then this will be the Supply
   // Current
   public static final int INTAKE_SUPPLY_CURRENT_LOWER_LIMIT =
@@ -44,7 +44,7 @@ public class IntakeConstants {
   public static final double DISCHARGE_TIMEOUT = 2; // these are both in SECONDS
 
   public enum IntakeState {
-    GRAB(.25),
+    GRAB(.4),
     SCORE(.30),
     BOOST(-.10), // This is so that changes to the eject speed won't effect the boost
     EJECT(-.10),

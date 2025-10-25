@@ -13,10 +13,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
- * The methods in this class are called automatically corresponding to each
- * mode, as described in the TimedRobot documentation. If you change the name
- * of this class or the package after creating this project, you must also
- * update the Main.java file in the project.
+ * The methods in this class are called automatically corresponding to each mode, as described in
+ * the TimedRobot documentation. If you change the name of this class or the package after creating
+ * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
 
@@ -26,10 +25,11 @@ public class Robot extends TimedRobot {
 
   /**
    * Runs when the robot starts.
+   *
    * <ol>
-   * <li>Innitializes Robot Container</li>
-   * <li>Starts web server at port 5800</li>
-   * <li>Starts automatic capture on camera server</li>
+   *   <li>Innitializes Robot Container
+   *   <li>Starts web server at port 5800
+   *   <li>Starts automatic capture on camera server
    * </ol>
    */
   public Robot() {
@@ -39,8 +39,8 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * Runs periodically, <em>only</em> calls {@link CommandScheduler#getInstance()}
-   * with the .run() method.
+   * Runs periodically, <em>only</em> calls {@link CommandScheduler#getInstance()} with the .run()
+   * method.
    */
   @Override
   public void robotPeriodic() {
@@ -49,14 +49,12 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {
-  } // Make it stop yelling at me
+  public void teleopPeriodic() {} // Make it stop yelling at me
 
   /**
-   * If you start in autonomous mode, this is the first method that runs.
-   * Calls {@link Robot#generalInit()} for startup functions, has some basic
-   * autonomous logic that calls {@link RobotContainer#schedule()} on
-   * {@link RobotContainer#getAutonomousCommand()}.
+   * If you start in autonomous mode, this is the first method that runs. Calls {@link
+   * Robot#generalInit()} for startup functions, has some basic autonomous logic that calls {@link
+   * RobotContainer#schedule()} on {@link RobotContainer#getAutonomousCommand()}.
    */
   @Override
   public void autonomousInit() {
@@ -69,17 +67,12 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /**
-   * Only calls {@link Robot#generalInit()}, no other logic.
-   */
+  /** Only calls {@link Robot#generalInit()}, no other logic. */
   @Override
   public void teleopInit() {
     generalInit();
   }
 
-  /**
-   * Cancels all commands, for when you want to manually run commands.
-   */
   @Override
   public void simulationInit() {
     generalInit();
@@ -96,11 +89,9 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * Initialization that applies to autonomous and teleop. Containes startup
-   * methods
-   * for various parts of the robot, not part of WPILib. Created because we were
-   * tired
-   * of trying to keep all the startup functions updated for both startup methods.
+   * Initialization that applies to autonomous and teleop. Containes startup methods for various
+   * parts of the robot, not part of WPILib. Created because we were tired of trying to keep all the
+   * startup functions updated for both startup methods.
    */
   private void generalInit() {
     if (autonomousCommand != null) {

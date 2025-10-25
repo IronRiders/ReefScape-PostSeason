@@ -6,9 +6,6 @@ import static org.ironriders.elevator.ElevatorConstants.FOLLOW_MOTOR_ID;
 import static org.ironriders.elevator.ElevatorConstants.INCHES_PER_ROTATION;
 import static org.ironriders.elevator.ElevatorConstants.PRIMARY_MOTOR_ID;
 
-import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
-import org.ironriders.lib.IronSubsystem;
-
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -19,24 +16,19 @@ import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
+import org.ironriders.lib.IronSubsystem;
 
-/**
- * This subsystem controls the big ol' elevator that moves the
- * manipulator vertically.
- */
+/** This subsystem controls the big ol' elevator that moves the manipulator vertically. */
 public class ElevatorSubsystem extends IronSubsystem {
   private final ElevatorCommands commands;
 
-  private final SparkMax primaryMotor = new SparkMax(
-      PRIMARY_MOTOR_ID,
-      MotorType.kBrushless); // lead motor
-  private final SparkMax followerMotor = new SparkMax(
-      FOLLOW_MOTOR_ID,
-      MotorType.kBrushless);
+  private final SparkMax primaryMotor =
+      new SparkMax(PRIMARY_MOTOR_ID, MotorType.kBrushless); // lead motor
+  private final SparkMax followerMotor = new SparkMax(FOLLOW_MOTOR_ID, MotorType.kBrushless);
 
   private final SparkLimitSwitch bottomLimitSwitch = primaryMotor.getReverseLimitSwitch();
 
@@ -60,12 +52,14 @@ public class ElevatorSubsystem extends IronSubsystem {
     SparkMaxConfig primaryConfig = new SparkMaxConfig();
     SparkMaxConfig followerConfig = new SparkMaxConfig();
 
-    LimitSwitchConfig forwardLimitSwitchConfig = new LimitSwitchConfig()
-        .forwardLimitSwitchEnabled(true)
-        .forwardLimitSwitchType(Type.kNormallyClosed);
-    LimitSwitchConfig reverseLimitSwitchConfig = new LimitSwitchConfig()
-        .reverseLimitSwitchEnabled(true)
-        .reverseLimitSwitchType(Type.kNormallyClosed);
+    LimitSwitchConfig forwardLimitSwitchConfig =
+        new LimitSwitchConfig()
+            .forwardLimitSwitchEnabled(true)
+            .forwardLimitSwitchType(Type.kNormallyClosed);
+    LimitSwitchConfig reverseLimitSwitchConfig =
+        new LimitSwitchConfig()
+            .reverseLimitSwitchEnabled(true)
+            .reverseLimitSwitchType(Type.kNormallyClosed);
 
     primaryConfig
         .idleMode(IdleMode.kBrake)
@@ -80,30 +74,20 @@ public class ElevatorSubsystem extends IronSubsystem {
         .follow(ElevatorConstants.PRIMARY_MOTOR_ID, true);
 
     primaryMotor.configure(
-        primaryConfig,
-        ResetMode.kResetSafeParameters,
-        PersistMode.kPersistParameters);
+        primaryConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     followerMotor.configure(
-        followerConfig,
-        ResetMode.kResetSafeParameters,
-        PersistMode.kPersistParameters);
+        followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    profile = new TrapezoidProfile(
-        new TrapezoidProfile.Constraints(
-            ElevatorConstants.MAX_VEL,
-            ElevatorConstants.MAX_ACC));
+    profile =
+        new TrapezoidProfile(
+            new TrapezoidProfile.Constraints(ElevatorConstants.MAX_VEL, ElevatorConstants.MAX_ACC));
 
-    pidController = new PIDController(
-        ElevatorConstants.P,
-        ElevatorConstants.I,
-        ElevatorConstants.D);
+    pidController =
+        new PIDController(ElevatorConstants.P, ElevatorConstants.I, ElevatorConstants.D);
 
-    feedforward = new ElevatorFeedforward(
-        ElevatorConstants.S,
-        ElevatorConstants.G,
-        ElevatorConstants.V);
+    feedforward =
+        new ElevatorFeedforward(ElevatorConstants.S, ElevatorConstants.G, ElevatorConstants.V);
 
-    pidController.setTolerance(ELEVATOR_POSITION_TOLERANCE);
     reset();
     commands = new ElevatorCommands(this);
   }
@@ -118,21 +102,16 @@ public class ElevatorSubsystem extends IronSubsystem {
     // }
 
     // Calculate the next state and update the current state
-    periodicSetpoint = profile.calculate(
-        ElevatorConstants.T,
-        periodicSetpoint,
-        goalSetpoint);
+    periodicSetpoint = profile.calculate(ElevatorConstants.T, periodicSetpoint, goalSetpoint);
 
     // Only do PID if homed
     if (isHomed) {
 
-      double pidOutput = pidController.calculate(
-          getHeight(),
-          periodicSetpoint.position);
-          // It's now recommended you remove the velocity one. Not sure why but it was causing a warning
-      double ff = feedforward.calculate( 
-          periodicSetpoint.position);
-          
+      double pidOutput = pidController.calculate(getHeight(), periodicSetpoint.position);
+      // It's now recommended you remove the velocity one. Not sure why but it was
+      // causing a warning
+      double ff = feedforward.calculate(periodicSetpoint.position);
+
       primaryMotor.set(pidOutput + ff);
     } else {
       if (bottomLimitSwitch.isPressed()) {
@@ -141,7 +120,7 @@ public class ElevatorSubsystem extends IronSubsystem {
         return;
       }
 
-      //logMessage("trying to home!"); // this will spam alot, debuging only
+      // logMessage("trying to home!"); // this will spam alot, debuging only
       primaryMotor.set(-ElevatorConstants.HOME_SPEED);
     }
 
@@ -149,24 +128,27 @@ public class ElevatorSubsystem extends IronSubsystem {
   }
 
   private void UpdateDashboard() {
-    publish("Homed", isHomed);
-    publish("Goal State", currentTarget.toString());
-    
-    publish("Goal Position", goalSetpoint.position);
-    if (isHomed)
-      publish("At Goal?", pidController.atSetpoint());
-    else
-      publish("At Goal?", "N/A; Not Homed!");
+    // -- Debugging --
+    debugPublish("Homed", isHomed);
+    debugPublish("Goal State", currentTarget.toString());
+    debugPublish("PID", pidController);
+    debugPublish("Goal Position", goalSetpoint.position);
+    debugPublish("Real Pos", getHeight());
+    if (isHomed) {
+      debugPublish("At Goal?", isAtPosition());
+    } else {
+      debugPublish("At Goal?", "N/A; Not Homed!");
+    }
 
-    publish(
-        "Forward Limit Switch",
-        primaryMotor.getForwardLimitSwitch().isPressed());
-    publish(
-        "Reverse Limit Switch",
-        primaryMotor.getReverseLimitSwitch().isPressed());
+    debugPublish("Forward Limit Switch", primaryMotor.getForwardLimitSwitch().isPressed());
+    debugPublish("Reverse Limit Switch", primaryMotor.getReverseLimitSwitch().isPressed());
 
-    publish("Primary Encoder", primaryMotor.getEncoder().getPosition());
-    publish("Follower Encoder", followerMotor.getEncoder().getPosition());
+    debugPublish("Is at goal?", isAtPosition());
+    debugPublish("Primary Encoder", primaryMotor.getEncoder().getPosition());
+    debugPublish("Follower Encoder", followerMotor.getEncoder().getPosition());
+
+    // -- Competition Info --
+    publish("Homed?", isHomed);
   }
 
   public void setGoal(ElevatorLevel level) {
@@ -213,7 +195,7 @@ public class ElevatorSubsystem extends IronSubsystem {
   }
 
   public boolean isAtPosition() {
-    return pidController.atSetpoint();
+    return Math.abs(getHeight() - goalSetpoint.position) < ELEVATOR_POSITION_TOLERANCE;
   }
 
   public ElevatorCommands getCommands() {

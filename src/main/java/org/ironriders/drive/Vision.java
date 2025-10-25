@@ -12,11 +12,10 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import swervelib.SwerveDrive;
 
 /**
- * Vision is not a subsystem. This class is a utility class for the
- * DriveSubsystem
- * and controls all of the apriltag processing and pose estimation.
+ * Vision is not a subsystem. This class is a utility class for the DriveSubsystem and controls all
+ * of the apriltag processing and pose estimation.
  *
- * (Why is it not a subsystem? Because it doesn't need to be.)
+ * <p>(Why is it not a subsystem? Because it doesn't need to be.)
  */
 public class Vision {
 

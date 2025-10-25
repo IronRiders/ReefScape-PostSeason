@@ -7,8 +7,8 @@ import java.io.File;
 
 public class DriveConstants {
 
-        public static final double ROBOT_WIDTH = 37; // Front-back
-        public static final double ROBOT_LENGTH = 37; // Side-side
+  public static final double ROBOT_WIDTH = 37; // Front-back
+  public static final double ROBOT_LENGTH = 37; // Side-side
 
   // Ports, IDs, Configs, etc.
   public static final int PRIMARY_CONTROLLER_PORT = 0;
@@ -32,10 +32,8 @@ public class DriveConstants {
   public static final double ROTATION_CONTROL_EXPONENT = 3.0;
   public static final double ROTATION_CONTROL_DEADBAND = 0.8;
 
-  public static final double SWERVE_DRIVE_MAX_SPEED =
-      6; // m/s 
-  public static final double SWERVE_MAXIMUM_ANGULAR_VELOCITY =
-      Math.PI * 2.5; // rad/s
+  public static final double SWERVE_DRIVE_MAX_SPEED = 6; // m/s
+  public static final double SWERVE_MAXIMUM_ANGULAR_VELOCITY = Math.PI * 2.5; // rad/s
 
   public static final double SWERVE_MAXIMUM_SPEED_AUTO = 6.0; // m/s
   public static final double SWERVE_MAXIMUM_ACCELERATION_AUTO = // TODO: This does nothing!!
@@ -46,4 +44,9 @@ public class DriveConstants {
 
   public static final double JOG_DISTANCE_INCHES = 0.5;
   public static final double JOG_SPEED = .25;
+
+  public static final String LIMELIGHT_NAME = "";
+  public static final double VISION_X_TRUST = 0.7;
+  public static final double VISION_Y_TRUST = 0.7;
+  public static final double VISION_ANGLE_TRUST = 9999999;
 }

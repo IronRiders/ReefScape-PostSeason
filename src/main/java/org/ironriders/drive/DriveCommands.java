@@ -19,19 +19,15 @@ import org.ironriders.lib.GameState;
 public class DriveCommands {
 
   private final DriveSubsystem driveSubsystem;
-
-  /**
-   * In addition to constructing a new DriveCommands, it also publishes {@linkplain
-   * #pathfindToTarget() Drive to Target} & {@linkplain #invertControls() Invert} commands to the
-   * dashboard.
-   */
   public DriveCommands(DriveSubsystem driveSubsystem) {
     this.driveSubsystem = driveSubsystem;
 
     this.driveSubsystem.debugPublish("Drive to Target", pathfindToTarget());
     this.driveSubsystem.debugPublish("Invert", Commands.runOnce(() -> GameState.invertControl()));
     this.driveSubsystem.publish(
-        "Invert Controls", Commands.runOnce(() -> driveSubsystem.switchInvertControl()));
+        "Invert Drive", Commands.runOnce(() -> driveSubsystem.switchDrive()));
+    this.driveSubsystem.publish(
+          "Invert Rotation", Commands.runOnce(() -> driveSubsystem.switchRotation()));
   }
 
   /**
@@ -116,13 +112,6 @@ public class DriveCommands {
                       DriveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY_AUTO,
                       DriveConstants.SWERVE_MAXIMUM_ANGULAR_ACCELERATION_AUTO));
           return driveSubsystem.pathfindCommand;
-        });
-  }
-
-  public Command invertControls() {
-    return driveSubsystem.runOnce(
-        () -> {
-          driveSubsystem.switchInvertControl();
         });
   }
 

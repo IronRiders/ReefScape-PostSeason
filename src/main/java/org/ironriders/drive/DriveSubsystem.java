@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import java.io.IOException;
 import java.util.Optional;
 import org.ironriders.lib.GameState;
@@ -37,7 +36,8 @@ public class DriveSubsystem extends IronSubsystem {
 
   private SwerveDrive swerveDrive;
   private Vision vision;
-  private boolean invertStatus = false;
+  private boolean rotationInvert = false;
+  private boolean driveInvert = false;
 
   public Command pathfindCommand;
   public double controlSpeedMultipler = 1;
@@ -69,12 +69,12 @@ public class DriveSubsystem extends IronSubsystem {
         swerveDrive::getRobotVelocity,
         (speeds, feedforwards) -> swerveDrive.setChassisSpeeds(
             new ChassisSpeeds(
-                speeds.vxMetersPerSecond,
-                speeds.vyMetersPerSecond,
+                -speeds.vxMetersPerSecond,
+                -speeds.vyMetersPerSecond,
                 RobotUtils.clamp(
                     -SWERVE_MAXIMUM_ANGULAR_VELOCITY,
                     SWERVE_MAXIMUM_ANGULAR_VELOCITY,
-                    speeds.omegaRadiansPerSecond))),
+                    -speeds.omegaRadiansPerSecond))),
         DriveConstants.HOLONOMIC_CONFIG,
         robotConfig,
         () -> {
@@ -109,9 +109,8 @@ public class DriveSubsystem extends IronSubsystem {
    *                      its own rotation.
    */
   public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
-    int invertMultiplier = invertStatus ? -1 : 1;
     swerveDrive.drive(
-        translation.times(invertMultiplier), rotation * invertMultiplier, fieldRelative, false);
+        translation.times(driveInvert ? -1 : 1), rotation * (rotationInvert ? -1 : 1), fieldRelative, false);
   }
 
   /** Fetch the DriveCommands instance */
@@ -146,12 +145,11 @@ public class DriveSubsystem extends IronSubsystem {
     swerveDrive.resetOdometry(new Pose2d(pose2d.getTranslation(), new Rotation2d(0)));
   }
 
-  public void switchInvertControl() {
-    invertStatus = !invertStatus;
-  }
-
-  public int getInversionStatus() {
-    return invertStatus ? -1 : 1;
+  public void switchRotation() {
+    rotationInvert = !rotationInvert;
+  }  
+  public void switchDrive() {
+    driveInvert = !driveInvert;
   }
 
   public void setSpeed(double speed) {

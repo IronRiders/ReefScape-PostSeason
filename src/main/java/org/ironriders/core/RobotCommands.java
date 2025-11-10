@@ -7,11 +7,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import java.util.function.DoubleSupplier;
-import org.ironriders.climb.ClimbCommands;
-import org.ironriders.core.ElevatorWristCTL.ElevatorWristState;
 import org.ironriders.drive.DriveCommands;
-import org.ironriders.intake.IntakeCommands;
-import org.ironriders.intake.IntakeConstants.IntakeState;
+
 import org.ironriders.targeting.TargetingCommands;
 
 /**
@@ -27,9 +24,6 @@ import org.ironriders.targeting.TargetingCommands;
 public class RobotCommands {
   private final DriveCommands driveCommands;
   private final TargetingCommands targetingCommands;
-  private final IntakeCommands intakeCommands;
-  private final ClimbCommands climbCommands;
-  private final ElevatorWristCTL elevatorWristCommands;
 
   private final GenericHID controller;
 
@@ -45,35 +39,20 @@ public class RobotCommands {
   public RobotCommands(
       DriveCommands driveCommands,
       TargetingCommands targetingCommands,
-      IntakeCommands intakeCommands,
-      ElevatorWristCTL elevatorWristCommands,
-      ClimbCommands climbCommands,
       GenericHID controller) {
     this.driveCommands = driveCommands;
     this.targetingCommands = targetingCommands;
-    this.intakeCommands = intakeCommands;
-    this.elevatorWristCommands = elevatorWristCommands;
-    this.climbCommands = climbCommands;
+
     this.controller = controller;
     // TODO: More named commands, implement good autos
 
-    NamedCommands.registerCommand("ElevatorWrist L2", elevatorWristSet(ElevatorWristState.L2));
-    NamedCommands.registerCommand("ElevatorWrist L3", elevatorWristSet(ElevatorWristState.L3));
-    NamedCommands.registerCommand("ElevatorWrist L4", elevatorWristSet(ElevatorWristState.L4));
 
-    NamedCommands.registerCommand("Intake Eject", eject());
-    NamedCommands.registerCommand("Intake", intake());
-    NamedCommands.registerCommand("Score", intakeCommands.set(IntakeState.SCORE));
 
     SmartDashboard.putData("RobotCommands/Reset Gyro", resetGyroAngle());
   }
 
   /** Initialize all subsystems when first enabled. */
-  public Command startup() {
-    intakeCommands.setOnSuccess(() -> rumbleController());
 
-    return elevatorWristCommands.reset(); // moves everything to zero
-  }
 
   /**
    * Command to drive the robot given controller input.
@@ -106,38 +85,7 @@ public class RobotCommands {
     return driveCommands.jog(robotRelativeAngleDegrees);
   }
 
-  /**
-   * Command to make the robot intake. Runs two commands in parallel:
-   *
-   * <ul>
-   * <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState)
-   * elevator wrist
-   * state} to {@link ElevatorWristState#INTAKING "INTAKING"}.
-   * <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to
-   * {@link IntakeState#GRAB
-   * "GRAB"}.
-   * </ul>
-   *
-   * <br>
-   *
-   * @return returns the command described above
-   */
-  public Command intake() {
-    return Commands.parallel(
-        elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING), intakeCommands.set(IntakeState.GRAB));
-    // .unless(() -> intakeCommands.getIntake().beamBreakTriggered());
-  }
 
-  /**
-   * Command to make the robot eject. Simply sets the
-   * {@link IntakeCommands#set(IntakeState) intake
-   * state} to {@link IntakeState#EJECT "eject"}.
-   *
-   * @return returns the command described above
-   */
-  public Command eject() {
-    return intakeCommands.set(IntakeState.EJECT);
-  }
 
   public Command resetGyroAngle() {
     return Commands.runOnce(() -> resetPigeon());
@@ -150,37 +98,9 @@ public class RobotCommands {
     driveCommands.resetRotation();
   }
 
-  /**
-   * Command to stop the intake and stow the elevator wrist. Does the following in
-   * parallel:
-   *
-   * <ul>
-   * <li>Sets the {@link ElevatorWristCTL#setElevatorWrist(ElevatorWristState)
-   * elevator wrist
-   * state} to {@link ElevatorWristState#HOLD "stow"}.
-   * <li>Sets the {@link IntakeCommands#set(IntakeState) intake state} to
-   * {@link IntakeState#STOP
-   * "stop"}.
-   * </ul>
-   *
-   * @return returns the command described above
-   */
-  public Command stopIntake() {
-    return Commands.parallel(
-        elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD), intakeCommands.set(IntakeState.STOP));
-    // .unless(() -> intakeCommands.getIntake().beamBreakTriggered()));
-  }
+  
 
-  public Command elevatorWristSet(ElevatorWristState state) {
-    switch (state) {
-      case L4:
-        return Commands.parallel(elevatorWristCommands.setElevatorWrist(state), intakeCommands.boost());
-
-      default:
-        return elevatorWristCommands.setElevatorWrist(state);
-    }
-  }
-
+  
   /**
    * Sets the rumble on the controller for 0.3 seconds.
    *

@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.Optional;
 import java.util.function.Supplier;
-import org.ironriders.core.ElevatorWristCTL.ElevatorLevel;
+
 import org.ironriders.lib.field.FieldPose;
 
 /** Current robot state required by multiple subsystems. TODO: this is practicly unused now */
@@ -17,7 +17,7 @@ public class GameState {
   private static Supplier<Optional<FieldPose>> targetRobotPose = () -> Optional.empty();
 
   // this represents our current elevator target
-  private static ElevatorLevel target = ElevatorLevel.DOWN;
+
 
   private GameState() {}
 
@@ -45,13 +45,6 @@ public class GameState {
     GameState.targetRobotPose = robotPose;
   }
 
-  public static ElevatorLevel getTarget() {
-    return target;
-  }
-
-  public static void setTarget(ElevatorLevel target) {
-    GameState.target = target;
-  }
 
   public static boolean getInvertControl() {
     return controlInverted;

@@ -12,16 +12,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import org.ironriders.climb.ClimbCommands;
-import org.ironriders.climb.ClimbConstants;
-import org.ironriders.climb.ClimbSubsystem;
-import org.ironriders.core.ElevatorWristCTL.ElevatorWristState;
 import org.ironriders.drive.DriveCommands;
 import org.ironriders.drive.DriveConstants;
 import org.ironriders.drive.DriveSubsystem;
-import org.ironriders.intake.IntakeCommands;
-import org.ironriders.intake.IntakeConstants.IntakeState;
-import org.ironriders.intake.IntakeSubsystem;
 import org.ironriders.lib.RobotUtils;
 import org.ironriders.targeting.TargetingCommands;
 import org.ironriders.targeting.TargetingSubsystem;
@@ -52,13 +45,6 @@ public class RobotContainer {
   public final TargetingSubsystem targetingSubsystem = new TargetingSubsystem();
   public final TargetingCommands targetingCommands = targetingSubsystem.getCommands();
 
-  public final ElevatorWristCTL elevatorWristCommands = new ElevatorWristCTL();
-
-  public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  public final IntakeCommands intakeCommands = intakeSubsystem.getCommands();
-
-  public final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
-  public final ClimbCommands climbCommands = climbSubsystem.getCommands();
 
   public final Double triggerThreshold = 0.75;
 
@@ -73,9 +59,6 @@ public class RobotContainer {
       new RobotCommands(
           driveCommands,
           targetingCommands,
-          intakeCommands,
-          elevatorWristCommands,
-          climbCommands,
           primaryController.getHID());
 
   /**
@@ -159,66 +142,14 @@ public class RobotContainer {
           primaryController.pov(angle).onTrue(driveCommands.jog(-angle));
         }
 
-        // Go to intaking, then grab until told to stop
-        primaryController
-            .rightTrigger(triggerThreshold)
-            .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING))
-            .onTrue(intakeCommands.set(IntakeState.GRAB))
-            .onFalse(intakeCommands.set(IntakeState.STOP));
-
-        // Score coral
-        primaryController
-            .leftTrigger(triggerThreshold)
-            .onTrue(intakeCommands.set(IntakeState.SCORE))
-            .onFalse(intakeCommands.set(IntakeState.STOP));
-
-        // Elevator Down
-        primaryController
-            .rightBumper()
-            .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING));
-
-        // Eject coral
-        primaryController
-            .leftBumper()
-            .onTrue(intakeCommands.set(IntakeState.EJECT))
-            .onFalse(intakeCommands.set(IntakeState.STOP));
-
-        primaryController
-            .button(1)
-            .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.L2));
-        primaryController
-            .button(2) // works for L1 as well (see the above link for button
-            // configuration
-            // information)
-            .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.L2));
-
-        primaryController
-            .button(3)
-            .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.L3));
-        primaryController
-            .button(4)
-            .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.L4));
-        break;
+       
 
       case PRIMARY_DRIVER_WITH_BOOST:
         primaryController.povRight().onTrue(driveCommands.jog(-90));
 
         primaryController.povLeft().onTrue(driveCommands.jog(90));
 
-        primaryController.povUp().onTrue(intakeCommands.boost());
-        primaryController.povDown().onTrue(intakeCommands.unboost());
 
-
-        // Intake and then go down
-        primaryController
-            .rightTrigger(triggerThreshold)
-            .onTrue(robotCommands.intake())
-            .onFalse(robotCommands.stopIntake());
-
-        primaryController
-            .leftTrigger(triggerThreshold)
-            .whileTrue(intakeCommands.set(IntakeState.SCORE))
-            .onFalse(intakeCommands.set(IntakeState.STOP));
 
         primaryController
             .leftBumper()
@@ -229,13 +160,6 @@ public class RobotContainer {
             .rightBumper()
             .onTrue(driveCommands.setDriveTrainSpeed(1.5))
             .onFalse(driveCommands.setDriveTrainSpeed(1));
-
-        primaryController.a().onTrue(robotCommands.elevatorWristSet(ElevatorWristState.HOLD));
-        primaryController.b().onTrue(robotCommands.elevatorWristSet(ElevatorWristState.L2));
-
-        primaryController.x().onTrue(robotCommands.elevatorWristSet(ElevatorWristState.L3));
-
-        primaryController.y().onTrue(robotCommands.elevatorWristSet(ElevatorWristState.L4));
 
         break;
 
@@ -244,15 +168,6 @@ public class RobotContainer {
           primaryController.pov(angle).onTrue(driveCommands.jog(-angle));
         }
 
-        primaryController
-            .rightTrigger(triggerThreshold)
-            .onTrue(robotCommands.intake())
-            .onFalse(robotCommands.stopIntake());
-
-        primaryController
-            .leftTrigger(triggerThreshold)
-            .onTrue(intakeCommands.set(IntakeState.SCORE))
-            .onFalse(intakeCommands.set(IntakeState.STOP));
 
         primaryController
             .leftBumper()
@@ -263,38 +178,12 @@ public class RobotContainer {
             .onTrue(driveCommands.setDriveTrainSpeed(1.5))
             .onFalse(driveCommands.setDriveTrainSpeed(1));
 
-        secondaryController
-            .button(5) // TODO: put actual button #
-            .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.L2));
-        secondaryController
-            .button(6) // TODO: put actual button #
-            .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.L2));
-        secondaryController
-            .button(7) // TODO: put actual button #
-            .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.L3));
-        secondaryController
-            .button(8) // TODO: put actual button #
-            .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.L4));
-        secondaryController
-            .button(9) // TODO: put actual button #
-            .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.INTAKING));
-        secondaryController
-            .button(10) // TODO: put actual button #
-            .onTrue(elevatorWristCommands.setElevatorWrist(ElevatorWristState.HOLD));
+        
         break;
       default:
         throw new Error("Invalid buttonmap type!");
     } // TODO: figure out what driveteam wants to do with this.
 
-    secondaryController
-        .button(16) // TODO: decide on buttons for these commands
-        .onTrue(climbCommands.set(ClimbConstants.Targets.CLIMBED));
-    secondaryController
-        .button(15) // TODO: decide on buttons for these commands
-        .onTrue(climbCommands.set(ClimbConstants.Targets.MIN));
-    secondaryController
-        .button(14) // TODO: decide on buttons for these commands
-        .onTrue(climbCommands.set(ClimbConstants.Targets.MAX));
   }
 
   /**

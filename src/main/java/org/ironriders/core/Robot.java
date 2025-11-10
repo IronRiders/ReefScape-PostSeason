@@ -100,6 +100,5 @@ public class Robot extends TimedRobot {
     }
     System.out.println("Starting Robot...");
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
-    robotContainer.robotCommands.startup().schedule();
   }
 }

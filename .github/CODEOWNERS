@@ -1,4 +1,4 @@
-*gradle* @IronRiders/student-leaders @IronRiders/mentors
-/.github/ @IronRiders/student-leaders @IronRiders/mentors
-/src/main/deploy/swerve/ @IronRiders/student-leaders @IronRiders/mentors
-/src/main/java/org/ironriders/drive/*Constants* @IronRiders/student-leaders @IronRiders/mentors
+*gradle* @IronRiders/mentors @IronRiders/student-leaders
+/.github/ @IronRiders/mentors @IronRiders/student-leaders
+/src/main/deploy/swerve/ @IronRiders/mentors @IronRiders/student-leaders
+/src/main/java/org/ironriders/drive/*Constants* @IronRiders/mentors @IronRiders/student-leaders

@@ -17,7 +17,10 @@ import org.ironriders.drive.DriveConstants;
 import org.ironriders.drive.DriveSubsystem;
 import org.ironriders.lib.RobotUtils;
 import org.ironriders.targeting.TargetingCommands;
+import org.ironriders.core.Intake.IntakeCommands;
+import org.ironriders.core.Intake.IntakeConstants.IntakeState;
 import org.ironriders.targeting.TargetingSubsystem;
+import org.ironriders.core.Intake.IntakeSubsystem;
 
 /**
  * Different button configurations for the driver controls PRIMARY_DRIVER: same as Driver Centered
@@ -42,6 +45,9 @@ public class RobotContainer {
   public final DriveSubsystem driveSubsystem = new DriveSubsystem();
   public final DriveCommands driveCommands = driveSubsystem.getCommands();
 
+  public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  public final IntakeCommands intakeCommands = intakeSubsystem.getCommands();
+
   public final TargetingSubsystem targetingSubsystem = new TargetingSubsystem();
   public final TargetingCommands targetingCommands = targetingSubsystem.getCommands();
 
@@ -52,6 +58,7 @@ public class RobotContainer {
 
   private final CommandXboxController primaryController =
       new CommandXboxController(DriveConstants.PRIMARY_CONTROLLER_PORT);
+  @SuppressWarnings("unused")
   private final CommandGenericHID secondaryController =
       new CommandJoystick(DriveConstants.KEYPAD_CONTROLLER_PORT);
 
@@ -130,6 +137,17 @@ public class RobotContainer {
                     DriveConstants.ROTATION_CONTROL_EXPONENT,
                     DriveConstants.ROTATION_CONTROL_DEADBAND)));
 
+
+
+    primaryController
+      .rightTrigger(.75)
+      .onTrue(intakeCommands.set(IntakeState.GRAB))
+      .onFalse(intakeCommands.set(IntakeState.STOP));
+
+      primaryController
+      .leftTrigger(.75)
+      .onTrue(intakeCommands.set(IntakeState.SCORE))
+      .onFalse(intakeCommands.set(IntakeState.STOP));
     switch (buttonConfiguration) { // configures buttons based on selected config. see the
       // buttonConfiguration to
       // know the currently active configuration

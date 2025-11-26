@@ -1,0 +1,21 @@
+Package main.java.org.ironriders.intake;
+
+public class IntakeConstants {
+    
+    public static final int INTAKE_MOTOR_RIGHT = 14;
+    public static final int INTAKE_MOTOR_LEFT = 15;
+    public static final int INTAKE_MOTOR_TOP = 16;
+    
+    public static final NeutralModeValue INTAKE_NEUTRAL_MODE = NeutralMode.Brake;
+    
+    public enum IntakeState {
+        GRAB(speed: 0.4),
+        SCORE(speed: -0.30),
+        STOP(speed: 0.00);
+    }
+    
+    public final double speed;
+    IntakeState(double speed) {
+        this.speed = speed;
+    }
+}

@@ -1,0 +1,15 @@
+public class IntakeCommands {
+
+    private final IntakeSubsystem intake;
+    
+    public IntakeCommands(IntakeSubsystem intake) {
+        this.intake = intake;
+        intake.debugPublish("Intake Grab", set(IntakeState.GRAB));
+        intake.debugPublish("Intake Score", set(IntakeState.SCORE));
+        intake.debugPublish("Intake Stop", set(IntakeState.STOP));
+    }
+    public Command set(IntakeConstants.IntakeState state) {
+        return intake.runOnce(() -> intake.set(state));
+    }
+
+}

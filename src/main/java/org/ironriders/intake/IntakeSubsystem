@@ -1,0 +1,48 @@
+Package main.java.org.ironriders.intake;
+
+public class IntakeSubsystem extends IronSubsystem {
+
+    private final IntakeCommands commands;
+    private final TalonFX rightIntake = new TalonFX(IntakeConstants.INTAKE_MOTOR_RIGHT);
+    private final TalonFX leftIntake = new TalonFX(IntakeConstants.INTAKE_MOTOR_LEFT);
+    private final TalonFX rollerIntake = new TalonFX(IntakeConstants.INTAKE_MOTOR_TOP);
+
+    .withCurrentLimits(new CurrentLimitsConfigs()
+        .withStatorCurrentLimitsEnable(true)
+        .withSupplyCurrentLimitEnable(true)
+        .withStatorCurrentLimit(30)
+        .withSupplyCurrentLimit(40)
+    );
+    .withMotorOutput(new MotorOutputConfigs()
+        .withNeutralMode(IntakeConstants.INTAKE_NEUTRAL_MODE)
+    );
+
+    leftIntake.getConfigurator().apply(mainConfig);
+    rightIntake.getConfigurator().apply(mainConfig);
+    rollerIntake.getConfigurator().apply(mainConfig);
+
+    public IntakeSubsystem() {
+        commands = new IntakeCommands(this);
+    }
+    public IntakeCommands getCommands() {
+        return commands;
+    }
+    @Override
+        public void periodic() {
+            debugPublish("Left Velocity",
+        leftIntake.getVelocity().getValue().in(Units.DegreesPerSecond));
+            debugPublish("Right Velocity",
+        rightIntake.getVelocity().getValue().in(Units.DegreesPerSecond));
+        }
+
+    public void setMotors(IntakeConstants.IntakeState state) {
+        leftIntake.set(state.speed);
+        rightIntake.set(state.speed);
+        rollerIntake.set(state.speed);
+    }
+
+
+
+    
+
+}

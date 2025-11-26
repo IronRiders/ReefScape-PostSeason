@@ -44,6 +44,10 @@ public class RobotContainer {
 
   public final TargetingSubsystem targetingSubsystem = new TargetingSubsystem();
   public final TargetingCommands targetingCommands = targetingSubsystem.getCommands();
+  
+  //NEW INTAKE
+  public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  public final IntakeCommands intakeCommands = new intakeSubsystem.getCommands();
 
 
   public final Double triggerThreshold = 0.75;
@@ -148,6 +152,12 @@ public class RobotContainer {
         primaryController.povRight().onTrue(driveCommands.jog(-90));
 
         primaryController.povLeft().onTrue(driveCommands.jog(90));
+
+        //NEW
+        primaryController
+            .RightTrigger(threshold:0.75)
+            .onTrue(intakeCommands.set(IntakeState.GRAB))
+            .onFalse(intakeCommands.set(IntakeState.STOP));
 
 
 

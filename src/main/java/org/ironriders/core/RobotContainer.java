@@ -18,6 +18,9 @@ import org.ironriders.drive.DriveSubsystem;
 import org.ironriders.lib.RobotUtils;
 import org.ironriders.targeting.TargetingCommands;
 import org.ironriders.targeting.TargetingSubsystem;
+import org.ironriders.wrist.WristCommand;
+import org.ironriders.wrist.WristSubsystem;
+import org.ironriders.wrist.WristConstants.WristState;
 
 /**
  * Different button configurations for the driver controls PRIMARY_DRIVER: same as Driver Centered
@@ -44,6 +47,9 @@ public class RobotContainer {
 
   public final TargetingSubsystem targetingSubsystem = new TargetingSubsystem();
   public final TargetingCommands targetingCommands = targetingSubsystem.getCommands();
+
+  public final WristSubsystem wristSubsystem = new WristSubsystem();
+  public final WristCommand wristCommand = wristSubsystem.getCommands();
 
 
   public final Double triggerThreshold = 0.75;
@@ -129,6 +135,12 @@ public class RobotContainer {
                         * driveSubsystem.controlSpeedMultipler,
                     DriveConstants.ROTATION_CONTROL_EXPONENT,
                     DriveConstants.ROTATION_CONTROL_DEADBAND)));
+
+
+    primaryController.a().onTrue(wristCommand.set(WristState.STOWED));
+    primaryController.b().onTrue(wristCommand.set(WristState.INTAKING));
+    primaryController.x().onTrue(wristCommand.set(WristState.L2L3));
+    primaryController.y().onTrue(wristCommand.set(WristState.L4));
 
     switch (buttonConfiguration) { // configures buttons based on selected config. see the
       // buttonConfiguration to

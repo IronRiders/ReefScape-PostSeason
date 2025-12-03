@@ -72,7 +72,8 @@ public class WristSubsystem extends IronSubsystem{
     }
 
     public double getRotation(){
-        return ((primarymotor.getAbsoluteEncoder().getPosition() - ABSOLUTE_ENCODER_OFFSET) * 360) - FRAME_OF_REFERENCE_OFFSET;
+        return ((primarymotor.getAbsoluteEncoder().getPosition() 
+        + ABSOLUTE_ENCODER_OFFSET) * 360) + FRAME_OF_REFERENCE_OFFSET;
     }
 
     public boolean atGoal(){

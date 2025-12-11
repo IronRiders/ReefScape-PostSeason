@@ -69,8 +69,8 @@ public class DriveSubsystem extends IronSubsystem {
         swerveDrive::getRobotVelocity,
         (speeds, feedforwards) -> swerveDrive.setChassisSpeeds(
             new ChassisSpeeds(
-                -speeds.vxMetersPerSecond,
-                -speeds.vyMetersPerSecond,
+                speeds.vxMetersPerSecond,
+                speeds.vyMetersPerSecond,
                 RobotUtils.clamp(
                     -SWERVE_MAXIMUM_ANGULAR_VELOCITY,
                     SWERVE_MAXIMUM_ANGULAR_VELOCITY,

@@ -22,7 +22,7 @@ public class DriveConstants {
 
   public static final PPHolonomicDriveController HOLONOMIC_CONFIG =
       new PPHolonomicDriveController(
-          new PIDConstants(10.0, 0.05, 0.0), // Translation PID
+          new PIDConstants(2.5, 0.05, 0.0), // Translation PID
           new PIDConstants(10.0, 0.2, 0.0) // Rotation PID
           );
 
@@ -37,7 +37,7 @@ public class DriveConstants {
   public static final double SWERVE_MAXIMUM_ANGULAR_VELOCITY =
       Math.PI * 2.5; // rad/s
 
-  public static final double SWERVE_MAXIMUM_SPEED_AUTO = 6.0; // m/s
+  public static final double SWERVE_MAXIMUM_SPEED_AUTO = 1.0; // m/s
   public static final double SWERVE_MAXIMUM_ACCELERATION_AUTO = // TODO: This does nothing!!
       SWERVE_MAXIMUM_SPEED_AUTO / 2; // m/s^2
   public static final double SWERVE_MAXIMUM_ANGULAR_VELOCITY_AUTO = Math.PI * 4; // rad/s
